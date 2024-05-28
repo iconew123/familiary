@@ -2,6 +2,7 @@ import { Box, Button, Text, Input, Select } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const Join = () => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
