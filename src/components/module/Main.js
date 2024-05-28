@@ -6,11 +6,31 @@ const Main = () => {
         <>
             <Box>
                 <h4>Main</h4>
-                <form method='POST' action={`${process.env.REACT_APP_SERVER_URL}/user/service`}>
+                <div id="image-container">
+
+                </div>
+                <form method='POST' action={`${process.env.REACT_APP_SERVER_URL}/user/service`} encType='multipart/form-data'>
                     <input type='hidden' id="command" name="command" value="test" />
                     <input type='submit' />
+                    <input type='file' id="file" name='file' accept={"image/png"} onChange={e => {
+                        console.log(e.target.files);
+
+                        const file = e.target.files[0];
+
+                        const reader = new FileReader();
+
+                        reader.onload = (f) => {
+                            console.log(f.target);
+                            const dataUrl = f.target.result;
+
+                            document.getElementById('image-container').innerHTML = `
+                                <img src=${dataUrl}>
+                            `;
+                        }
+                        reader.readAsDataURL(file);
+                    }} />
                 </form>
-                
+
             </Box>
         </>
     );
