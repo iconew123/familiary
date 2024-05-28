@@ -1,8 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./components/Root";
 import Main from "./components/module/Main";
+import DiaryMain from "./components/diaryHome/DiaryMain";
+import CreateBaby from "./components/diaryHome/baby/CreateBaby";
+import InfoBaby from "./components/diaryHome/baby/InfoBaby";
+import UpdateBaby from "./components/diaryHome/baby/UpdateBaby";
+import JoinBabyByCode from "./components/diaryHome/baby/JoinBabyByCode";
 
-const roueter = createBrowserRouter([
+const router = createBrowserRouter([
     {
         path:"/",
         element: <Root />,
@@ -17,14 +22,36 @@ const roueter = createBrowserRouter([
     </>
     },
     {
-        path:"/user",
+        path:"/diary",
         element: <Root />,
         children:[
             {
                 path:"",
-                element:<>
-                    <h4>user pages</h4>
-                </>
+                element: <DiaryMain/>
+                
+            }
+        ]
+    },
+    {
+        path:"/baby",
+        element: <Root />,
+        children:[
+            {
+                path:"/baby/update",
+                element: <UpdateBaby/>
+                
+            },
+            {
+                path:"/baby/info",
+                element: <InfoBaby/>
+            },
+            {
+                path:"/baby/create",
+                element: <CreateBaby/>
+            },
+            {
+                path:"/baby/join",
+                element: <JoinBabyByCode/>
             }
         ]
     },
@@ -32,4 +59,4 @@ const roueter = createBrowserRouter([
     basename: "/familiary",
 });
 
-export default roueter;
+export default router;
