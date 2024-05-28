@@ -1,37 +1,49 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Grid, GridItem } from '@chakra-ui/react';
 import React from 'react';
 
 const Main = () => {
     return (
         <>
-            <Box>
-                <h4>Main</h4>
-                <div id="image-container">
 
-                </div>
-                <form method='POST' action={`${process.env.REACT_APP_SERVER_URL}/user/service`} encType='multipart/form-data'>
-                    <input type='hidden' id="command" name="command" value="test" />
-                    <input type='submit' />
-                    <input type='file' id="file" name='file' accept={"image/png"} onChange={e => {
-                        console.log(e.target.files);
+            <Grid
+                h='100vh'
+                templateAreas={`"adArea hospital guide login"
+                                "adArea board board diary"`}
+                gridTemplateColumns={'1fr 1fr 1fr 1fr'}
+                gap={1}>
 
-                        const file = e.target.files[0];
+                {/* 광고단 */}
+                <GridItem w='100%' bg='purple' area={'adArea'}>
+                    광고
+                </GridItem>
 
-                        const reader = new FileReader();
+                {/* 병원 정보 */}
+                <GridItem w='100%' bg='lightblue' area={'hospital'}>
+                    병원INFO
+                </GridItem>
 
-                        reader.onload = (f) => {
-                            console.log(f.target);
-                            const dataUrl = f.target.result;
+                {/* 임산부 가이드 */}
+                <GridItem w='100%' bg='lightpink' area={'guide'}>
+                    임산부 가이드
+                </GridItem>
 
-                            document.getElementById('image-container').innerHTML = `
-                                <img src=${dataUrl}>
-                            `;
-                        }
-                        reader.readAsDataURL(file);
-                    }} />
-                </form>
+                {/* 로그인 */}
+                <GridItem w='100%' bg='white' area={'login'}>
+                    로그인
+                </GridItem>
 
-            </Box>
+                {/* 다이어리 */}
+                <GridItem w='100%' bg='gray' area={'diary'}>
+                    다이어리
+                </GridItem>
+
+                {/* 게시판(최신순) */}
+                <GridItem w='100%' bg='lightgreen' area={'board'}>
+                    게시판(최신순)
+                </GridItem>
+
+            </Grid>
+            
         </>
     );
 };
