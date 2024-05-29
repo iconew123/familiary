@@ -9,6 +9,7 @@ import JoinBabyByCode from "./components/diaryHome/baby/JoinBabyByCode";
 import CommunityTalk from "./components/community/CommunityTalk";
 import CommunityNotice from "./components/community/CommunityNotice";
 import CommunityRecommend from "./components/community/CommunityRecommend";
+import CreateCommunity from "./components/community/CreateCommunity";
 
 const router = createBrowserRouter([
     {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
             {
                 path: '/community/recommend',
                 element: <CommunityRecommend />,
+            },
+            {
+                path: '/community/create',
+                element: <CreateCommunity />,
             }
         ]
     },
