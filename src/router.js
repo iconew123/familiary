@@ -10,6 +10,7 @@ import CommunityTalk from "./components/community/CommunityTalk";
 import CommunityNotice from "./components/community/CommunityNotice";
 import CommunityRecommend from "./components/community/CommunityRecommend";
 import CreateCommunity from "./components/community/CreateCommunity";
+import UpdateCommunity from "./components/community/UpdateCommunity";
 
 const router = createBrowserRouter([
     {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
             {
                 path: '/community/create',
                 element: <CreateCommunity />,
+            },
+            {
+                path: '/community/update',
+                element: <UpdateCommunity />,
             }
         ]
     },
