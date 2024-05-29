@@ -25,7 +25,7 @@ const DiaryMain = () => {
 
     // 데이터 받아오기
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=9e305a2b1c`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=6c9ed3331d`)
             .then(response => {
                 return response.json();
             })
@@ -137,7 +137,7 @@ const DiaryMain = () => {
                         ) : (
                             <Icon as={CiImageOff} w={500} h={300} marginTop='20px' />
                         )}
-
+                        <br/>
                         <Text fontSize='4xl' as='b'>{data.nickname}</Text>
                         <Text fontSize='xl'>출산예정일 : {data.expected_date} </Text>
                         {dDay > 0 ? (
