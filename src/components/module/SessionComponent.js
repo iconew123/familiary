@@ -1,51 +1,31 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-
-// // // 세션 상태를 관리할 컨텍스트 생성
-// const SessionContext = createContext();
-
-// // 세션 상태를 제공하는 SessionProvider 컴포넌트 생성
-// export const SessionProvider = ({ children }) => {
-//     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-//     const loginStatus = () => {
-//         // 로그인 상태 업데이트
-//         setIsLoggedIn(true);
-//     };
-
-//     const logoutStatus = () => {
-//         // 로그아웃 상태 업데이트
-//         setIsLoggedIn(false);
-//     };
-
-//     return (
-//         <SessionContext.Provider value={{ isLoggedIn, loginStatus, logoutStatus }}>
-//             {children}
-//         </SessionContext.Provider>
-//     );
-// };
-
-// // 세션 정보를 사용할 수 있게 하는 hook 생성
-// export const useSession = () => useContext(SessionContext);
+import { useState, useEffect } from 'react';
 
 export const useSession = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
         const loggedIn = sessionStorage.getItem('isLoggedIn');
-        if (loggedIn === 'true') {
+        const user = sessionStorage.getItem('userInfo');
+        if (loggedIn === 'true' && user) {
             setIsLoggedIn(true);
+            setUserInfo(JSON.parse(user));
         }
     }, []);
 
-    const loginStatus = () => {
+    const loginStatus = (user) => {
         sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userInfo', JSON.stringify(user));
         setIsLoggedIn(true);
+        setUserInfo(user);
     };
 
     const logoutStatus = () => {
         sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('userInfo');
         setIsLoggedIn(false);
+        setUserInfo(null);
     };
 
-    return { isLoggedIn, loginStatus, logoutStatus };
+    return { isLoggedIn, userInfo, loginStatus, logoutStatus };
 };

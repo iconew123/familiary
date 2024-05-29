@@ -2,9 +2,16 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../module/SessionComponent';
 
+
+
 const Logout = () => {
     const navigate = useNavigate();
     const { logoutStatus } = useSession();
+    const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+    if (!loggedIn) {
+        navigate('/user/login');
+    }
 
     useEffect(() => {
         logoutStatus();

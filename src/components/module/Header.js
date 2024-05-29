@@ -2,20 +2,29 @@ import { Box, Button, Center, Flex, Heading, Select } from '@chakra-ui/react';
 import React from 'react';
 import { Text } from '@chakra-ui/react'
 import { Link, useLocation } from 'react-router-dom';
+import { useSession } from './SessionComponent'
 
 
 const Header = () => {
     const location = useLocation();
     const isDiaryPage = location.pathname === '/diary' || '/create-baby'; // 현재 페이지가 diary 페이지인지 확인
     const isCommunityPage = location.pathname === '/community';
-
+    const { isLoggedIn, session } = useSession();
+    console.log(isLoggedIn);
+    console.log(session);
 
     return (
         <>
             <Box>
-                <Box float='right' marginRight='20px'>
-                    <Link>로그인 | </Link>
-                    <Link>회원가입</Link>
+                <Box float='right' display="flex" alignItems="center" marginRight='20px'>
+                    {!isLoggedIn ? (
+                        <>
+                            <Box marginLeft='10px'><Link to="/user/login"><Text fontSize='xl' marginTop='8px' color='#765d2f'>로그인</Text></Link></Box>
+                            <Box marginLeft='10px'><Link to="/user/join"><Text fontSize='xl' marginTop='8px' color='#765d2f'>회원가입</Text></Link></Box>
+                        </>
+                    ) : (
+                        <Box marginLeft='10px'><Link to="/user/logout"><Text fontSize='xl' marginTop='8px' color='#765d2f'>로그아웃</Text></Link></Box>
+                    )}
                 </Box>
 
                 <Box>
@@ -23,7 +32,7 @@ const Header = () => {
                 </Box>
 
                 <Box align='center'>
-                    <Link to='/'><Text fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
+                    <Link to='/main'><Text fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>
@@ -41,7 +50,7 @@ const Header = () => {
                                 <option value='option5'>영양제 정보</option>
                                 <option value='option6'>태교·운동</option>
                             </Select>
-                            <Link to="/contact"><Text fontSize='xl' marginTop='8px' color='#765d2f'>MYPAGE</Text></Link>
+                            <Link to="/user/MyPage"><Text fontSize='xl' marginTop='8px' color='#765d2f'>MYPAGE</Text></Link>
                         </Flex>
                     </nav>
                 </Box>
