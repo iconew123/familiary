@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const Join = () => {
+    const loggedIn = sessionStorage.getItem('isLoggedIn');
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [nickname, setNickname] = useState('');
@@ -13,40 +15,95 @@ const Join = () => {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [idError, setIdError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [nicknameError, setNicknameError] = useState(false);
+    const [nameError, setNameError] = useState(false);
+    const [securityNumberError, setSecurityNumberError] = useState(false);
+    const [telecomError, setTelecomError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
     const navigate = useNavigate();
 
+    if (loggedIn) {
+        navigate('/main');
+    }
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!id | !password | !nickname | !name | !securityNumber | !telecom | !phone) {
+            if (!id) {
+                setIdError('아이디를 입력하세요.');
 
-        const formData = new URLSearchParams();
-        formData.append('id', id);
-        formData.append('password', password);
-        formData.append('nickname', nickname);
-        formData.append('name', name);
-        formData.append('securityNumber', securityNumber);
-        formData.append('telecom', telecom);
-        formData.append('phone', phone);
-        formData.append('email', email);
-        formData.append('address', address);
+            } else if (id) {
+                setIdError(false);
 
-        try {
-            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=join`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                console.log('데이터 전송 성공');
-                navigate('/user/login');
-            } else {
-                const errorData = await response.json();
-                console.log('데이터 전송 실패', errorData);
             }
-        } catch (error) {
-            console.error('네트워크 오류', error);
+            if (!password) {
+                setPasswordError('비밀번호를 입력하세요.');
+
+            } else if (password) {
+                setPasswordError(false);
+
+            }
+            if (!nickname) {
+                setNicknameError('닉네임을 입력하세요.');
+            } else if (nickname) {
+                setNicknameError(false);
+            }
+            if (!name) {
+                setNameError('이름을 입력하세요.');
+            } else if (name) {
+                setNameError(false);
+            }
+            if (!securityNumber) {
+                setSecurityNumberError('주민번호를 입력하세요.');
+            } else if (securityNumber) {
+                setSecurityNumberError(false);
+            }
+            if (!telecom) {
+                setTelecomError('통신사를 선택해주세요');
+            } else if (telecom) {
+                setTelecomError(false);
+            }
+            if (!phone) {
+                setPhoneError('핸드폰번호를 입력하세요.');
+            } else if (phone) {
+                setPhoneError(false);
+            }
+            return
+        }
+        else {
+
+            const formData = new URLSearchParams();
+            formData.append('id', id);
+            formData.append('password', password);
+            formData.append('nickname', nickname);
+            formData.append('name', name);
+            formData.append('securityNumber', securityNumber);
+            formData.append('telecom', telecom);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('address', address);
+
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=join`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    console.log('데이터 전송 성공');
+                    navigate('/user/login');
+                } else {
+                    const errorData = await response.json();
+                    console.log('데이터 전송 실패', errorData);
+                }
+            } catch (error) {
+                console.error('네트워크 오류', error);
+            }
         }
     };
 
@@ -148,7 +205,14 @@ const Join = () => {
                         onChange={(e) => setAddress(e.target.value)}
                         size='lg' bg='white' w='100%'
                     />
-                    <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>로그인</Button>
+                    {idError ? <Text color="red">{idError}</Text> : null}
+                    {passwordError ? (<Text color="red">{passwordError}</Text>) : null}
+                    {nicknameError ? (<Text color="red">{nicknameError}</Text>) : null}
+                    {nameError ? (<Text color="red">{nameError}</Text>) : null}
+                    {securityNumberError ? (<Text color="red">{securityNumberError}</Text>) : null}
+                    {telecomError ? (<Text color="red">{telecomError}</Text>) : null}
+                    {phoneError ? (<Text color="red">{phoneError}</Text>) : null}
+                    <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원가입</Button>
                 </form>
             </Box>
 
