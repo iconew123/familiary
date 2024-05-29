@@ -6,7 +6,7 @@ import { Box } from '@chakra-ui/react'
 const CommunityTalk = () => {
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/talk`)
+        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/talk`)
             .then(response => {
                 return response.json();
             })
@@ -28,7 +28,7 @@ const CommunityTalk = () => {
 
             </Box>
             <TableContainer>
-                <Table varient={"striped"} colorScheme="teal">
+                <Table variant={"striped"} colorScheme="teal">
                     <Thead>
                         <Tr>
                             <Th>제목</Th>

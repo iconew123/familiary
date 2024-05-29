@@ -6,7 +6,7 @@ import { Box } from '@chakra-ui/react'
 const CommunityNotice = () => {
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/notice`)
+        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/notice`)
             .then(response => {
                 return response.json();
             })
@@ -28,7 +28,7 @@ const CommunityNotice = () => {
 
             </Box>
             <TableContainer>
-                <Table varient={"striped"} colorScheme="teal">
+                <Table variant={"striped"} colorScheme="teal">
                     <Thead>
                         <Tr>
                             <Th>제목</Th>
@@ -40,7 +40,7 @@ const CommunityNotice = () => {
                         {data.map((item, index) => (
                             <Tr key={index}>
                                 <Td>{item.title}</Td>
-                                <Td>{item.userNickname}</Td>
+                                <Td>{item.userNickName}</Td>
                                 <Td>{item.regDate}</Td>
                             </Tr>
                         ))}
