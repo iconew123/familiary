@@ -8,7 +8,7 @@ const InfoBaby = () => {
 
     // 삭제하기
     const handleDelete = () => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=delete&code=451dcae11c`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=delete&code=92fe74901c`, {
             method: 'POST',
         })
             .then(response => {
@@ -25,7 +25,25 @@ const InfoBaby = () => {
     };
 
     // 데이터 받아오기
+    const [data, setData] = useState({
+        nickname: '',
+        name: '',
+        gender: '',
+        expected_date: '',
+        blood_type: ''
+    });
 
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=6c9ed3331d`)
+            .then(response => response.json())
+            .then(data => {
+                setData(data);
+                console.log('데이터 받아오기 성공', data);
+            })
+            .catch(error => {
+                console.error('데이터를 받아오는 중 에러 발생', error);
+            });
+    }, []);
     
 
     
