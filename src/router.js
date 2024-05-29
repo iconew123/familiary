@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./components/Root";
 import Main from "./components/module/Main";
-import DiaryMain from "./components/diaryHome/DiaryMain";
 import CreateBaby from "./components/diaryHome/baby/CreateBaby";
 import InfoBaby from "./components/diaryHome/baby/InfoBaby";
 import UpdateBaby from "./components/diaryHome/baby/UpdateBaby";
@@ -11,10 +10,17 @@ import CommunityNotice from "./components/community/CommunityNotice";
 import CommunityRecommend from "./components/community/CommunityRecommend";
 import CreateCommunity from "./components/community/CreateCommunity";
 import UpdateCommunity from "./components/community/UpdateCommunity";
+import ViewCommunity from "./components/community/ViewCommunity";
+import Join from "./components/user/Join";
+import Login from "./components/user/Login";
+import Logout from "./components/user/Logout";
+import MyPage from "./components/user/MyPage";
+import UserUpdate from "./components/user/UserUpdate"
+import UserDelete from "./components/user/UserDelete"
 
 const router = createBrowserRouter([
     {
-        path: "/main",
+        path: "/",
         element: <Root />,
         children: [
             {
@@ -31,28 +37,27 @@ const router = createBrowserRouter([
         element: <Root />,
         children: [
             {
-                path: "join",
+                path: "/user/join",
                 element: <Join />
             },
             {
-                path: "login",
+                path: "/user/login",
                 element: <Login />
             },
             {
-                path: "logout", // Logout 경로 추가
+                path: "/user/logout", // Logout 경로 추가
                 element: <Logout />
             },
             {
-                path: "myPage",
+                path: "/user/myPage",
                 element: <MyPage />,
             },
-
             {
-                path: "update",
+                path: "/user/update",
                 element: <UserUpdate />
             },
             {
-                path: "delete",
+                path: "/user/delete",
                 element: <UserDelete />
             },
 
@@ -82,9 +87,9 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path:"/community",
+        path: "/community",
         element: <Root />,
-        children:[
+        children: [
             {
                 path: '/community/talk',
                 element: <CommunityTalk />,
@@ -104,10 +109,14 @@ const router = createBrowserRouter([
             {
                 path: '/community/update',
                 element: <UpdateCommunity />,
+            },
+            {
+                path: '/community/detail',
+                element: <ViewCommunity />,
             }
         ]
     },
-],{
+], {
     basename: "/familiary",
 });
 
