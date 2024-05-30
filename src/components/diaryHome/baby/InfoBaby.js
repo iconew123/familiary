@@ -34,7 +34,7 @@ const InfoBaby = () => {
     });
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=6c9ed3331d`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=88d947e41e`)
             .then(response => response.json())
             .then(data => {
                 setData(data);

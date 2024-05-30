@@ -10,6 +10,13 @@ import CommunityNotice from "./components/community/CommunityNotice";
 import CommunityRecommend from "./components/community/CommunityRecommend";
 import CreateCommunity from "./components/community/CreateCommunity";
 import UpdateCommunity from "./components/community/UpdateCommunity";
+import Join from "./components/user/Join";
+import Login from "./components/user/Login";
+import Logout from "./components/user/Logout";
+import MyPage from "./components/user/MyPage";
+import UserUpdate from "./components/user/UserUpdate";
+import UserDelete from "./components/user/UserDelete";
+import DiaryMain from "./components/diaryHome/DiaryMain";
 import ViewCommunity from "./components/community/ViewCommunity";
 import Join from "./components/user/Join";
 import Login from "./components/user/Login";
@@ -64,25 +71,36 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path: "/baby",
+        path:"/diary",
         element: <Root />,
-        children: [
+        children:[
             {
-                path: "/baby/update",
-                element: <UpdateBaby />
-
+                path:"",
+                element: <DiaryMain/>
+                
+            }
+        ]
+    },
+    {
+        path:"/baby",
+        element: <Root />,
+        children:[
+            {
+                path:"/baby/update",
+                element: <UpdateBaby/>
+                
             },
             {
-                path: "/baby/info",
-                element: <InfoBaby />
+                path:"/baby/info",
+                element: <InfoBaby/>
             },
             {
-                path: "/baby/create",
-                element: <CreateBaby />
+                path:"/baby/create",
+                element: <CreateBaby/>
             },
             {
-                path: "/baby/join",
-                element: <JoinBabyByCode />
+                path:"/baby/join",
+                element: <JoinBabyByCode/>
             }
         ]
     },

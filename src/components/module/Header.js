@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
-    const isDiaryPage = location.pathname === '/diary' || '/create-baby'; // 현재 페이지가 diary 페이지인지 확인
+    const isDiaryPage = location.pathname === '/diary' || '/baby/create';
     const isCommunityPage = location.pathname === '/community';
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 

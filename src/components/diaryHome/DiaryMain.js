@@ -25,7 +25,7 @@ const DiaryMain = () => {
 
     // 데이터 받아오기
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=6c9ed3331d`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=88d947e41e`)
             .then(response => {
                 return response.json();
             })
@@ -95,7 +95,7 @@ const DiaryMain = () => {
         <>
             <Box bg='#fffbf0' h='auto'>
                 <HStack w={'100vw'} wrap={"wrap"} >
-                    <Box
+                    <Box 
                         boxSize={
                             window.screen.width >= 760 ? "49vw" : "100vw"
                         }
@@ -169,13 +169,14 @@ const DiaryMain = () => {
                         templateAreas={`"calendar"
                                  "select"
                                  "diaryInfo"`}
-                        gridTemplateRows={'3fr 40px 1fr'}>
+                        gridTemplateRows={'3fr 40px 1fr'}
+                        gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
                             <MyCalendar />
                         </GridItem>
 
-                        <GridItem w='95%' bg='pink' area={'diaryInfo'}>
+                        <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'}>
                             상세
                         </GridItem>
 
