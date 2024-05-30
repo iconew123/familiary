@@ -39,7 +39,7 @@ const CommunityNotice = () => {
                     <Tbody>
                         {data.map((item, index) => (
                             <Tr key={index}>
-                                <Td>{item.title}</Td>
+                                <a href={`detail?command=read/detail&code=${item.code}`}><Td>{item.title}</Td></a>
                                 <Td>{item.userNickName}</Td>
                                 <Td>{item.regDate}</Td>
                             </Tr>
