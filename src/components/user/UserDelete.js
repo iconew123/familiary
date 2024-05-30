@@ -1,26 +1,32 @@
 import { Input, Button, Box, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../module/SessionComponent'; 
 
 const UserDelete = () => {
-    const { loginStatus } = useSession();
+    const { logoutStatus } = useSession();
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
+    const userSample = sessionStorage.getItem('userInfo');
+    const user = JSON.parse(userSample);
+    const { isLoggedIn } = useSession();
 
 
-    if (!loggedIn) {
-        navigate('/user/login');
-        return;
-    }
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate('/main');
+        }
+    }, [isLoggedIn, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new URLSearchParams();
         formData.append('password', password);
-        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=login`, {
-            method: 'POST',
+
+        
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=delete`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -28,7 +34,7 @@ const UserDelete = () => {
         });
         if (response.ok) {
             console.log('회원 탈퇴 성공');
-            loginStatus();
+            logoutStatus();
             navigate('/main');
         } else {
             console.log('회원 탈퇴 실패');

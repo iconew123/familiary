@@ -9,11 +9,10 @@ const Logout = () => {
     const { logoutStatus } = useSession();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 
-    if (!loggedIn) {
-        navigate('/user/login');
-    }
-
     useEffect(() => {
+        if (!loggedIn) {
+            navigate('/user/login');
+        }
         logoutStatus();
         navigate('/main');
     }, [logoutStatus, navigate]);
