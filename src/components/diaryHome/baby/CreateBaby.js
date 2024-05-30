@@ -32,6 +32,13 @@ const CreateBaby = () => {
         setPhoto(file); // 이미지 파일을 photo state에 저장
     };
 
+      // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+      const userSample = sessionStorage.getItem('userInfo');
+
+      // 문자열(JSON)을 다시 리스트로 파싱하여 사용
+      const user = JSON.parse(userSample);
+  
+
     const [isOpen, setIsOpen] = useState(false);
 
     const handleButtonClick = () => {
@@ -43,6 +50,7 @@ const CreateBaby = () => {
         }
 
         const formData = new FormData();
+        formData.append('user_id', user.id)
         formData.append('nickname', babyInfo.nickname);
         formData.append('name', babyInfo.name);
         formData.append('gender', babyInfo.gender);
@@ -115,7 +123,6 @@ const CreateBaby = () => {
                  onChange={(e) => setBabyInfo({ ...babyInfo, position: e.target.value })}>
                     <option value='mother'>엄마</option>
                     <option value='father'>아빠</option>
-                    <option value='family'>가족</option>
                 </Select>
 
                 <Input

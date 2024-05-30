@@ -40,11 +40,11 @@ const Header = () => {
                 </Box>
 
                 <Box align='center'>
-                    <Link to='/main'><Text marginLeft='100px' fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
+                    <Link to='/'><Text marginLeft='100px' fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>
-                            <Link to='/diary'>
+                            <Link to={loggedIn ? '/diary' : '/user/login'}>
                                 <Text fontSize='xl' marginTop='8px' marginRight='20px' color={isDiaryPage ? '#fff' : '#765d2f'}>DIARY</Text>
                             </Link>
                             <Link to='/community'>

@@ -1,6 +1,7 @@
 import { Box, Button, Text, Input, Select } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from '../module/SessionComponent';
 
 
 
@@ -22,11 +23,14 @@ const Join = () => {
     const [securityNumberError, setSecurityNumberError] = useState(false);
     const [telecomError, setTelecomError] = useState(false);
     const [phoneError, setPhoneError] = useState(false);
+    const { isLoggedIn} = useSession();
     const navigate = useNavigate();
 
-    if (loggedIn) {
-        navigate('/main');
-    }
+    useEffect(() => {
+        if (loggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn, navigate]);
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -215,8 +219,6 @@ const Join = () => {
                     <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원가입</Button>
                 </form>
             </Box>
-
-
         </Box>
     );
 };
