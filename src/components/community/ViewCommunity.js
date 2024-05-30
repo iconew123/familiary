@@ -1,19 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Text, VStack } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const ViewCommunity = () => {
-    const { code } = useParams();
+    const [searchParams] = useSearchParams();
+    const code = searchParams.get('code'); // URL에서 code 파라미터 가져오기
+    const category = searchParams.get('category'); // URL에서 category 파라미터 가져오기
     const navigate = useNavigate();
 
     const [data, setData] = useState({});
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
-    }, [code]);
+        console.log("code: " + code);
+        console.log("category: " + category);
+
+        if (code && category) {
+            fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('네트워크 응답이 올바르지 않습니다');
+                    }
+                    return response.json();
+                })
+                .then(responseData => {
+                    console.log(responseData);
+                    setData(responseData.community);  // `community` 객체로 데이터 설정
+                })
+                .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
+        }
+    }, [code, category]);
 
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete`, {
@@ -26,7 +41,7 @@ const ViewCommunity = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('게시글 삭제 성공');
-                    navigate('/');
+                    navigate(`/familiary/community/${category}`); // 삭제 후 해당 리스트로 이동
                 } else {
                     console.log('게시글 삭제 실패');
                 }
@@ -35,7 +50,7 @@ const ViewCommunity = () => {
     };
 
     const handleUpdate = () => {
-        navigate(`/community/update&code=${code}`);
+        navigate(`/familiary/community/${category}/update?code=${code}`); // 수정 페이지로 이동
     };
 
     return (
