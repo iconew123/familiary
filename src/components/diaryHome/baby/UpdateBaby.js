@@ -9,7 +9,7 @@ const UpdateBaby = () => {
     const [data, setData] = useState({}); // 서버로부터 받아올 데이터를 저장할 상태 변수를 선언
     useEffect(() => {
         // 컴포넌트가 마운드될 때 실행되는 useEffect를 사용해 데이터를 서버로부터 받아옴
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=6c9ed3331d`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=88d947e41e`)
             .then(response => response.json()) // JSON 형식으로 파싱
             .then(data => setData(data)) // 받아온 데이터를 상태 변수에 저장
             .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
@@ -17,6 +17,7 @@ const UpdateBaby = () => {
 
     // 아기정보를 업데이트하는데 필요한 상태 변수들을 선언
     const [babyInfo, setBabyInfo] = useState({
+        code: '88d947e41e',
         nickname: '',
         name: '',
         gender: '',
@@ -24,6 +25,14 @@ const UpdateBaby = () => {
         blood_type: '',
         photo: ''
     });
+
+    // 이미지 파일을 저장할 상태 변수 추가
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    // 이미지 파일 선택 핸들러
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
 
     // 최초의 순간에 babyInfo.expected_date를 설정
     useEffect(() => {
@@ -60,14 +69,19 @@ const UpdateBaby = () => {
 
         const formData = new FormData();
         // 변경된 값이 있으면 해당 값을, 없으면 기존 값을 FromData에 추가
+        formData.append('code', babyInfo.code);
         formData.append('nickname', babyInfo.nickname || data.nickname);
         formData.append('name', babyInfo.name || data.name);
         formData.append('gender', babyInfo.gender || data.gender);
         formData.append('expected_date', babyInfo.expected_date || data.expected_date);
         formData.append('blood_type', babyInfo.blood_type || data.blood_type);
 
+        // 이미지 파일이 선택되었으면 폼 데이터에 추가
+        if (selectedFile) {
+            formData.append('photo', selectedFile);
+        }
         // 서버로 데이터 전송
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=update&code=6c9ed3331d`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=update&code=88d947e41e`, {
             method: 'POST',
             body: formData  // FormData를 요청 본문으로 설정
         })
@@ -136,8 +150,14 @@ const UpdateBaby = () => {
                     </Select>
                 </Flex>
 
+                {/* 이미지 파일 입력 필드 추가 */}
+                <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
+                <Text fontSize='xl' as='b' marginRight='50px'>이미지</Text>
+                        <Input type="file" onChange={handleFileChange} size='lg' bg='white' width='500px' h='60px' />
+                    </Flex>
+
                 {/* 수정하기 버튼 */}
-                <Button onClick={handleButtonClick} marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
+                <Button onClick={handleButtonClick} marginTop='20px' marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
 
             </Box>
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

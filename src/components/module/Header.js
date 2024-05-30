@@ -7,7 +7,7 @@ import { useSession } from './SessionComponent'
 
 const Header = () => {
     const location = useLocation();
-    const isDiaryPage = location.pathname === '/diary' || '/create-baby'; // 현재 페이지가 diary 페이지인지 확인
+    const isDiaryPage = location.pathname === '/diary' || '/baby/create';
     const isCommunityPage = location.pathname === '/community';
     const { isLoggedIn, session } = useSession();
     console.log(isLoggedIn);
@@ -32,7 +32,7 @@ const Header = () => {
                 </Box>
 
                 <Box align='center'>
-                    <Link to='/main'><Text fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
+                    <Link to='/'><Text fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>

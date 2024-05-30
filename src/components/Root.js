@@ -6,7 +6,7 @@ import { Grid } from '@chakra-ui/react';
 
 const Root = () => {
     return (
-        <Grid templateRows={"160px auto 180px"} minH={"100vh"} maxW={"100vw"}>
+        <Grid templateRows={"160px auto 80px"} minH={"120vh"} maxW={"100vw"}>
             <Header />
             <Outlet />
             <Footer />
