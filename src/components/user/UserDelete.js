@@ -14,30 +14,37 @@ const UserDelete = () => {
 
 
     useEffect(() => {
+
         if (!loggedIn) {
-            navigate('/main');
+            navigate('/');
         }
     }, [isLoggedIn, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new URLSearchParams();
+        formData.append('id', user);
         formData.append('password', password);
 
-        
-        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=delete`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData.toString()
-        });
-        if (response.ok) {
-            console.log('회원 탈퇴 성공');
-            logoutStatus();
-            navigate('/main');
-        } else {
-            console.log('회원 탈퇴 실패');
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString(),
+                mode: 'cors'
+            });
+            if (response.ok) {
+                console.log('회원 탈퇴 성공');
+                logoutStatus();
+                navigate('/main');
+            } else {
+                console.log('회원 탈퇴 실패');
+            }
+    
+        } catch (error) {
+            console.error('회원탈퇴 요청 중 에러 발생:', error);
         }
     };
 
