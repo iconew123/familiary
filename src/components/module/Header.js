@@ -2,22 +2,30 @@ import { Box, Button, Center, Flex, Heading, Select } from '@chakra-ui/react';
 import React from 'react';
 import { Text } from '@chakra-ui/react'
 import { Link, useLocation } from 'react-router-dom';
-import { useSession } from './SessionComponent'
+
 
 
 const Header = () => {
     const location = useLocation();
     const isDiaryPage = location.pathname === '/diary' || '/create-baby'; // 현재 페이지가 diary 페이지인지 확인
     const isCommunityPage = location.pathname === '/community';
-    const { isLoggedIn, session } = useSession();
-    console.log(isLoggedIn);
-    console.log(session);
+    const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    const userSample = sessionStorage.getItem('userInfo');
+
+    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
+    const user = JSON.parse(userSample);
+
+
+
+
 
     return (
         <>
             <Box>
                 <Box float='right' display="flex" alignItems="center" marginRight='20px'>
-                    {!isLoggedIn ? (
+                    {!loggedIn ? (
                         <>
                             <Box marginLeft='10px'><Link to="/user/login"><Text fontSize='xl' marginTop='8px' color='#765d2f'>로그인</Text></Link></Box>
                             <Box marginLeft='10px'><Link to="/user/join"><Text fontSize='xl' marginTop='8px' color='#765d2f'>회원가입</Text></Link></Box>
@@ -32,7 +40,7 @@ const Header = () => {
                 </Box>
 
                 <Box align='center'>
-                    <Link to='/main'><Text fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
+                    <Link to='/main'><Text marginLeft='100px' fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>
