@@ -27,5 +27,9 @@ export const useSession = () => {
         setUserInfo(null);
     };
 
-    return { isLoggedIn, userInfo, loginStatus, logoutStatus };
+    const getUserId = () => {
+        return userInfo ? userInfo.id : null;
+    };
+
+    return { isLoggedIn, userInfo, loginStatus, logoutStatus, getUserId };
 };

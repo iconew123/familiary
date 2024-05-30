@@ -1,6 +1,7 @@
 import { Box, Button, Text, Input, Select } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from '../module/SessionComponent';
 
 
 const UserUpdate = () => {
@@ -11,14 +12,20 @@ const UserUpdate = () => {
     const [newPhone, setNewPhone] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newAdress, setNewAdress] = useState('');
+    const { isLoggedIn } = useSession();
+
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
+    const userSample = sessionStorage.getItem('userInfo');
+    const user = JSON.parse(userSample);
+
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate('/main');
+        }
+    }, [isLoggedIn, navigate]);
 
 
-    if (!loggedIn) {
-        navigate('/user/login');
-        return;
-    }
     const handleSubmit = async (event) => {
         event.preventDefault();
 
