@@ -16,8 +16,9 @@ import Logout from "./components/user/Logout";
 import MyPage from "./components/user/MyPage";
 import UserUpdate from "./components/user/UserUpdate";
 import UserDelete from "./components/user/UserDelete";
-import DiaryMain from "./components/diaryHome/DiaryMain";
+import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMain";
 import ViewCommunity from "./components/community/ViewCommunity";
+import DiaryView from "./components/diaryHome/DiaryView";
 
 const router = createBrowserRouter([
     {
@@ -72,7 +73,11 @@ const router = createBrowserRouter([
                 path:"",
                 element: <DiaryMain/>
                 
-            }
+            },
+            {
+                path:"/diary/:date",
+                element: <DiaryView/>
+            },
         ]
     },
     {

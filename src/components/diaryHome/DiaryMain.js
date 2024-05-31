@@ -1,32 +1,39 @@
-import { Box, Button, Flex, Grid, GridItem, HStack, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Grid, GridItem, HStack, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Square, Text } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import MyCalendar from './MyCalendar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
 import { CiImageOff } from "react-icons/ci";
 
+
+const fetchDiaryDetailInfo = async (formatDate) => {
+    const now = new Date();
+    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}`);
+    const data = await response.json();
+    console.log("data : " + data.date);
+    return data;
+}
+
 const DiaryMain = () => {
-
     const loggedIn = sessionStorage.getItem('isLoggedIn');
-
+    
     // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
     const userSample = sessionStorage.getItem('userInfo');
-
+    
     // 문자열(JSON)을 다시 리스트로 파싱하여 사용
     const user = JSON.parse(userSample);
-
-
+    
+    
     const navigate = useNavigate(); // React Router의 history 객체를 가져옵니다.
     const [showRecordOptions, setShowRecordOptions] = useState(false); // 기록 옵션을 표시할지 여부를 관리하는 state
     const [showSearchOptions, setShowSearchOptions] = useState(false);
 
-
     // 날짜 계산하기
     const [targetDate, setTargetDate] = useState('');
-    const [dDay, setDDay] = useState(null);
+    const [dDay, setDDay] = useState();
     const [isOpen, setIsOpen] = useState(false);
-    const [serverData, setServerData] = useState(null);
+    const [serverData, setServerData] = useState();
     const [formatDate, setFormatDate] = useState(''); // New state for selected date
 
     // 데이터 받아오기
@@ -63,6 +70,7 @@ const DiaryMain = () => {
             })
             .then(data => {
                 setData(data);
+                console('sdf' + data);
                 setTargetDate(data.expected_date);
             })
             .catch(error => {
@@ -86,15 +94,10 @@ const DiaryMain = () => {
 
     useEffect(() => {
         if (formatDate) {
-            fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    setServerData(data);
-                })
-                .catch(error => {
-                    console.error('데이터를 가져오는 중 에러 발생:', error);
-                });
+            console.log('formatDate : ' + formatDate);
+            fetchDiaryDetailInfo(formatDate).then(data => {
+                setServerData(data);
+            });
         }
     }, [formatDate]);
 
@@ -110,7 +113,7 @@ const DiaryMain = () => {
         if (option === 'writeDiary') {
             navigate('/daily-record');
         } else if (option === 'writeInfo') {
-            navigate('/info-record');
+            navigate('/info-record/');
         } else if (option === 'showDiary') {
             navigate('/show-diary');
         } else if (option === 'showInfo') {
@@ -138,7 +141,7 @@ const DiaryMain = () => {
         setIsOpen(false);
     };
 
-    const handleDateSelect = (date) => { // New handler for date selection
+    const handleDateSelect = (date) => {
         setFormatDate(date);
     };
 
@@ -244,7 +247,37 @@ const DiaryMain = () => {
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'}>
-                            상세
+                            <Grid
+                            w='100%'
+                            h='100%'
+                            templateAreas={`"babyInfoWirte" "dailyWrite"`}
+                            templateRows={'1fr 1fr'}
+                            >
+                                <GridItem bg='blue.300' area={'dailyWrite'}>
+                                    <Text fontSize='3xl'>
+                                        [일기] :
+                                        {!serverData
+                                            ? '해당일자의 정보가 없습니다'
+                                            : (serverData.date ? `[${serverData.date}]일 ` : '해당일자의 정보가 없습니다')
+                                        }
+                                        {serverData ? <Link to={`/diary/${serverData.date}`}>{serverData.title}</Link> : ""}
+                                    </Text>
+                                </GridItem>
+                                <GridItem bg='green' area={'babyInfoWirte'}>
+                                    <Flex color='white' textAlign='center'>
+                                        <Center w='auto' h='auto'>
+                                            <Text> [일기] </Text>
+                                        </Center>
+                                        <Square size='200px'>
+                                            <Text>formatDate</Text>
+                                        </Square>
+                                        <Center flex='1' bg='tomato' textAlign='center'>
+                                            <Text>내용</Text>
+                                        </Center>
+                                    </Flex>
+                                </GridItem>
+                            </Grid>
+
                         </GridItem>
 
                         <GridItem w='95%' area={'select'}>
@@ -277,4 +310,5 @@ const DiaryMain = () => {
     );
 };
 
+export {fetchDiaryDetailInfo};
 export default DiaryMain;
