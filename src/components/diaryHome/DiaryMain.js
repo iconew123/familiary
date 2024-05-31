@@ -17,8 +17,9 @@ const fetchDiaryDetailInfo = async (formatDate) => {
 
 const DiaryMain = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn');
-    
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    const selectedBaby = sessionStorage.getItem('isSelectedBaby');
+
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때!
     const userSample = sessionStorage.getItem('userInfo');
     
     // 문자열(JSON)을 다시 리스트로 파싱하여 사용
