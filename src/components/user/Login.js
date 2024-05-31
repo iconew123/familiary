@@ -10,9 +10,9 @@ const Login = () => {
     const [idError, setIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
-
+    const loggedIn = sessionStorage.getItem('isLoggedIn');
     useEffect(() => {
-        if (isLoggedIn) {
+        if (loggedIn) {
             navigate('/');
         }
     }, [isLoggedIn, navigate]);

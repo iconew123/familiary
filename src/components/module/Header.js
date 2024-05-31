@@ -40,7 +40,7 @@ const Header = () => {
                 </Box>
 
                 <Box align='center'>
-                    <Link to='/main'><Text marginLeft='100px' fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
+                    <Link to='/'><Text marginLeft='100px' fontSize='5xl' as='b' color='#765d2f'>Familiary</Text>
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>
