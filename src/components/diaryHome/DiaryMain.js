@@ -12,7 +12,7 @@ const DiaryMain = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const selectedBaby = sessionStorage.getItem('isSelectedBaby');
 
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때!
     const userSample = sessionStorage.getItem('userInfo');
     const babySample = sessionStorage.getItem('babyInfo');
 
