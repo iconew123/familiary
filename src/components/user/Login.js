@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSession } from '../module/SessionComponent';
 
 const Login = () => {
-    const { isLoggedIn, loginStatus} = useSession();
+    const { isLoggedIn, loginStatus } = useSession();
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [idError, setIdError] = useState('');
@@ -19,6 +19,11 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const formData = new URLSearchParams();
+        formData.append('id', id);
+        formData.append('password', password);
+
 
         // 입력 검증
         if (!id || !password) {
@@ -35,11 +40,7 @@ const Login = () => {
             }
             return;
         }
-
-        const formData = new URLSearchParams();
-        formData.append('id', id);
-        formData.append('password', password);
-
+        if (id)
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=login`, {
                 method: 'POST',
