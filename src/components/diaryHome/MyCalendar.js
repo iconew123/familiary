@@ -1,12 +1,8 @@
-import React, { Component, useState } from 'react'
-import axios from 'axios';
-import { addDays, addMonths, endOfMonth, endOfWeek, format, formatDate, isSameDay, isSameMonth, parse, startOfMonth, startOfWeek, subMonths } from 'date-fns'
+import React, { useState } from 'react';
+import { addDays, addMonths, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { Icon } from '@iconify/react';
 import './style.css';
 
-
-
-// 년월 랜더링
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
     return (
         <div className='header'>
@@ -21,10 +17,9 @@ const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-// 요일 랜더링
 const RenderDate = () => {
     const days = [];
     const date = ['SUN', 'MON', 'TUE', 'WEN', 'THU', 'FRI', 'SAT'];
@@ -37,8 +32,8 @@ const RenderDate = () => {
         );
     }
 
-    return <div className='row-days'>{days}</div>
-}
+    return <div className='row-days'>{days}</div>;
+};
 
 const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
     const startMonth = startOfMonth(currentMonth);
@@ -54,8 +49,8 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
     while (day <= endDay) {
         for (let i = 0; i < 7; i++) {
             formatDay = format(day, 'd');
-
             const cloneDay = day;
+
             days.push(
                 <div className={`rows-day ${!isSameMonth(day, currentMonth) ? 'disabled' :
                     isSameDay(day, selectedDate) ? 'selected' :
@@ -77,16 +72,15 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
     }
     return (
         <div className='body'>{rows}</div>
-    )
-}
+    );
+};
 
-export default function MyCalendar() {
+export default function MyCalendar(props) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     const prevMonth = () => {
         setCurrentMonth(subMonths(currentMonth, 1));
-        console.log(selectedDate);
     };
 
     const nextMonth = () => {
@@ -96,12 +90,13 @@ export default function MyCalendar() {
     const onDateClick = (day) => {
         setSelectedDate(day);
         const formatDate = format(day, 'yyyy-MM-dd');
-
         console.log(formatDate);
-        sendDateToServlet(formatDate);
-        // console.log(selectedDate);
-        // window.location.href = `${process.env.REACT_APP_SERVER_URL}?date=formatDate`;
-    }
+
+
+        if (typeof props.onDateSelect === 'function') {
+            props.onDateSelect(formatDate);
+        }
+    };
 
     return (
         <div className='calendar-box'>
@@ -111,19 +106,3 @@ export default function MyCalendar() {
         </div>
     );
 }
-
-// 포맷된 날짜를 서버로 전송하는 함수
-const sendDateToServlet = (formatDate) => {
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/sample`, { date: formatDate }) // 서버 URL과 엔드포인트로 POST 요청
-        .then(response => {
-            console.log('Date sent successfully:', response); // 요청 성공 시 콘솔에 출력
-            console.log('check date', formatDate)
-        })
-        .catch(error => {
-            console.error('Error sending date:', error); // 요청 실패 시 콘솔에 출력
-        });
-};
-
-
-
-
