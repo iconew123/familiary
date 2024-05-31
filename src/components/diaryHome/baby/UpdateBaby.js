@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Flex, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
+
 const UpdateBaby = () => {
     const navigate = useNavigate(); // useNavigate 훅을 사용해 페이지 이동을 위한 함수를 가져옴
+
+    const babySample = sessionStorage.getItem('babyInfo');
+    const baby = JSON.parse(babySample);
 
     // 데이터 받아오기
     const [data, setData] = useState({}); // 서버로부터 받아올 데이터를 저장할 상태 변수를 선언
     useEffect(() => {
         // 컴포넌트가 마운드될 때 실행되는 useEffect를 사용해 데이터를 서버로부터 받아옴
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=88d947e41e`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=${baby.code}`)
             .then(response => response.json()) // JSON 형식으로 파싱
             .then(data => setData(data)) // 받아온 데이터를 상태 변수에 저장
             .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
@@ -81,9 +85,9 @@ const UpdateBaby = () => {
             formData.append('photo', selectedFile);
         }
         // 서버로 데이터 전송
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=update&code=88d947e41e`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=update&code=${baby.code}`, {
             method: 'POST',
-            body: formData  // FormData를 요청 본문으로 설정
+            body: formData 
         })
             .then(response => {
                 if (response.ok) {
