@@ -20,7 +20,7 @@ const UserUpdate = () => {
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
     const loggedIn = sessionStorage.getItem('isLoggedIn');
-
+    
     useEffect(() => {
         if (!loggedIn) {
             navigate('/');
@@ -58,13 +58,14 @@ const UserUpdate = () => {
         formData.append('id', user.id); 
         formData.append('password', password);
         formData.append('newPassword', newPassword);
-        formData.append('newNickname', newNickname || userInfo.nickname);
-        formData.append('newTelecom', newTelecom || userInfo.telecom);
-        formData.append('newPhone', newPhone || userInfo.phone);
-        formData.append('newEmail', newEmail || userInfo.email);
-        formData.append('newAddress', newAddress || userInfo.address);
+        formData.append('newNickname', newNickname || user.nickname);
+        formData.append('newTelecom', newTelecom || user.telecom);
+        formData.append('newPhone', newPhone || user.phone);
+        formData.append('newEmail', newEmail || user.email);
+        formData.append('newAddress', newAddress || user.address);
 
-        
+        console.log(userInfo.nickname);
+
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=update`, {
                 method: 'POST',
@@ -126,7 +127,7 @@ const UserUpdate = () => {
 
                     <Input
                         type="text"
-                        value={newNickname}
+                        defaultValue={user.nickname}
                         id="newNickname"
                         name="newNickname"
                         placeholder="닉네임"
@@ -137,7 +138,7 @@ const UserUpdate = () => {
                     <Select
                         id="newTelecom"
                         name="newTelecom"
-                        value={newTelecom}
+                        defaultValue={user.telecom}
                         onChange={(e) => setNewTelecom(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
@@ -149,7 +150,7 @@ const UserUpdate = () => {
                     </Select>
                     <Input
                         type="text"
-                        value={newPhone}
+                        defaultValue={user.phone}
                         id="newPhone"
                         name="newPhone"
                         placeholder="핸드폰번호"
@@ -159,7 +160,7 @@ const UserUpdate = () => {
                     />
                     <Input
                         type="email"
-                        value={newEmail}
+                        defaultValue={user.email}
                         id="newEmail"
                         name="newEmail"
                         placeholder="이메일"
@@ -169,7 +170,7 @@ const UserUpdate = () => {
                     />
                     <Input
                         type="text"
-                        value={newAddress}
+                        defaultValue={user.address}
                         id="newAddress"
                         name="newAddress"
                         placeholder="주소"
