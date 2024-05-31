@@ -138,6 +138,10 @@ const DiaryMain = () => {
         setIsOpen(false);
     };
 
+    const handleDateSelect = (date) => { // New handler for date selection
+        setFormatDate(date);
+    };
+
     return (
         <>
             <Box bg='#fffbf0' h='auto'>
@@ -236,7 +240,7 @@ const DiaryMain = () => {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar />
+                            <MyCalendar onDateSelect={handleDateSelect} /> {/* Pass onDateSelect prop */}
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'}>
