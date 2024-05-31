@@ -11,12 +11,6 @@ import CommunityRecommend from "./components/community/CommunityRecommend";
 import CreateCommunity from "./components/community/CreateCommunity";
 import UpdateCommunity from "./components/community/UpdateCommunity";
 import ViewCommunity from "./components/community/ViewCommunity";
-import Join from "./components/user/Join";
-import Login from "./components/user/Login";
-import Logout from "./components/user/Logout";
-import MyPage from "./components/user/MyPage";
-import UserUpdate from "./components/user/UserUpdate"
-import UserDelete from "./components/user/UserDelete"
 
 const router = createBrowserRouter([
     {

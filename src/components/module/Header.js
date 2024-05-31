@@ -44,7 +44,7 @@ const Header = () => {
                     </Link>
                     <nav>
                         <Flex justify="center" bg='#e0ccb3' h='48px' marginTop='15px'>
-                            <Link to='/diary'>
+                            <Link to={loggedIn ? '/diary' : '/user/login'}>
                                 <Text fontSize='xl' marginTop='8px' marginRight='20px' color={isDiaryPage ? '#fff' : '#765d2f'}>DIARY</Text>
                             </Link>
                             <Link to='/community'>
