@@ -21,9 +21,13 @@ const JoinBabyByCode = () => {
         }));
     };
 
+    const userSample = sessionStorage.getItem('userInfo');
+    const user = JSON.parse(userSample);
+
+
     const handleButtonClick = () => {
         const formData = new FormData();
-        formData.append('user_id', 'hoit5it');
+        formData.append('user_id', user.id);
         formData.append('position', babyInfo.position);
         formData.append('baby_code', babyInfo.baby_code);
 
@@ -35,7 +39,7 @@ const JoinBabyByCode = () => {
             .then(data => {
                 console.log('data : ' + data);
                 console.log('baby : ' + data.baby);
-                if(data.dupl){
+                if (data.dupl) {
                     setModalMessage("이미 등록 중인 아기입니다.")
                     openErrorModal();
                 }
@@ -50,7 +54,7 @@ const JoinBabyByCode = () => {
                 } else {
                     setModalMessage("존재하지 않는 코드입니다.");
                     openErrorModal(); // 에러 모달 열기
-                } 
+                }
             })
             .catch(error => {
                 console.error('데이터를 전송하는 중 에러 발생', error);
