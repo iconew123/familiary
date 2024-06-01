@@ -1,62 +1,55 @@
-import { Box, Button, Center, Flex, Grid, GridItem, HStack, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Square, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, HStack, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, Square, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import MyCalendar from './MyCalendar';
-import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
 import { CiImageOff } from "react-icons/ci";
 import { useSession } from '../module/SessionComponent';
 
-const fetchDiaryDetailInfo = async (formatDate) => {
+const fetchDiaryDetailInfo = async (formatDate,selectedBabyCode) => {
     const now = new Date();
-    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}`);
+    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}&babycode=${selectedBabyCode}`);
     const data = await response.json();
-    console.log("data : " + data.date);
     return data;
 }
 
 const DiaryMain = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const selectedBaby = sessionStorage.getItem('isSelectedBaby');
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
     const userSample = sessionStorage.getItem('userInfo');
     const babySample = sessionStorage.getItem('babyInfo');
-    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
     const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
-    
-    const navigate = useNavigate(); // React Router의 history 객체를 가져옵니다.
-    const [showRecordOptions, setShowRecordOptions] = useState(false); // 기록 옵션을 표시할지 여부를 관리하는 state
-    const [showSearchOptions, setShowSearchOptions] = useState(false);
 
-    // 날짜 계산하기
+    // 오늘날짜 출력
+    const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
+
+    
+    const navigate = useNavigate(); 
+    const [showRecordOptions, setShowRecordOptions] = useState(false);
+    const [showSearchOptions, setShowSearchOptions] = useState(false);
     const [targetDate, setTargetDate] = useState('');
     const [dDay, setDDay] = useState();
     const [isOpen, setIsOpen] = useState(false);
     const [serverData, setServerData] = useState();
-    const [formatDate, setFormatDate] = useState(''); // New state for selected date
-
-    // 데이터 받아오기
+    const [formatDate, setFormatDate] = useState('');
     const [data, setData] = useState({});
     const [babyData, setBabyData] = useState({ codes: [], nicknames: [] });
+    const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
             .then(babyData => {
                 
-                if (!babyData.codes) {  // babyData가 비어 있는 경우 등록하기 모달을 열기
+                if (!babyData.codes) {
                     handleModalOpen();
-                } else {    // babyData 존재
-                    if (!selectedBaby) {    // babyData가 존재 -> baby session에 값 존재X
-                        // 모달창 열어 선택 (session 채워주기)
-                        console.log('선택된 아기X: ' + selectedBaby)
+                } else {
+                    if (!selectedBaby) {
                         setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
                         setIsBabyModalOpen(true);
                     } else {
-                        // babyData 존재 -> baby 세션 존재 -> 값 불러오기
-                        console.log('선택된 아기O: ' + selectedBaby)
-                        console.log("babyCode: " + baby.code);
                         handleClick(baby.code);
                     }
                 }
@@ -69,26 +62,17 @@ const DiaryMain = () => {
     const { isSelectedBaby, enrollStatus } = useSession();
     const [selectedBabyCode, setSelectedBabyCode] = useState(null);
     const handleClick = async (value) => {
-
-        console.log('value: ' +value);
-
         setSelectedBabyCode(value);
-
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&baby_code=${value}&user_id=${user.id}`)
             const data = await response.json();
-
             setData(data);
             setTargetDate(data.expected_date);
-
-            console.log("data(닉네임): " + data.nickname);
             enrollStatus(data);
-            console.log(data);
         } catch (error) {
             console.error('데이터를 가져오는 중 에러 발생', error);
         }
     };
-
 
     useEffect(() => {
         if (targetDate) {
@@ -104,10 +88,9 @@ const DiaryMain = () => {
     }, [targetDate]);
 
     useEffect(() => {
-        if (formatDate) {
-            console.log('formatDate : ' + formatDate);
-            fetchDiaryDetailInfo(formatDate).then(data => {
-                setServerData(data);
+        if (formatDate && selectedBabyCode) {
+            fetchDiaryDetailInfo(formatDate,selectedBabyCode).then(data => {
+                setServerData(data,selectedBabyCode);
             });
         }
     }, [formatDate]);
@@ -121,12 +104,10 @@ const DiaryMain = () => {
     };
 
     const handleOptionClick = (option) => {
-        if (option === 'writeDiary') {
-            navigate('/daily-record');
-        } else if (option === 'writeInfo') {
+        if (option === 'writeInfo') {
             navigate('/info-record/');
         } else if (option === 'showDiary') {
-            navigate('/show-diary');
+            navigate(`/diary/show/${selectedBabyCode}`);
         } else if (option === 'showInfo') {
             navigate('/show-info');
         } else if (option === 'infoBaby') {
@@ -138,10 +119,10 @@ const DiaryMain = () => {
         }
     };
 
-    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false); // 베이비 모달 상태
+    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false); 
 
     const handleBabyModalClose = () => {
-        setIsBabyModalOpen(false); // 베이비 모달 닫기
+        setIsBabyModalOpen(false); 
     };
 
     const handleModalOpen = () => {
@@ -155,6 +136,95 @@ const DiaryMain = () => {
     const handleDateSelect = (date) => {
         setFormatDate(date);
     };
+    
+    // 다이어리 생성
+    const [diary, setdiary] = useState({
+        title: '',
+        content: '',
+        category: ''
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        console.log("name : " + name);
+        console.log("value : " + value);
+        setdiary(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    };
+
+    const [photo,setPhoto] = useState(null);
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setPhoto(file);
+    }
+
+    // 다중 클릭방지
+    const [isLoading, setIsLoading] = useState(false);
+    const handleButtonClick = () => {
+
+        setIsLoading(true);
+
+        if(!diary.title){
+            alert("제목을 입력해주세요.");
+            return;
+        }
+        if(!diary.content){
+            alert("제목을 입력해주세요.");
+            return;
+        }
+        if(!diary.category){
+            alert("제목을 입력해주세요.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('babycode', selectedBabyCode);
+        formData.append('title', diary.title);
+        formData.append('content', diary.content);
+        formData.append('category', diary.category);
+        if (photo !== null) {
+            formData.append('photo', photo);
+        }
+        
+        fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=create`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('데이터 전송 성공');
+                onRecordModalClose();
+                
+                // 입력 성공 후 서버로부터 데이터 가져오기
+                fetchDiaryDetailInfo(currentDate, selectedBabyCode)
+                    .then(data => {
+                        // 데이터 업데이트
+                        setServerData(data);
+                    })
+                    .catch(error => {
+                        console.error('데이터를 가져오는 중 에러 발생', error);
+                        alert('데이터를 가져오는 중 에러가 발생했습니다.');
+                    });
+            } else {
+                console.log('데이터 전송 실패');
+                alert('데이터 전송에 실패했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            if (data.status === 400) {
+                alert(data.message_diary);
+            }
+        })
+        .catch(error => {
+            console.error('데이터를 전송하는 중 에러 발생', error);
+            alert('데이터 전송 중 에러가 발생했습니다.');
+        });
+    };
+    
 
     return (
         <>
@@ -166,7 +236,6 @@ const DiaryMain = () => {
                         }
                         align="center"
                     >
-
                         {!babyData.codes ? (
                             <Box
                                 marginTop='20px'
@@ -176,11 +245,9 @@ const DiaryMain = () => {
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
-
                             >
                                 <Button onClick={handleModalOpen} w='200px' h='70px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>등록하기</Button>
                             </Box>
-
                         ) : (
                             <>
                                 {data.url != null ? (
@@ -207,7 +274,6 @@ const DiaryMain = () => {
                                 )}
                                 <Button onClick={() => handleOptionClick('infoBaby')} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
                                 <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
-
                             </>
                         )}
 
@@ -223,14 +289,12 @@ const DiaryMain = () => {
                             </ModalContent>
                         </Modal>
 
-                        {/* 베이비 모달 */}
                         <Modal isOpen={isBabyModalOpen} onClose={handleBabyModalClose}>
                             <ModalOverlay />
                             <ModalContent>
                                 <ModalHeader>선택하기</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    {/* 등록된 Baby 모달창에 표시 */}
                                     <Flex direction="column">
                                         {babyData.nicknames.map((nickname, index) => (
                                             <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} key={index} value={babyData.codes[index]} marginBottom="4px" onClick={() => { handleClick(babyData.codes[index]); handleBabyModalClose(); }} >
@@ -243,7 +307,6 @@ const DiaryMain = () => {
                         </Modal>
                     </Box>
 
-
                     <Grid boxSize={
                         window.screen.width >= 760 ? "49vw" : "100vw"
                     }
@@ -254,15 +317,15 @@ const DiaryMain = () => {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar onDateSelect={handleDateSelect} /> {/* Pass onDateSelect prop */}
+                            <MyCalendar onDateSelect={handleDateSelect} /> 
                         </GridItem>
 
-                        <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'}>
+                        <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'} textAlign={'center'}>
                             <Grid
                             w='100%'
                             h='100%'
-                            templateAreas={`"babyInfoWirte" "dailyWrite"`}
-                            templateRows={'1fr 1fr'}
+                            templateAreas={`"dailyWrite"`}
+                            templateRows={'1fr'}
                             >
                                 <GridItem bg='blue.300' area={'dailyWrite'}>
                                     <Text fontSize='3xl'>
@@ -271,31 +334,16 @@ const DiaryMain = () => {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverData.date ? `[${serverData.date}]일 ` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverData ? <Link to={`/diary/${serverData.date}`}>{serverData.title}</Link> : ""}
+                                        {serverData ? <Link to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
                                     </Text>
                                 </GridItem>
-                                <GridItem bg='green' area={'babyInfoWirte'}>
-                                    <Flex color='white' textAlign='center'>
-                                        <Center w='auto' h='auto'>
-                                            <Text> [일기] </Text>
-                                        </Center>
-                                        <Square size='200px'>
-                                            <Text>formatDate</Text>
-                                        </Square>
-                                        <Center flex='1' bg='tomato' textAlign='center'>
-                                            <Text>내용</Text>
-                                        </Center>
-                                    </Flex>
-                                </GridItem>
                             </Grid>
-
                         </GridItem>
 
                         <GridItem w='95%' area={'select'}>
                             <Flex justifyContent="flex-end">
                                 <Flex flexDirection="column" display={showSearchOptions ? 'flex' : 'none'}>
-                                    <Button onClick={() => handleOptionClick('showDiary')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>일기 모아보기</Button>
-                                    <Button onClick={() => handleOptionClick('showInfo')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} >정보 모아보기</Button>
+                                    <Button onClick={() => handleOptionClick('showDiary')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} >일기 모아보기</Button>
                                 </Flex>
 
                                 <Button onClick={handleSearchClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
@@ -303,23 +351,61 @@ const DiaryMain = () => {
                                 </Button>
 
                                 <Flex flexDirection="column" display={showRecordOptions ? 'flex' : 'none'}>
-                                    <Button onClick={() => handleOptionClick('writeDiary')} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>하루 기록</Button>
-                                    <Button onClick={() => handleOptionClick('writeInfo')} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>정보 기록</Button>
+                                    <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>하루 기록</Button>
                                 </Flex>
 
                                 <Button onClick={handleRecordClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
                                     <EditIcon />
                                 </Button>
-
                             </Flex>
-
                         </GridItem>
                     </Grid>
                 </HStack>
             </Box>
+
+            <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>{currentDate}일의 다이어리 기록</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <VStack spacing={4}>
+                            <FormControl isRequired>
+                                <FormLabel>제목</FormLabel>
+                                <Input type="text" name="title" value={diary.title} onChange={handleInputChange} placeholder="제목을 입력하세요" />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel>내용</FormLabel>
+                                <Textarea name="content" value={diary.content} onChange={handleInputChange} placeholder="내용을 입력하세요" />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel>타입</FormLabel>
+                                <Select name="category" value={diary.category} onChange={handleInputChange} placeholder="타입 선택">
+                                    <option value="출산전">출산전</option>
+                                    <option value="출산후">출산후</option>
+                                </Select>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>이미지 업로드</FormLabel>
+                                <Input type="file" onChange={handleImageChange} accept="image/*" />
+                            </FormControl>
+                            <Button
+                                onClick={handleButtonClick}
+                                colorScheme="teal"
+                                size="lg"
+                                type="submit"
+                                isLoading={isLoading}
+                                disabled={isLoading}
+                            >
+                                저장
+                            </Button>
+                        </VStack>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </>
     );
 };
 
-export {fetchDiaryDetailInfo};
+export { fetchDiaryDetailInfo };
 export default DiaryMain;

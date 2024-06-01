@@ -78,6 +78,7 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
 export default function MyCalendar({ onDateSelect }) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [formatDate, setFormatDate] = useState(format(selectedDate, 'yyyy-MM-dd'));
 
     const prevMonth = () => {
         setCurrentMonth(subMonths(currentMonth, 1));
@@ -89,11 +90,12 @@ export default function MyCalendar({ onDateSelect }) {
 
     const onDateClick = (day) => {
         setSelectedDate(day);
-        const formatDate = format(day, 'yyyy-MM-dd');
-        console.log(formatDate);
+        const newFormatDate = format(day, 'yyyy-MM-dd');
+        setFormatDate(newFormatDate);
+        console.log(newFormatDate);
 
         if (typeof onDateSelect === 'function') {
-            onDateSelect(formatDate);
+            onDateSelect(newFormatDate);
         }
     };
 
