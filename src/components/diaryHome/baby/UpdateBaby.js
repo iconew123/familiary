@@ -6,14 +6,17 @@ import { useNavigate } from 'react-router-dom';
 const UpdateBaby = () => {
     const navigate = useNavigate(); // useNavigate 훅을 사용해 페이지 이동을 위한 함수를 가져옴
 
+    const userSample = sessionStorage.getItem('userInfo');
     const babySample = sessionStorage.getItem('babyInfo');
+
+    const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
 
     // 데이터 받아오기
     const [data, setData] = useState({}); // 서버로부터 받아올 데이터를 저장할 상태 변수를 선언
     useEffect(() => {
         // 컴포넌트가 마운드될 때 실행되는 useEffect를 사용해 데이터를 서버로부터 받아옴
-        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&code=${baby.code}`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&baby_code=${baby.code}&user_id=${user.id}`)
             .then(response => response.json()) // JSON 형식으로 파싱
             .then(data => setData(data)) // 받아온 데이터를 상태 변수에 저장
             .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
@@ -21,12 +24,12 @@ const UpdateBaby = () => {
 
     // 아기정보를 업데이트하는데 필요한 상태 변수들을 선언
     const [babyInfo, setBabyInfo] = useState({
-        code: '88d947e41e',
+        code: baby.code,
         nickname: '',
         name: '',
-        gender: '',
+        gender: null,
         expected_date: '',
-        blood_type: '',
+        blood_type: null,
         photo: ''
     });
 
@@ -65,7 +68,7 @@ const UpdateBaby = () => {
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
         console.log('expected_date' + babyInfo.expected_date)
-
+        console.log('gender: ' + data.gender);
         if (!datePattern.test(babyInfo.expected_date)) {
             setIsOpen(true);
             return;
@@ -76,9 +79,13 @@ const UpdateBaby = () => {
         formData.append('code', babyInfo.code);
         formData.append('nickname', babyInfo.nickname || data.nickname);
         formData.append('name', babyInfo.name || data.name);
-        formData.append('gender', babyInfo.gender || data.gender);
+        if (babyInfo.gender !== null) {
+            formData.append('gender', babyInfo.gender);
+        }
         formData.append('expected_date', babyInfo.expected_date || data.expected_date);
-        formData.append('blood_type', babyInfo.blood_type || data.blood_type);
+        if (babyInfo.blood_type !== null) {
+            formData.append('blood_type', babyInfo.blood_type);
+        }
 
         // 이미지 파일이 선택되었으면 폼 데이터에 추가
         if (selectedFile) {
@@ -87,7 +94,7 @@ const UpdateBaby = () => {
         // 서버로 데이터 전송
         fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=update&code=${baby.code}`, {
             method: 'POST',
-            body: formData 
+            body: formData
         })
             .then(response => {
                 if (response.ok) {
@@ -131,7 +138,8 @@ const UpdateBaby = () => {
                 {/* 성별 선택 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='65px'>성별</Text>
-                    <Select value={babyInfo.gender || data.gender} onChange={(e) => setBabyInfo({ ...babyInfo, gender: e.target.value })} size='lg' bg='white' w='500px' h='60px'>
+                    <Select value={babyInfo.gender || data.gender} onChange={(e) => setBabyInfo({ ...babyInfo, gender: e.target.value })}size='lg' bg='white' w='500px' h='60px'>
+                        <option value=''>-- 선택 --</option>
                         <option value='M'>왕자</option>
                         <option value='F'>공주</option>
                     </Select>
@@ -147,6 +155,7 @@ const UpdateBaby = () => {
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='50px'>혈액형</Text>
                     <Select value={babyInfo.blood_type || data.blood_type} onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })} size='lg' bg='white' w='500px' h='60px'>
+                        <option value=''>-- 선택 --</option>
                         <option value='A'>A</option>
                         <option value='B'>B</option>
                         <option value='O'>O</option>
@@ -156,9 +165,9 @@ const UpdateBaby = () => {
 
                 {/* 이미지 파일 입력 필드 추가 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                <Text fontSize='xl' as='b' marginRight='50px'>이미지</Text>
-                        <Input type="file" onChange={handleFileChange} size='lg' bg='white' width='500px' h='60px' />
-                    </Flex>
+                    <Text fontSize='xl' as='b' marginRight='50px'>이미지</Text>
+                    <Input type="file" onChange={handleFileChange} size='lg' bg='white' width='500px' h='60px' />
+                </Flex>
 
                 {/* 수정하기 버튼 */}
                 <Button onClick={handleButtonClick} marginTop='20px' marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>

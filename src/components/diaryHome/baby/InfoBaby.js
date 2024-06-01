@@ -41,7 +41,8 @@ const InfoBaby = () => {
         gender: '',
         expected_date: '',
         blood_type: '',
-        position: ''
+        position: '',
+        url: '' // 추가: url 필드도 초기화
     });
 
     useEffect(() => {
@@ -93,27 +94,27 @@ const InfoBaby = () => {
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='65px'>태명</Text>
-                    <Input name='nickname' value={data.nickname} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Input name='nickname' value={data.nickname || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='65px'>이름</Text>
-                    <Input name='name' value={data.name} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Input name='name' value={data.name || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='65px'>성별</Text>
-                    <Input name='gender' value={data.gender == 'M' ? '왕자' : '공주'} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Input name='gender' value={data.gender === 'M' ? '왕자' : data.gender === 'F' ? '공주' : ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='10px'>출산예정일</Text>
-                    <Input name='expected_date' value={data.expected_date} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Input name='expected_date' value={data.expected_date || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='50px'>혈액형</Text>
-                    <Input name='blood_type' value={data.blood_type} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Input name='blood_type' value={data.blood_type || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
                 </Flex>
 
                 {data.position === 'mother' || data.position === 'father' ?
