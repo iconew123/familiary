@@ -18,7 +18,7 @@ const InfoBaby = () => {
     // 삭제하기
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=delete&code=${baby.code}`, {
-            method: 'POST',
+            method: 'DELETE',
         })
             .then(response => {
                 if (response.ok) {
