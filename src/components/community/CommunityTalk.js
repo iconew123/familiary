@@ -1,61 +1,82 @@
 import { Heading } from '@chakra-ui/layout';
-import { Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom';
+import { Box } from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CommunityTalk = () => {
     const [data, setData] = useState([]);
-    const [category, setCategory] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/chat`)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setData(data);
-                // 데이터에서 첫 번째 아이템의 카테고리 정보 가져오기
-                if (data.length > 0) {
-                    setCategory(data[0].category);
-                    console.log(data[0].category);
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/chat`);
+                const result = await response.json();
+                console.log('Fetched data:', result); // 데이터 로그 출력
+
+                // 데이터 구조 확인
+                if (Array.isArray(result)) {
+                    console.log('Data is an array with length:', result.length);
+                    result.forEach((item, index) => console.log(`Item ${index}:`, item));
+                    setData(result);
+                } else {
+                    console.error('Fetched data is not an array:', result);
                 }
-            })
-            .catch(error => {
-                console.error('데이터를 가져오는 중 에러 발생', error);
-            });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
-    
+
+    const handleCreate = () => {
+        navigate('/community/create'); // 작성하기 페이지로 이동
+    };
+
     return (
         <>
-            <Box h='auto' w='100%'>
-                <Heading>
-                    자유 게시판
-                </Heading>
+            <Box>
+                <Heading>자유 게시판</Heading>
+                <Box>
 
-            </Box>
-            <TableContainer>
-                <Table variant={"striped"} colorScheme="teal">
-                    <Thead>
-                        <Tr>
-                            <Th>제목</Th>
-                            <Th>작성자</Th>
-                            <Th>작성일</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {data.map((item, index) => (
-                            <Tr key={index}>
-                                <Td><Link to={`detail?command=read/detail&code=${item.code}&category=${category}`}>{item.title}</Link></Td>
-                                <Td>{item.userNickName}</Td>
-                                <Td>{item.regDate}</Td>
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>제목</Th>
+                                <Th>작성자</Th>
+                                <Th>작성일</Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                    <Tfoot></Tfoot>
-                </Table>
-            </TableContainer>
+                        </Thead>
+                        <Tbody>
+                            {data.length > 0 ? (
+                                data.map((item, index) => (
+                                    <Tr key={index}>
+                                        <Td>
+                                            <Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>
+                                                {item.title}
+                                            </Link>
+                                        </Td>
+                                        <Td>{item.userNickName}</Td>
+                                        <Td>{item.regDate}</Td>
+                                    </Tr>
+                                ))
+                            ) : (
+                                <Tr>
+                                    <Td colSpan="3">데이터가 없습니다</Td>
+                                </Tr>
+                            )}
+                        </Tbody>
+                        <Tfoot />
+                    </Table>
+                </Box>
+                <Box>
+                    <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
+                        작성하기
+                    </Button>
+                </Box>
+            </Box>
         </>
     );
 };

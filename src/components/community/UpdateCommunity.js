@@ -54,7 +54,7 @@ const UpdateCommunity = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('데이터 전송 성공');
-                    navigate('/diary');
+                    navigate(`detail?command=read/detail&code=${data.code}&category=${community.category}`);
                 } else {
                     console.log('데이터 전송 실패');
                 }
@@ -62,11 +62,11 @@ const UpdateCommunity = () => {
             .catch(error => {
                 console.error('데이터를 전송하는 중 에러 발생', error);
             });
+        navigate(`/community/detail?command=read/detail&code=${data.code}`);
     };
 
     return (
         <>
-        <Text fontSize='4xl'>게시글 수정하기</Text>
             <Box id='input-container'>
                 <div>
                     <Select defaultValue={data.category} variant='flushed' w='200px' padding='30px'
