@@ -47,7 +47,7 @@ const UserDelete = () => {
             }
 
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=delete`, {
-                method: 'DELETE',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
