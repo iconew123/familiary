@@ -36,7 +36,7 @@ const CommunityRecommend = () => {
             alert("글을 작성하려면 로그인이 필요합니다.");
             return;
         }
-        navigate('/community/create'); // 작성하기 페이지로 이동
+        navigate('/community/create?command=create'); // 작성하기 페이지로 이동
     };
 
     return (
