@@ -1,5 +1,5 @@
-import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Flex, Image, Input, Text, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure } from '@chakra-ui/react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../../module/SessionComponent';
 
@@ -16,6 +16,10 @@ const InfoBaby = () => {
     const baby = JSON.parse(babySample);
 
     const { cancelStatus } = useSession();
+
+        // 삭제 모달 관련
+        const { isOpen, onOpen, onClose } = useDisclosure();
+        const cancelRef = useRef();
 
     // 삭제하기
     const handleDelete = () => {
@@ -128,11 +132,37 @@ const InfoBaby = () => {
                 
                     <Flex direction="row" justifyContent="center" alignItems="center" height="auto" marginTop='30px' marginBottom='50px' >
                         <Button onClick={() => handleOptionClick('updateBaby')} marginRight='20px' w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>수정하기</Button>
-                        <Button onClick={handleDelete} w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>삭제하기</Button>
+                        <Button onClick={onOpen} w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>삭제하기</Button>
                     </Flex>
                 </>
                     : null}
 
+<AlertDialog
+                    isOpen={isOpen}
+                    leastDestructiveRef={cancelRef}
+                    onClose={onClose}
+                >
+                    <AlertDialogOverlay>
+                        <AlertDialogContent>
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                                아기 정보 삭제
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                                정말로 삭제하시겠습니까?
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                                <Button ref={cancelRef} onClick={onClose}>
+                                    아니오
+                                </Button>
+                                <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={handleDelete} ml={3}>
+                                    예
+                                </Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialogOverlay>
+                </AlertDialog>
             </Box>
         </>
     );
