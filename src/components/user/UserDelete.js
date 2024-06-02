@@ -1,4 +1,4 @@
-import { Input, Button, Box, Text } from '@chakra-ui/react';
+import { Input, Button, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../module/SessionComponent';
@@ -13,6 +13,7 @@ const UserDelete = () => {
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
     const navigate = useNavigate();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
 
@@ -22,7 +23,6 @@ const UserDelete = () => {
     }, [isLoggedIn, navigate]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
         const formData = new URLSearchParams();
 
         formData.append('id', user.id);
@@ -66,6 +66,25 @@ const UserDelete = () => {
         }
     };
 
+    const [data, setData] = useState({});
+
+    const handleCheckClick = () => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=checkDeleteBaby&user_id=${user.id}`)
+        .then(response => response.json())
+        .then(data => {
+
+            if(data.isExist){
+                onOpen();  // 모달창 호출
+            } else {
+                handleSubmit();
+            }
+            
+        })
+        .catch(error => {
+            console.error('데이터를 가져오는 중 에러 발생', error);
+        });
+};
+
     return (
         <Box
             bg='#fffbf0'
@@ -76,7 +95,6 @@ const UserDelete = () => {
             textAlign='center'>
             <Box maxW='500px'>
                 <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>회원탈퇴</Text>
-                <form onSubmit={handleSubmit}>
                     <Input
                         type="password"
                         value={password}
@@ -89,9 +107,25 @@ const UserDelete = () => {
                     />
                     {serverError && <Text color="red">{serverError}</Text>}
                     {passwordError && <Text color="red">{passwordError}</Text>}
-                    <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원탈퇴</Button>
-                </form>
+                    <Button onClick={() => handleCheckClick()} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원탈퇴</Button>
             </Box>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>탈퇴 불가가</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text>연결된 아기정보를 삭제해주세요.</Text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={onClose}>
+                            닫기
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
         </Box>
     );
 };

@@ -8,7 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
-    const isDiaryPage = location.pathname === '/diary' || '/baby/create';
+    const isDiaryPage = location.pathname === '/diary';
     const isCommunityPage = location.pathname === '/community';
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 

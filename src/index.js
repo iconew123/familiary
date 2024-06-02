@@ -16,7 +16,7 @@ const theme = extendTheme({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ChakraProvider theme={theme}>
-    <GlobalStyles /> {/* 글로벌 스타일을 적용합니다 */}
+    <GlobalStyles /> 
     <App />
   </ChakraProvider>
 );
