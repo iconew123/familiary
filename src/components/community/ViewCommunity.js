@@ -40,7 +40,7 @@ const ViewCommunity = () => {
     }, [code, category]);
 
     const handleDelete = () => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete&code=${code}`, {
             method: 'DELETE',
             body: JSON.stringify({ code }),
             headers: {
