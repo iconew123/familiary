@@ -291,7 +291,9 @@ const DiaryMain = () => {
                                 )}
                                 <br />
                                 <Text fontSize='4xl' as='b' fontFamily="'Nanum Gothic', cursive">{data.nickname}</Text>
-                                <Text fontSize='xl' fontFamily="'Nanum Gothic', cursive">출산예정일 : {data.expected_date} </Text>
+                                <Text fontSize='xl' fontFamily="'Nanum Gothic', cursive">
+  {new Date(data.expected_date) <= new Date() ? '출산일' : '출산예정일'} : {data.expected_date} 
+</Text>
                                 {dDay > 0 ? (
                                     <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive" >태어나기까지 {dDay}일</Text>
                                 ) : dDay < 0 ? (

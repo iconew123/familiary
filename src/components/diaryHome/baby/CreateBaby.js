@@ -175,7 +175,7 @@ const CreateBaby = () => {
                 <ModalContent>
                     <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
                     <ModalBody fontFamily="'Nanum Gothic', cursive">
-                        아기와의 관계여부는 필수항목입니다. <br />
+                        아기와의 관계선택은 필수항목입니다. <br />
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setModalOpen(false)} fontFamily="'Nanum Gothic', cursive">
