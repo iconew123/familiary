@@ -40,6 +40,7 @@ const CreateBaby = () => {
 
 
     const [isOpen, setIsOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const handleButtonClick = () => {
@@ -49,6 +50,11 @@ const CreateBaby = () => {
 
         if (!datePattern.test(babyInfo.expected_date)) {
             setIsOpen(true);
+            return;
+        }
+
+        if (!babyInfo.position) {
+            setModalOpen(true);
             return;
         }
 
@@ -158,6 +164,21 @@ const CreateBaby = () => {
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
+                            확인
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
+                    <ModalBody fontFamily="'Nanum Gothic', cursive">
+                        아기와의 관계여부는 필수항목입니다. <br />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setModalOpen(false)} fontFamily="'Nanum Gothic', cursive">
                             확인
                         </Button>
                     </ModalFooter>
