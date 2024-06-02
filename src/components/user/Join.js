@@ -6,7 +6,7 @@ import { useSession } from '../module/SessionComponent';
 
 
 const Join = () => {
-    
+
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [nickname, setNickname] = useState('');
@@ -23,7 +23,15 @@ const Join = () => {
     const [securityNumberError, setSecurityNumberError] = useState(false);
     const [telecomError, setTelecomError] = useState(false);
     const [phoneError, setPhoneError] = useState(false);
-    const { isLoggedIn} = useSession();
+
+    const [idDuplError, setIdDuplError] = useState(false);
+    const [nicknameDuplError, setNicknameDuplError] = useState(false);
+    const [phoneDuplError, setPhoneDuplError] = useState(false);
+    const [emailDuplError, setEmailDuplError] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+
+    const { isLoggedIn } = useSession();
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     useEffect(() => {
@@ -31,46 +39,123 @@ const Join = () => {
             navigate('/');
         }
     }, [isLoggedIn, navigate]);
-    
+
     const handleSubmit = async (event) => {
+        
         event.preventDefault();
-        if (!id | !password | !nickname | !name | !securityNumber | !telecom | !phone) {
-            if (!id) {
-                setIdError('아이디를 입력하세요.');
-            } else if (id) {
-                setIdError(false);
+        setLoading(true);
+        let hasError = false;
+
+        const checkDuplicate = async (field, value) => {
+            const formData = new URLSearchParams();
+            formData.append('field', field);
+            formData.append('value', value);
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=checkDuplicate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+                const data = await response.json();
+                return data.isDuplicate;
+            } catch (error) {
+                console.error('네트워크 오류', error);
+                return false;
             }
-            if (!password) {
-                setPasswordError('비밀번호를 입력하세요.');
-            } else if (password) {
-                setPasswordError(false);
+        };
+
+        if (!id) {
+            setIdError('아이디를 입력하세요.');
+            hasError = true;
+        } else {
+            setIdError(false);
+        }
+
+        if (!password) {
+            setPasswordError('비밀번호를 입력하세요.');
+            hasError = true;
+        } else {
+            setPasswordError(false);
+        }
+
+        if (!nickname) {
+            setNicknameError('닉네임을 입력하세요.');
+            hasError = true;
+        } else {
+            setNicknameError(false);
+        }
+
+        if (!name) {
+            setNameError('이름을 입력하세요.');
+            hasError = true;
+        } else {
+            setNameError(false);
+        }
+
+        if (!securityNumber) {
+            setSecurityNumberError('주민번호를 입력하세요.');
+            hasError = true;
+        } else {
+            setSecurityNumberError(false);
+        }
+
+        if (!telecom) {
+            setTelecomError('통신사를 선택해주세요');
+            hasError = true;
+        } else {
+            setTelecomError(false);
+        }
+
+        if (!phone) {
+            setPhoneError('핸드폰번호를 입력하세요.');
+            hasError = true;
+        } else {
+            setPhoneError(false);
+        }
+
+        // 중복확인
+        if (!hasError) {
+            const idDuplicate = await checkDuplicate('id', id);
+            if (idDuplicate) {
+                setIdDuplError('아이디가 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setIdDuplError(false);
             }
-            if (!nickname) {
-                setNicknameError('닉네임을 입력하세요.');
-            } else if (nickname) {
-                setNicknameError(false);
+
+            const nicknameDuplicate = await checkDuplicate('nickname', nickname);
+            if (nicknameDuplicate) {
+                setNicknameDuplError('닉네임이 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setNicknameDuplError(false);
             }
-            if (!name) {
-                setNameError('이름을 입력하세요.');
-            } else if (name) {
-                setNameError(false);
+
+            const phoneDuplicate = await checkDuplicate('phone', phone);
+            if (phoneDuplicate) {
+                setPhoneDuplError('핸드폰번호가 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setPhoneDuplError(false);
             }
-            if (!securityNumber) {
-                setSecurityNumberError('주민번호를 입력하세요.');
-            } else if (securityNumber) {
-                setSecurityNumberError(false);
+
+            if (email) {
+                const emailDuplicate = await checkDuplicate('email', email);
+                if (emailDuplicate) {
+                    setEmailDuplError('이메일이 이미 사용 중입니다.');
+                    hasError = true;
+                } else {
+                    setEmailDuplError(false);
+                }
             }
-            if (!telecom) {
-                setTelecomError('통신사를 선택해주세요');
-            } else if (telecom) {
-                setTelecomError(false);
-            }
-            if (!phone) {
-                setPhoneError('핸드폰번호를 입력하세요.');
-            } else if (phone) {
-                setPhoneError(false);
-            }
-            return
+        }
+
+        // 에러 발생 시 제출 중단
+        if (hasError) {
+            setLoading(false);
+            return;
         }
         else {
 
@@ -85,25 +170,33 @@ const Join = () => {
             formData.append('email', email);
             formData.append('address', address);
 
-            try {
-                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=join`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData
-                });
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=join`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            });
 
-                if (response.ok) {
-                    console.log('데이터 전송 성공');
-                    navigate('/user/login');
+            if (response.ok) {
+                const userData = await response.json();
+                if (userData.status === 200) {
+                    console.log('회원가입 성공');
+                    loginStatus(userData);
+                    navigate('/myPage');
                 } else {
-                    const errorData = await response.json();
-                    console.log('데이터 전송 실패', errorData);
+                    console.log('회원가입 실패:', userData.message);
                 }
-            } catch (error) {
-                console.error('네트워크 오류', error);
+            } else {
+                console.log('회원가입 요청 실패');
+                setPasswordError('서버 오류가 발생했습니다.');
             }
+        } catch (error) {
+            console.error('회원가입 요청 중 에러 발생:', error);
+            setPasswordError('네트워크 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -115,11 +208,10 @@ const Join = () => {
             alignItems="center"
             justifyContent="center"
             flexDirection='column'
-            textAlign='center'>
-
+            textAlign='center'
+        >
             <Box maxW='500px'>
                 <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>회원가입</Text>
-
                 <form onSubmit={handleSubmit}>
                     <Input
                         type="text"
@@ -188,7 +280,7 @@ const Join = () => {
                         size='lg' bg='white' w='100%'
                     />
                     <Input
-                        type="email"
+                        type="text"
                         value={email}
                         id="email"
                         name="email"
@@ -205,14 +297,18 @@ const Join = () => {
                         onChange={(e) => setAddress(e.target.value)}
                         size='lg' bg='white' w='100%'
                     />
-                    {idError ? <Text color="red">{idError}</Text> : null}
-                    {passwordError ? (<Text color="red">{passwordError}</Text>) : null}
-                    {nicknameError ? (<Text color="red">{nicknameError}</Text>) : null}
-                    {nameError ? (<Text color="red">{nameError}</Text>) : null}
-                    {securityNumberError ? (<Text color="red">{securityNumberError}</Text>) : null}
-                    {telecomError ? (<Text color="red">{telecomError}</Text>) : null}
-                    {phoneError ? (<Text color="red">{phoneError}</Text>) : null}
-                    <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원가입</Button>
+                    {idError && <Text color="red">{idError}</Text>}
+                    {idDuplError && <Text color="red">{idDuplError}</Text>}
+                    {passwordError && <Text color="red">{passwordError}</Text>}
+                    {nicknameError && <Text color="red">{nicknameError}</Text>}
+                    {nicknameDuplError && <Text color="red">{nicknameDuplError}</Text>}
+                    {nameError && <Text color="red">{nameError}</Text>}
+                    {securityNumberError && <Text color="red">{securityNumberError}</Text>}
+                    {telecomError && <Text color="red">{telecomError}</Text>}
+                    {phoneError && <Text color="red">{phoneError}</Text>}
+                    {phoneDuplError && <Text color="red">{phoneDuplError}</Text>}
+                    {emailDuplError && <Text color="red">{emailDuplError}</Text>}
+                    <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} isLoading={loading}>회원가입</Button>
                 </form>
             </Box>
         </Box>
