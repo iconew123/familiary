@@ -2,6 +2,9 @@ import { Box, Grid, GridItem, Link, Text } from '@chakra-ui/react';
 import React from 'react';
 
 const Main = () => {
+    const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
+
+
     const loggedIn = sessionStorage.getItem('isLoggedIn');
       // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
       const userSample = sessionStorage.getItem('userInfo');
@@ -41,13 +44,13 @@ const Main = () => {
                             <Box marginLeft='10px'><Link to="/user/join"><Text fontSize='xl' marginTop='8px' color='#765d2f'>회원가입</Text></Link></Box>
                         </>
                     ) : (
-                        <Box marginLeft='10px'><Text fontSize="2xl" fontWeight="bold" mb="20px">
+                        <Box marginLeft='10px'><Text fontSize="2xl" fontWeight="bold" mb="20px" fontFamily="'Nanum Gothic', cursive">
                         {user.id}님의 회원 정보
                     </Text>
-                    <Text fontSize="xl">
+                    <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive">
                         닉네임 {user.nickname}
                     </Text>
-                    <Text fontSize="xl">
+                    <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive">
                         이름 {user.name}
                     </Text></Box>
                     )}
