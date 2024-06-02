@@ -1,16 +1,15 @@
 import { Box, Button, Input, Select, Text, Textarea, VStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CreateCommunity = () => {
-
-    // 데이터 받아오기
+    const{ userId, userNickname } = useParams();
     const [data, setData] = useState({});
     const navigate = useNavigate();
 
     const [community, setCommunity] = useState({
-        userId: '',
-        userNickname: '',
+        userId: userId,
+        userNickname: userNickname,
         title: '',
         content: '',
         category: '',
@@ -24,13 +23,42 @@ const CreateCommunity = () => {
         }));
     };
 
-    const [isOpen, setIsOpen] = useState(false);
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    const userSample = sessionStorage.getItem('userInfo');
+    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
+    const user = JSON.parse(userSample);
 
+    // 다중 클릭방지
+    const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
+        setIsLoading(true);
+
+        if (!community.title) {
+            alert("제목을 입력해주세요.");
+            setIsLoading(false);
+            return;
+        }
+        if (!community.content) {
+            alert("내용을 입력해주세요.");
+            setIsLoading(false);
+            return;
+        }
+        if (!community.category) {
+            alert("카테고리를 선택해주세요.");
+            setIsLoading(false);
+            return;
+        }
+
+        // 공지사항에 글을 작성할 수 있는지 여부를 판단
+        if (community.category === 'notice' && !user.is_admin) {
+            alert("권한이 없습니다. 공지사항에 글을 작성할 수 있는 권한이 필요합니다.");
+            setIsLoading(false);
+            return;
+        }
 
         const formData = new FormData();
-        formData.append('userId', community.userId);
-        formData.append('userNickname', community.userNickname);
+        formData.append('userId', user.id);
+        formData.append('userNickname', user.nickname);
         formData.append('title', community.title);
         formData.append('content', community.content);
         formData.append('category', community.category);
@@ -57,16 +85,13 @@ const CreateCommunity = () => {
             });
     };
 
-    const [value, setValue] = React.useState('')
-    const handleChange = (event) => setValue(event.target.value)
-
     return (
         <>
             <Box id='input-container'>
                 <div>
                     <Select value={community.category} variant='flushed' w='200px' padding='30px'
                         onChange={(e) => setCommunity({ ...community, category: e.target.value })}>
-                        <option disabled>게시판 선택</option>
+                        <option>게시판 선택</option>
                         <option value='notice'>공지사항</option>
                         <option value='chat'>잡담</option>
                         <option value='recommend'>추천</option>
