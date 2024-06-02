@@ -3,17 +3,32 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CreateCommunity = () => {
-    const{ userId, userNickname } = useParams();
-    const [data, setData] = useState({});
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    const userSample = sessionStorage.getItem('userInfo');
+    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
+    const user = JSON.parse(userSample);
     const navigate = useNavigate();
 
     const [community, setCommunity] = useState({
-        userId: userId,
-        userNickname: userNickname,
+        userId: '',
+        userNickname: '',
         title: '',
         content: '',
         category: '',
     });
+
+    useEffect(() => {
+        // 세션 스토리지에서 저장된 유저 정보를 불러옴
+        const userSample = sessionStorage.getItem('userInfo');
+        if (userSample) {
+            const user = JSON.parse(userSample);
+            setCommunity(prevState => ({
+                ...prevState,
+                userId: user.id,
+                userNickname: user.nickname,
+            }));
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -23,67 +38,33 @@ const CreateCommunity = () => {
         }));
     };
 
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
-    const userSample = sessionStorage.getItem('userInfo');
-    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
-    const user = JSON.parse(userSample);
-
-    // 다중 클릭방지
-    const [isLoading, setIsLoading] = useState(false);
-    const handleButtonClick = () => {
-        setIsLoading(true);
-
-        if (!community.title) {
-            alert("제목을 입력해주세요.");
-            setIsLoading(false);
-            return;
-        }
-        if (!community.content) {
-            alert("내용을 입력해주세요.");
-            setIsLoading(false);
-            return;
-        }
-        if (!community.category) {
-            alert("카테고리를 선택해주세요.");
-            setIsLoading(false);
+    const handleButtonClick = async () => {
+        if (!community.title || !community.content || !community.category) {
+            alert("제목, 내용, 카테고리를 모두 입력해주세요.");
             return;
         }
 
-        // 공지사항에 글을 작성할 수 있는지 여부를 판단
-        if (community.category === 'notice' && !user.is_admin) {
-            alert("권한이 없습니다. 공지사항에 글을 작성할 수 있는 권한이 필요합니다.");
-            setIsLoading(false);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('userId', user.id);
-        formData.append('userNickname', user.nickname);
-        formData.append('title', community.title);
-        formData.append('content', community.content);
-        formData.append('category', community.category);
-        console.log(community.userId);
-        console.log(community.userNickname);
-        console.log(community.title);
-        console.log(community.content);
-        console.log(community.category);
-
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=create&userId=user111&userNickname=user111`, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('데이터 전송 성공');
-                    navigate(`/community/${community.category}?command=read/${community.category}`);
-                } else {
-                    console.log('데이터 전송 실패')
-                }
-            })
-            .catch(error => {
-                console.error('데이터를 전송하는 중 에러 발생', error);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(community)
             });
+
+            if (response.ok) {
+                console.log('데이터 전송 성공');
+                navigate(`/community/${community.category}?command=read/${community.category}`);
+            } else {
+                console.log('데이터 전송 실패')
+            }
+        } catch (error) {
+            console.error('데이터를 전송하는 중 에러 발생', error);
+        }
     };
+
+    console.log(community);
 
     return (
         <>
