@@ -9,8 +9,8 @@ const CreateCommunity = () => {
     const navigate = useNavigate();
 
     const [community, setCommunity] = useState({
-        userId: '',
-        userNickname: '',
+        userId: 'user111',
+        userNickname: 'user111',
         title: '',
         content: '',
         category: '',
@@ -34,6 +34,11 @@ const CreateCommunity = () => {
         formData.append('title', community.title);
         formData.append('content', community.content);
         formData.append('category', community.category);
+        console.log(community.userId);
+        console.log(community.userNickname);
+        console.log(community.title);
+        console.log(community.content);
+        console.log(community.category);
 
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=create`, {
             method: 'POST',
@@ -42,7 +47,7 @@ const CreateCommunity = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('데이터 전송 성공');
-                    navigate('/diary');
+                    navigate(`/community/${community.category}?command=read/${community.category}`);
                 } else {
                     console.log('데이터 전송 실패')
                 }
@@ -59,9 +64,9 @@ const CreateCommunity = () => {
         <>
             <Box id='input-container'>
                 <div>
-                    <Select defaultValue={community.category} variant='flushed' w='200px' padding='30px'
+                    <Select value={community.category} variant='flushed' w='200px' padding='30px'
                         onChange={(e) => setCommunity({ ...community, category: e.target.value })}>
-                        <option selected disabled>게시판 선택</option>
+                        <option disabled>게시판 선택</option>
                         <option value='notice'>공지사항</option>
                         <option value='chat'>잡담</option>
                         <option value='recommend'>추천</option>
