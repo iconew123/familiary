@@ -119,16 +119,18 @@ const InfoBaby = () => {
                     <Input name='blood_type' value={data.blood_type || ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
+                {data.position === 'mother' || data.position === 'father' ?
+                <>
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
                     <Text fontSize='xl' as='b' marginRight='30px' fontFamily="'Nanum Gothic', cursive">아기코드</Text>
                     <Input name='babyCode' value={baby.code} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
-
-                {data.position === 'mother' || data.position === 'father' ?
+                
                     <Flex direction="row" justifyContent="center" alignItems="center" height="auto" marginTop='30px' marginBottom='50px' >
                         <Button onClick={() => handleOptionClick('updateBaby')} marginRight='20px' w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>수정하기</Button>
                         <Button onClick={handleDelete} w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>삭제하기</Button>
                     </Flex>
+                </>
                     : null}
 
             </Box>

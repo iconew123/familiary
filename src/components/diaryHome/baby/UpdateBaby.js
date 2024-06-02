@@ -69,11 +69,10 @@ const UpdateBaby = () => {
 
     // 수정 버튼 클릭 핸들러
     const handleButtonClick = () => {
+        console.log(babyInfo.expected_date);
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
-        console.log('expected_date' + babyInfo.expected_date)
-        console.log('gender: ' + data.gender);
-        if (!datePattern.test(babyInfo.expected_date)) {
+        if (!datePattern.test(babyInfo.expected_date) || babyInfo.expected_date === '') {
             setIsOpen(true);
             return;
         }
