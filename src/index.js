@@ -13,20 +13,10 @@ const theme = extendTheme({
   },
 });
 
-ReactDOM.render(
-  <ChakraProvider theme={theme}>
-    <GlobalStyles /> {/* 글로벌 스타일을 적용합니다 */}
-    <App />
-  </ChakraProvider>,
-  document.getElementById("root")
-);
-
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
-    <ChakraProvider>
-      <App />
-    </ChakraProvider>
-  // </React.StrictMode>
+  <ChakraProvider theme={theme}>
+    <GlobalStyles /> 
+    <App />
+  </ChakraProvider>
 );

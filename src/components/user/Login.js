@@ -40,7 +40,8 @@ const Login = () => {
             }
             return;
         }
-        if (id)
+
+
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=login`, {
                 method: 'POST',
@@ -52,14 +53,21 @@ const Login = () => {
 
             if (response.ok) {
                 const userData = await response.json();
-                console.log('로그인 성공');
-                loginStatus(userData);
-                console.log(userData);
+                if (userData.status === 200) {
+                    console.log('로그인 성공');
+                    loginStatus(userData);
+                    navigate('/');
+                } else {
+                    console.log('로그인 실패:', userData.message);
+                    setPasswordError('아이디 또는 비밀번호가 잘못되었습니다.');
+                }
             } else {
-                console.log('로그인 실패');
+                console.log('로그인 요청 실패');
+                setPasswordError('서버 오류가 발생했습니다.');
             }
         } catch (error) {
             console.error('로그인 요청 중 에러 발생:', error);
+            setPasswordError('네트워크 오류가 발생했습니다.');
         }
     };
 

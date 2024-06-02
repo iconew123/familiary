@@ -11,6 +11,9 @@ const Main = () => {
 
       // 문자열(JSON)을 다시 리스트로 파싱하여 사용
       const user = JSON.parse(userSample);
+
+      console.log('홈2'
+      )
     return (
         <>
 
@@ -22,17 +25,17 @@ const Main = () => {
                 gap={1}>
 
                 {/* 광고단 */}
-                <GridItem w='100%' bg='purple' area={'adArea'}>
+                <GridItem w='100%' bg='#E3C0AA' area={'adArea'}>
                     광고
                 </GridItem>
 
                 {/* 병원 정보 */}
-                <GridItem w='100%' bg='lightblue' area={'hospital'}>
+                <GridItem w='100%' bg='#E3D2AA' area={'hospital'}>
                     병원INFO
                 </GridItem>
 
                 {/* 임산부 가이드 */}
-                <GridItem w='100%' bg='lightpink' area={'guide'}>
+                <GridItem w='100%' bg='#E4CBAB' area={'guide'}>
                     임산부 가이드
                 </GridItem>
 
@@ -57,12 +60,12 @@ const Main = () => {
                 </GridItem>
 
                 {/* 다이어리 */}
-                <GridItem w='100%' bg='gray' area={'diary'}>
+                <GridItem w='100%' bg='#E3C8C1' area={'diary'}>
                     다이어리
                 </GridItem>
 
                 {/* 게시판(최신순) */}
-                <GridItem w='100%' bg='lightgreen' area={'board'}>
+                <GridItem w='100%' bg='#E6D7C3' area={'board'}>
                     게시판(최신순)
                 </GridItem>
 
