@@ -121,6 +121,24 @@ const DiaryMain = () => {
 
     const [isBabyModalOpen, setIsBabyModalOpen] = useState(false); 
 
+    const handleBabyModalOpen = () => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
+            .then(response => response.json())
+            .then(babyData => {
+                
+                if (!babyData.codes) {
+                    handleModalOpen();
+                } else { 
+                        setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
+                        setIsBabyModalOpen(true);
+                }
+            })
+            .catch(error => {
+                console.error('데이터를 가져오는 중 에러 발생', error);
+            });
+    };
+
+
     const handleBabyModalClose = () => {
         setIsBabyModalOpen(false); 
     };
@@ -272,8 +290,13 @@ const DiaryMain = () => {
                                 ) : (
                                     <Text fontSize="xl"></Text>
                                 )}
-                                <Button onClick={() => handleOptionClick('infoBaby')} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
-                                <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
+                                <Flex justifyContent="center">
+                                <Button onClick={() => handleOptionClick('infoBaby')} w='210px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
+                                </Flex>
+                                <Flex justifyContent="center">
+                                <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
+                                <Button onClick={handleBabyModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>선택하기</Button>
+                                </Flex>
                             </>
                         )}
 
