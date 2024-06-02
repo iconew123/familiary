@@ -113,13 +113,13 @@ const UserDelete = () => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>탈퇴 불가가</ModalHeader>
+                    <ModalHeader>탈퇴 불가</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <Text>연결된 아기정보를 삭제해주세요.</Text>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={onClose}>
+                        <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} mr={3} onClick={onClose}>
                             닫기
                         </Button>
                     </ModalFooter>

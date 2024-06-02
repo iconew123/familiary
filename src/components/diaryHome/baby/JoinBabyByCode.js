@@ -39,6 +39,12 @@ const JoinBabyByCode = () => {
             .then(data => {
                 console.log('data : ' + data);
                 console.log('baby : ' + data.baby);
+
+                if (!babyInfo.position) {
+                    setModalOpen(true);
+                    return;
+                }
+                
                 if (data.dupl) {
                     setModalMessage("이미 등록 중인 아기입니다.")
                     openErrorModal();
@@ -60,6 +66,8 @@ const JoinBabyByCode = () => {
                 console.error('데이터를 전송하는 중 에러 발생', error);
             });
     };
+
+    const [modalOpen, setModalOpen] = useState(false);
 
     return (
         <>
@@ -86,17 +94,34 @@ const JoinBabyByCode = () => {
                 <Modal isOpen={isErrorModalOpen} onClose={closeErrorModal}>
                     <ModalOverlay />
                     <ModalContent>
-                        <ModalHeader>에러</ModalHeader>
+                        <ModalHeader>주의</ModalHeader>
                         <ModalBody>
                             {modalMessage}
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme="blue" mr={3} onClick={closeErrorModal}>
+                            <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} mr={3} onClick={closeErrorModal}>
                                 확인
                             </Button>
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
+
+
+                <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
+                    <ModalBody fontFamily="'Nanum Gothic', cursive">
+                        아기와의 관계선택은 필수항목입니다. <br />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setModalOpen(false)} fontFamily="'Nanum Gothic', cursive">
+                            확인
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
             </Box>
         </>
     );

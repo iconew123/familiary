@@ -31,9 +31,9 @@ const UpdateBaby = () => {
         code: baby.code,
         nickname: '',
         name: '',
-        gender: null,
+        gender: baby.gender,
         expected_date: '',
-        blood_type: null,
+        blood_type: baby.blood_type,
         photo: ''
     });
 
@@ -69,11 +69,10 @@ const UpdateBaby = () => {
 
     // 수정 버튼 클릭 핸들러
     const handleButtonClick = () => {
+        console.log(babyInfo.expected_date);
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
-        console.log('expected_date' + babyInfo.expected_date)
-        console.log('gender: ' + data.gender);
-        if (!datePattern.test(babyInfo.expected_date)) {
+        if (!datePattern.test(babyInfo.expected_date) || babyInfo.expected_date === '') {
             setIsOpen(true);
             return;
         }
@@ -186,7 +185,7 @@ const UpdateBaby = () => {
                         yyyy-mm-dd 형식으로 입력해주세요.
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
+                        <Button contrastmr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
                             확인
                         </Button>
                     </ModalFooter>
