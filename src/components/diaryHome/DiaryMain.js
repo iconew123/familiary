@@ -251,6 +251,10 @@ const DiaryMain = () => {
         });
     };
 
+    const linkStyle = {
+        color: 'blue', // 원하는 색상으로 변경
+        textDecoration: 'none', // 밑줄 제거
+      };
 
     return (
         <>
@@ -369,7 +373,7 @@ const DiaryMain = () => {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverData.date ? `[${serverData.date}]일 ` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverData ? <Link to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
+                                        {serverData ? <Link style={linkStyle} to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
                                     </Text>
                                 </GridItem>
                             </Grid>

@@ -35,6 +35,11 @@ const DiaryShow = () => {
             });
     };
 
+    const linkStyle = {
+        color: 'blue', // 원하는 색상으로 변경
+        textDecoration: 'none', // 밑줄 제거
+    };
+
     return (
         <ChakraProvider>
             <Box textAlign="center" p="50px" bg="#fdf8f3" height="100vh">
@@ -56,7 +61,7 @@ const DiaryShow = () => {
                                 {contentData.map((item, index) => (
                                     <Tr key={index}>
                                         <Td textAlign="center" fontSize="20px">{item.date}</Td>
-                                        <Td textAlign="center" fontSize="20px"><Link to={`/diary/${item.date}/${babycode}`}>{item.title}</Link></Td>
+                                        <Td textAlign="center" fontSize="20px"><Link style={linkStyle} to={`/diary/${item.date}/${babycode}`}>{item.title}</Link></Td>
                                     </Tr>
                                 ))}
                             </Tbody>

@@ -11,8 +11,8 @@ const Join = () => {
     const [securityNumber, setSecurityNumber] = useState('');
     const [telecom, setTelecom] = useState('');
     const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [email, setEmail] = useState('');
 
     const [idError, setIdError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
@@ -164,8 +164,8 @@ const Join = () => {
         formData.append('securityNumber', securityNumber);
         formData.append('telecom', telecom);
         formData.append('phone', phone);
-        formData.append('email', email);
         formData.append('address', address);
+        formData.append('email', email);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=join`, {
@@ -276,21 +276,21 @@ const Join = () => {
                         size='lg' bg='white' w='100%'
                     />
                     <Input
-                        type="email"
-                        value={email}
-                        id="email"
-                        name="email"
-                        placeholder="이메일"
-                        onChange={(e) => setEmail(e.target.value)}
-                        size='lg' bg='white' w='100%'
-                    />
-                    <Input
                         type="text"
                         value={address}
                         id="address"
                         name="address"
                         placeholder="주소"
                         onChange={(e) => setAddress(e.target.value)}
+                        size='lg' bg='white' w='100%'
+                    />
+                    <Input
+                        type="email"
+                        value={email}
+                        id="email"
+                        name="email"
+                        placeholder="이메일"
+                        onChange={(e) => setEmail(e.target.value)}
                         size='lg' bg='white' w='100%'
                     />
                     {idError && <Text color="red">{idError}</Text>}

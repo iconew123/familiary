@@ -121,6 +121,7 @@ const DiaryView = () => {
         })
             .then(response => {
                 if (response.ok) {
+                    alert("다이어리 삭제 성공");
                     navigate('/diary');
                 } else {
                     navigate('/');
@@ -140,7 +141,7 @@ const DiaryView = () => {
         <>
             <Box
                 p="40px"
-                bg="rgb(255, 208, 208)"
+                bg="#E0CCB3"
                 borderRadius="20px"
                 boxShadow="0 12px 24px rgba(0, 0, 0, 0.1)"
                 maxW="800px"
