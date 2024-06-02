@@ -50,7 +50,7 @@ const ViewCommunity = () => {
     };
 
     const handleUpdate = () => {
-        navigate(`/familiary/community/${category}/update?code=${code}`); // 수정 페이지로 이동
+        navigate(`/community/update?code=${code}`); // 수정 페이지로 이동
     };
 
     return (
