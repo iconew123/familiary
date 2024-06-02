@@ -31,38 +31,48 @@ const CommunityRecommend = () => {
     const handleCreate = () => {
         navigate('/community/create'); // 작성하기 페이지로 이동
     };
-    
+
     return (
         <>
-            <Box h='auto' w='100%'>
+            <Box>
                 <Heading>
                     추천게시판
                 </Heading>
-
-            </Box>
-                <Table>
-                    <Thead>
-                        <Tr>
-                            <Th>제목</Th>
-                            <Th>작성자</Th>
-                            <Th>작성일</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {data.map((item, index) => (
-                            <Tr key={index}>
-                                <Td><Link to={`detail?command=read/detail&code=${item.code}&category=${category}`}>{item.title}</Link></Td>
-                                <Td>{item.userNickName}</Td>
-                                <Td>{item.regDate}</Td>
+                <Box>
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>제목</Th>
+                                <Th>작성자</Th>
+                                <Th>작성일</Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                    <Tfoot></Tfoot>
-                </Table>
-
-            <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
-                작성하기
-            </Button>
+                        </Thead>
+                        <Tbody>
+                        {data.length > 0 ? (
+                                data.map((item, index) => (
+                                    <Tr key={index}>
+                                        <Td>
+                                            <Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>
+                                                {item.title}
+                                            </Link>
+                                        </Td>
+                                        <Td>{item.userNickName}</Td>
+                                        <Td>{item.regDate}</Td>
+                                    </Tr>
+                                ))
+                            ) : (
+                                <Tr>
+                                    <Td colSpan="3">데이터가 없습니다</Td>
+                                </Tr>
+                            )}
+                        </Tbody>
+                        <Tfoot></Tfoot>
+                    </Table>
+                </Box>
+                <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
+                    작성하기
+                </Button>
+            </Box>
         </>
     );
 };
