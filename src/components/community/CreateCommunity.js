@@ -9,8 +9,8 @@ const CreateCommunity = () => {
     const navigate = useNavigate();
 
     const [community, setCommunity] = useState({
-        userId: 'user111',
-        userNickname: 'user111',
+        userId: '',
+        userNickname: '',
         title: '',
         content: '',
         category: '',
@@ -40,7 +40,7 @@ const CreateCommunity = () => {
         console.log(community.content);
         console.log(community.category);
 
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=create`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=create&userId=user111&userNickname=user111`, {
             method: 'POST',
             body: formData
         })
