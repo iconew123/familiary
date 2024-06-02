@@ -340,6 +340,7 @@ const DiaryMain = () => {
                     <Grid boxSize={
                         window.screen.width >= 760 ? "49vw" : "100vw"
                     }
+                        h ='auto'
                         templateAreas={`"calendar"
                                  "select"
                                  "diaryInfo"`}
