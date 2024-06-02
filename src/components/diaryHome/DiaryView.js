@@ -110,6 +110,13 @@ const DiaryView = () => {
 
     const handleEdit = () => {
         onRecordModalOpen();
+        if (serverData) {
+            setdiary({
+                title: serverData.title || '',
+                content: serverData.content || '',
+                category: serverData.category || ''
+            });
+        }
     };
 
     const handleDelete = () => {

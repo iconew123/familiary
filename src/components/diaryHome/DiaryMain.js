@@ -181,22 +181,24 @@ const DiaryMain = () => {
     // 다중 클릭방지
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
-
         setIsLoading(true);
-
-        if(!diary.title){
+    
+        if (!diary.title) {
             alert("제목을 입력해주세요.");
+            setIsLoading(false);
             return;
         }
-        if(!diary.content){
-            alert("제목을 입력해주세요.");
+        if (!diary.content) {
+            alert("내용을 입력해주세요.");
+            setIsLoading(false);
             return;
         }
-        if(!diary.category){
-            alert("제목을 입력해주세요.");
+        if (!diary.category) {
+            alert("카테고리를 선택해주세요.");
+            setIsLoading(false);
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('babycode', selectedBabyCode);
         formData.append('title', diary.title);
@@ -205,7 +207,7 @@ const DiaryMain = () => {
         if (photo !== null) {
             formData.append('photo', photo);
         }
-        
+    
         fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=create`, {
             method: 'POST',
             body: formData
@@ -236,10 +238,12 @@ const DiaryMain = () => {
             if (data.status === 400) {
                 alert(data.message_diary);
             }
+            setIsLoading(false); // 데이터 전송 완료 후 로딩 상태를 false로 설정하여 버튼 활성화
         })
         .catch(error => {
             console.error('데이터를 전송하는 중 에러 발생', error);
             alert('데이터 전송 중 에러가 발생했습니다.');
+            setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
         });
     };
     

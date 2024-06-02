@@ -15,13 +15,20 @@ const DiaryShow = () => {
 
     const fetchContent = (type) => {
         const url = `${process.env.REACT_APP_SERVER_URL}/diary?command=${type === 'text' ? 'diarylist' : 'imagelist'}&babycode=${babycode}`;
-        // fetch 요청 보내기
         fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                setContentData(data);
+            .then(response => response.json().then(data => ({ status: response.status, body: data })))
+            .then(({ status, body }) => {
+                if (status !== 200) {
+                    console.log(body.message); // 에러 메시지 로그
+                    setContentData(null); // 상태 코드가 200이 아닌 경우 null로 설정
+                } else {
+                    setContentData(body); // 상태 코드가 200인 경우 데이터 설정
+                }
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setContentData(null); // 오류가 발생한 경우 null로 설정
+            });
     };
 
     return (
@@ -32,7 +39,7 @@ const DiaryShow = () => {
                     <Icon as={FaImage} boxSize="50px" mx="10px" onClick={() => handleIconClick('image')} cursor="pointer" />
                 </Box>
 
-                {contentType === 'text' ? ( // 텍스트 모양일 때
+                {contentData && contentType === 'text' ? (
                     <Box overflowX="auto">
                         <Table variant="simple" size="lg" bg="white" borderRadius="md" boxShadow="md">
                             <Thead>
@@ -42,8 +49,7 @@ const DiaryShow = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {/* 데이터가 있을 때만 테이블 렌더링 */}
-                                {contentData && contentData.map((item, index) => (
+                                {contentData.map((item, index) => (
                                     <Tr key={index}>
                                         <Td textAlign="center" fontSize="20px">{item.date}</Td>
                                         <Td textAlign="center" fontSize="20px"><Link to={`/diary/${item.date}/${babycode}`}>{item.title}</Link></Td>
@@ -52,19 +58,18 @@ const DiaryShow = () => {
                             </Tbody>
                         </Table>
                     </Box>
-                ) : ( // 이미지 모양일 때
+                ) : contentData && contentType === 'image' ? (
                     <Box>
-                        {/* 데이터가 있을 때만 이미지 렌더링 */}
-                        {contentData && contentData.map((item, index) => (
+                        {contentData.map((item, index) => (
                             <Box key={index} mb="20px">
                                 <Link to={`/diary/${item.Date}/${babycode}`} key={index} mb="20px">
-                                    <Image src={item.imgurl} alt={`Image ${index}`} />
+                                    <Image src={item.imgurl} />
                                 </Link>
                                 <Box textAlign="center" fontSize="20px">{item.Date}</Box>
                             </Box>
                         ))}
                     </Box>
-                )}
+                ) : null}
             </Box>
         </ChakraProvider>
     );
