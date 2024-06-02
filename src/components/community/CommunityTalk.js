@@ -1,8 +1,8 @@
 import { Heading } from '@chakra-ui/layout';
-import { Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const CommunityTalk = () => {
     const [data, setData] = useState([]);
@@ -26,6 +26,10 @@ const CommunityTalk = () => {
                 console.error('데이터를 가져오는 중 에러 발생', error);
             });
     }, []);
+
+    const handleCreate = () => {
+        Navigate(`/community/create`); // 작성하기 페이지로 이동
+    };
     
     return (
         <>
@@ -56,6 +60,8 @@ const CommunityTalk = () => {
                     <Tfoot></Tfoot>
                 </Table>
             </TableContainer>
+
+            <Button onClick={handleCreate} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>작성하기</Button>
         </>
     );
 };

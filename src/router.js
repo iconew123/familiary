@@ -113,7 +113,7 @@ const router = createBrowserRouter([
         element: <Root />,
         children: [
             {
-                path: '/community/talk',
+                path: '/community/chat',
                 element: <CommunityTalk />,
             },
             {
@@ -133,7 +133,15 @@ const router = createBrowserRouter([
                 element: <UpdateCommunity />,
             },
             {
-                path: '/community/detail',
+                path: '/community/notice/detail',
+                element: <ViewCommunity />,
+            },
+            {
+                path: '/community/chat/detail',
+                element: <ViewCommunity />,
+            },
+            {
+                path: '/community/recommend/detail',
                 element: <ViewCommunity />,
             }
         ]
