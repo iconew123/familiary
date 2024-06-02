@@ -29,6 +29,13 @@ const CommunityRecommend = () => {
     }, []);
 
     const handleCreate = () => {
+        // 여기서 사용자가 로그인되어 있는지 확인
+        const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+        if (!loggedIn) {
+            alert("글을 작성하려면 로그인이 필요합니다.");
+            return;
+        }
         navigate('/community/create'); // 작성하기 페이지로 이동
     };
 
