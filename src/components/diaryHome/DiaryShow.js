@@ -19,15 +19,19 @@ const DiaryShow = () => {
             .then(response => response.json().then(data => ({ status: response.status, body: data })))
             .then(({ status, body }) => {
                 if (status !== 200) {
-                    console.log(body.message); // 에러 메시지 로그
-                    setContentData(null); // 상태 코드가 200이 아닌 경우 null로 설정
+                    console.log(body.message);
+                    setContentData(null);
                 } else {
-                    setContentData(body); // 상태 코드가 200인 경우 데이터 설정
+                    if(body[0].status === 400){
+                        setContentData(null);
+                    }else{
+                        setContentData(body);
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                setContentData(null); // 오류가 발생한 경우 null로 설정
+                setContentData(null);
             });
     };
 
@@ -59,13 +63,12 @@ const DiaryShow = () => {
                         </Table>
                     </Box>
                 ) : contentData && contentType === 'image' ? (
-                    <Box>
+                    <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap="30px">
                         {contentData.map((item, index) => (
                             <Box key={index} mb="20px">
-                                <Link to={`/diary/${item.Date}/${babycode}`} key={index} mb="20px">
-                                    <Image src={item.imgurl} />
+                                <Link to={`/diary/${item.Date}/${babycode}`} key={index}>
+                                    <Image src={item.imgurl} boxSize="350px" objectFit="cover" />
                                 </Link>
-                                <Box textAlign="center" fontSize="20px">{item.Date}</Box>
                             </Box>
                         ))}
                     </Box>

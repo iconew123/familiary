@@ -4,14 +4,12 @@ import { fetchDiaryDetailInfo } from './DiaryMain';
 import { Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select } from '@chakra-ui/react';
 
 const DiaryView = () => {
-    const { date, babycode } = useParams();
+    const { date, babycode, id } = useParams();
     const navigate = useNavigate();
     const [serverData, setServerData] = useState();
     const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
 
     useEffect(() => {
-        console.log("baby_code" + babycode);
-        console.log("date" + date);
         fetchDiaryDetailInfo(date, babycode).then(response => {
             setServerData(response);
         });
@@ -25,8 +23,6 @@ const DiaryView = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log("name : " + name);
-        console.log("value : " + value);
         setdiary(prevState => ({
             ...prevState,
             [name]: value
@@ -120,8 +116,6 @@ const DiaryView = () => {
     };
 
     const handleDelete = () => {
-        console.log("serverData.baby_code" + serverData.baby_code);
-        console.log("serverData.date" + serverData.date);
         fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=delete&babycode=${serverData.baby_code}&date=${serverData.date}`, {
             method: 'DELETE'
         })
