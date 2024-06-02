@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 
 const UpdateBaby = () => {
+
+    const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
+
+
     const navigate = useNavigate(); // useNavigate 훅을 사용해 페이지 이동을 위한 함수를 가져옴
 
     const userSample = sessionStorage.getItem('userInfo');
@@ -121,24 +125,24 @@ const UpdateBaby = () => {
                 justifyContent="center"
                 flexDirection='column'>
 
-                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='30px'>아기 정보 수정하기</Text>
+                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='30px' fontFamily="'Nanum Gothic', cursive">아기 정보 수정하기</Text>
 
                 {/* 태명 입력 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>태명</Text>
-                    <Input name='nickname' defaultValue={data.nickname} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">태명</Text>
+                    <Input name='nickname' defaultValue={data.nickname} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
                 </Flex>
 
                 {/* 이름 입력 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>이름</Text>
-                    <Input name='name' defaultValue={data.name} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">이름</Text>
+                    <Input name='name' defaultValue={data.name} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
                 </Flex>
 
                 {/* 성별 선택 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>성별</Text>
-                    <Select value={babyInfo.gender || data.gender} onChange={(e) => setBabyInfo({ ...babyInfo, gender: e.target.value })}size='lg' bg='white' w='500px' h='60px'>
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">성별</Text>
+                    <Select value={babyInfo.gender || data.gender} onChange={(e) => setBabyInfo({ ...babyInfo, gender: e.target.value })}size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive">
                         <option value=''>-- 선택 --</option>
                         <option value='M'>왕자</option>
                         <option value='F'>공주</option>
@@ -147,14 +151,14 @@ const UpdateBaby = () => {
 
                 {/* 출산예정일 입력 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='10px'>출산예정일</Text>
-                    <Input name='expected_date' defaultValue={data.expected_date} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
+                    <Text fontSize='xl' as='b' marginRight='10px' fontFamily="'Nanum Gothic', cursive">출산예정일</Text>
+                    <Input name='expected_date' defaultValue={data.expected_date} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
                 </Flex>
 
                 {/* 혈액형 선택 필드 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='50px'>혈액형</Text>
-                    <Select value={babyInfo.blood_type || data.blood_type} onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })} size='lg' bg='white' w='500px' h='60px'>
+                    <Text fontSize='xl' as='b' marginRight='50px' fontFamily="'Nanum Gothic', cursive">혈액형</Text>
+                    <Select value={babyInfo.blood_type || data.blood_type} onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive">
                         <option value=''>-- 선택 --</option>
                         <option value='A'>A</option>
                         <option value='B'>B</option>
@@ -165,24 +169,24 @@ const UpdateBaby = () => {
 
                 {/* 이미지 파일 입력 필드 추가 */}
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='50px'>이미지</Text>
-                    <Input type="file" onChange={handleFileChange} size='lg' bg='white' width='500px' h='60px' />
+                    <Text fontSize='xl' as='b' marginRight='50px' fontFamily="'Nanum Gothic', cursive">이미지</Text>
+                    <Input type="file" onChange={handleFileChange} size='lg' bg='white' width='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
                 </Flex>
 
                 {/* 수정하기 버튼 */}
-                <Button onClick={handleButtonClick} marginTop='20px' marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
+                <Button onClick={handleButtonClick} marginTop='20px' marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">수정하기</Button>
 
             </Box>
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>필수</ModalHeader>
-                    <ModalBody>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
+                    <ModalBody fontFamily="'Nanum Gothic', cursive">
                         출산예정일은 필수항목입니다. <br />
                         yyyy-mm-dd 형식으로 입력해주세요.
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)}>
+                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
                             확인
                         </Button>
                     </ModalFooter>

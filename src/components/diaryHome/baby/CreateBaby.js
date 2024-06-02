@@ -95,9 +95,9 @@ const CreateBaby = () => {
                 flexDirection='column'>
 
 
-                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='30px'>아기 등록하기</Text>
-                <Input placeholder='태명' name='nickname' value={babyInfo.nickname} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
-                <Input placeholder='이름' name='name' value={babyInfo.name} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
+                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='30px' fontFamily="'Nanum Gothic', cursive">아기 등록하기</Text>
+                <Input placeholder='태명' name='nickname' value={babyInfo.nickname} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
+                <Input placeholder='이름' name='name' value={babyInfo.name} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
                 <RadioGroup
                     bg='white'
                     w='500px'
@@ -107,7 +107,7 @@ const CreateBaby = () => {
                     defaultValue={babyInfo.gender}
                     onChange={(value) => setBabyInfo({ ...babyInfo, gender: value })}>
                     <Stack spacing={5} direction='row' alignItems='center'>
-                        <Radio color='#765d2f' size='lg' colorScheme='yellow' value='M'>
+                        <Radio color='#765d2f' size='lg' colorScheme='yellow' value='M' >
                             남자
                         </Radio>
                         <Radio color='#765d2f' size='lg' colorScheme='yellow' value='F'>
@@ -116,8 +116,8 @@ const CreateBaby = () => {
                     </Stack>
                 </RadioGroup>
 
-                <Input placeholder='출산예정일' name='expected_date' value={babyInfo.expected_date} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
-                <Select placeholder='혈액형' bg='white' w='500px' h='60px' defaultValue={babyInfo.blood_type}
+                <Input placeholder='출산예정일' name='expected_date' value={babyInfo.expected_date} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" />
+                <Select placeholder='혈액형' bg='white' w='500px' h='60px' defaultValue={babyInfo.blood_type} fontFamily="'Nanum Gothic', cursive"
                     onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })}>
                     <option value='A'>A</option>
                     <option value='B'>B</option>
@@ -125,8 +125,8 @@ const CreateBaby = () => {
                     <option value='AB'>AB</option>
                 </Select>
 
-                <Select placeholder='아기와의 관계' bg='white' w='500px' h='60px' defaultValue={babyInfo.position}
-                    onChange={(e) => setBabyInfo({ ...babyInfo, position: e.target.value })}>
+                <Select placeholder='아기와의 관계' bg='white' w='500px' h='60px' defaultValue={babyInfo.position} fontFamily="'Nanum Gothic', cursive"
+                    onChange={(e) => setBabyInfo({ ...babyInfo, position: e.target.value })} >
                     <option value='mother'>엄마</option>
                     <option value='father'>아빠</option>
                 </Select>
@@ -140,9 +140,10 @@ const CreateBaby = () => {
                     accept='image/*'
                     onChange={handleImageChange}
                     marginBottom='10px'
+                    fontFamily="'Nanum Gothic', cursive"
                 />
 
-                <Button onClick={handleButtonClick} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} marginBottom='50px' disabled={loading}>
+                <Button onClick={handleButtonClick} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive" marginBottom='50px' disabled={loading}>
                     {loading ? <Spinner size='sm' /> : '등록하기'}
                 </Button>
             </Box>
@@ -150,13 +151,13 @@ const CreateBaby = () => {
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>필수</ModalHeader>
-                    <ModalBody>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
+                    <ModalBody fontFamily="'Nanum Gothic', cursive">
                         출산예정일은 필수항목입니다. <br />
                         yyyy-mm-dd 형식으로 입력해주세요.
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)}>
+                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
                             확인
                         </Button>
                     </ModalFooter>

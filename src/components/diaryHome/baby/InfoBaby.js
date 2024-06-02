@@ -5,6 +5,8 @@ import { useSession } from '../../module/SessionComponent';
 
 const InfoBaby = () => {
 
+    const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
+
     const navigate = useNavigate();
 
     const userSample = sessionStorage.getItem('userInfo');
@@ -77,50 +79,50 @@ const InfoBaby = () => {
                 justifyContent="center"
                 flexDirection='column'>
 
-                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='15px'>아기 정보</Text>
+                <Text fontSize='4xl' as='b' color='#765d2f' marginTop='30px' marginBottom='15px' fontFamily="'Nanum Gothic', cursive">아기 정보</Text>
 
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    {data.url ? <Image
-                        src={data.url}
-                        w='300px'
-                        h='200px'
-                        alt='Baby Image'
-                        marginTop='20px'
-                        marginBottom='30px'
-                    /> : null}
+                    {data.url ?                                     <Image
+                                        src={data.url}
+                                        width='250px'
+                                        height='auto'
+                                        alt='Baby Image'
+                                        marginTop='20px'
+                                        objectFit='cover'
+                                    /> : null}
 
                 </Flex>
 
-                <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>태명</Text>
-                    <Input name='nickname' value={data.nickname || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                <Flex direction="row" justifyContent="center" alignItems="center" height="auto" marginTop='20px' >
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">태명</Text>
+                    <Input name='nickname' value={data.nickname || ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>이름</Text>
-                    <Input name='name' value={data.name || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">이름</Text>
+                    <Input name='name' value={data.name || ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='65px'>성별</Text>
-                    <Input name='gender' value={data.gender === 'M' ? '왕자' : data.gender === 'F' ? '공주' : ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Text fontSize='xl' as='b' marginRight='65px' fontFamily="'Nanum Gothic', cursive">성별</Text>
+                    <Input name='gender' value={data.gender === 'M' ? '왕자' : data.gender === 'F' ? '공주' : ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='10px'>출산예정일</Text>
-                    <Input name='expected_date' value={data.expected_date || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Text fontSize='xl' as='b' marginRight='10px' fontFamily="'Nanum Gothic', cursive">출산예정일</Text>
+                    <Input name='expected_date' value={data.expected_date || ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
                 <Flex direction="row" justifyContent="center" alignItems="center" height="auto" >
-                    <Text fontSize='xl' as='b' marginRight='50px'>혈액형</Text>
-                    <Input name='blood_type' value={data.blood_type || ''} size='lg' bg='white' w='500px' h='60px' isReadOnly />
+                    <Text fontSize='xl' as='b' marginRight='50px' fontFamily="'Nanum Gothic', cursive">혈액형</Text>
+                    <Input name='blood_type' value={data.blood_type || ''} size='lg' bg='white' w='500px' h='60px' fontFamily="'Nanum Gothic', cursive" isReadOnly />
                 </Flex>
 
                 {data.position === 'mother' || data.position === 'father' ?
                     <Flex direction="row" justifyContent="center" alignItems="center" height="auto" marginTop='30px' marginBottom='50px' >
-                        <Button onClick={() => handleOptionClick('updateBaby')} marginRight='20px' w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
-                        <Button onClick={handleDelete} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>삭제하기</Button>
+                        <Button onClick={() => handleOptionClick('updateBaby')} marginRight='20px' w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>수정하기</Button>
+                        <Button onClick={handleDelete} w='100px' bg='#e0ccb3' fontFamily="'Nanum Gothic', cursive" _hover={{ color: '#fffbf0' }}>삭제하기</Button>
                     </Flex>
                     : null}
             </Box>
