@@ -6,33 +6,37 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const CommunityTalk = () => {
     const [data, setData] = useState([]);
+    const [category, setCategory] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/chat`);
-                const result = await response.json();
-                console.log('Fetched data:', result); // 데이터 로그 출력
-
-                // 데이터 구조 확인
-                if (Array.isArray(result)) {
-                    console.log('Data is an array with length:', result.length);
-                    result.forEach((item, index) => console.log(`Item ${index}:`, item));
-                    setData(result);
-                } else {
-                    console.error('Fetched data is not an array:', result);
+        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/chat`)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setData(data);
+                // 데이터에서 첫 번째 아이템의 카테고리 정보 가져오기
+                if (data.length > 0) {
+                    setCategory(data[0].category);
+                    console.log(data[0].category);
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
+            })
+            .catch(error => {
+                console.error('데이터를 가져오는 중 에러 발생', error);
+            });
     }, []);
 
     const handleCreate = () => {
-        navigate('/community/create'); // 작성하기 페이지로 이동
+        // 여기서 사용자가 로그인되어 있는지 확인
+        const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+        if (!loggedIn) {
+            alert("글을 작성하려면 로그인이 필요합니다.");
+            return;
+        }
+        navigate('/community/create?command=create'); // 작성하기 페이지로 이동
     };
 
     return (
