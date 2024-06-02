@@ -31,9 +31,9 @@ const UpdateBaby = () => {
         code: baby.code,
         nickname: '',
         name: '',
-        gender: null,
+        gender: baby.gender,
         expected_date: '',
-        blood_type: null,
+        blood_type: baby.blood_type,
         photo: ''
     });
 
