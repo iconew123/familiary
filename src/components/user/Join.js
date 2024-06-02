@@ -181,7 +181,7 @@ const Join = () => {
                 if (userData.status === 200) {
                     console.log('회원가입 성공');
                     loginStatus(userData);
-                    navigate('/myPage');
+                    navigate('/');
                 } else {
                     console.log('회원가입 실패:', userData.message);
                 }

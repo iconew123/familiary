@@ -351,14 +351,14 @@ const DiaryMain = () => {
                             <MyCalendar onDateSelect={handleDateSelect} />
                         </GridItem>
 
-                        <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'} textAlign={'center'}>
+                        <GridItem w='95%' h='150px' bg='#E0CCB3' area={'diaryInfo'} textAlign={'center'}>
                             <Grid
                                 w='100%'
                                 h='100%'
                                 templateAreas={`"dailyWrite"`}
                                 templateRows={'1fr'}
                             >
-                                <GridItem bg='blue.300' area={'dailyWrite'}>
+                                <GridItem bg='#E0CCB3' area={'dailyWrite'} >
                                     <Text fontSize='3xl' fontFamily="'Nanum Gothic', cursive">
                                         [일기] :
                                         {!serverData
