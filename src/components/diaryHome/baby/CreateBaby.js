@@ -1,5 +1,5 @@
-import { Box, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text } from '@chakra-ui/react';
-import React, {useState } from 'react';
+import { Box, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Spinner, Stack, Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CreateBaby = () => {
@@ -33,15 +33,16 @@ const CreateBaby = () => {
     };
 
 
-      // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
-      const userSample = sessionStorage.getItem('userInfo');
-      // 문자열(JSON)을 다시 리스트로 파싱하여 사용
-      const user = JSON.parse(userSample);
-  
+    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
+    const userSample = sessionStorage.getItem('userInfo');
+    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
+    const user = JSON.parse(userSample);
+
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleButtonClick = () => {   
+    const [loading, setLoading] = useState(false);
+    const handleButtonClick = () => {
         console.log("id: " + user.id);
 
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -50,6 +51,8 @@ const CreateBaby = () => {
             setIsOpen(true);
             return;
         }
+
+        setLoading(true); // 로딩 상태 시작
 
         const formData = new FormData();
         formData.append('user_id', user.id);
@@ -66,6 +69,7 @@ const CreateBaby = () => {
             body: formData
         })
             .then(response => {
+                setLoading(false); // 로딩 상태 종료
                 if (response.ok) {
                     console.log('데이터 전송 성공');
                     navigate('/diary');
@@ -114,7 +118,7 @@ const CreateBaby = () => {
 
                 <Input placeholder='출산예정일' name='expected_date' value={babyInfo.expected_date} onChange={handleInputChange} size='lg' bg='white' w='500px' h='60px' />
                 <Select placeholder='혈액형' bg='white' w='500px' h='60px' defaultValue={babyInfo.blood_type}
-                 onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })}>
+                    onChange={(e) => setBabyInfo({ ...babyInfo, blood_type: e.target.value })}>
                     <option value='A'>A</option>
                     <option value='B'>B</option>
                     <option value='O'>O</option>
@@ -122,7 +126,7 @@ const CreateBaby = () => {
                 </Select>
 
                 <Select placeholder='아기와의 관계' bg='white' w='500px' h='60px' defaultValue={babyInfo.position}
-                 onChange={(e) => setBabyInfo({ ...babyInfo, position: e.target.value })}>
+                    onChange={(e) => setBabyInfo({ ...babyInfo, position: e.target.value })}>
                     <option value='mother'>엄마</option>
                     <option value='father'>아빠</option>
                 </Select>
@@ -138,8 +142,9 @@ const CreateBaby = () => {
                     marginBottom='10px'
                 />
 
-                <Button onClick={handleButtonClick} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} marginBottom='50px'>등록하기</Button>
-
+                <Button onClick={handleButtonClick} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} marginBottom='50px' disabled={loading}>
+                    {loading ? <Spinner size='sm' /> : '등록하기'}
+                </Button>
             </Box>
 
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
