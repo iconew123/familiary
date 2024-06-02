@@ -41,6 +41,7 @@ const CreateBaby = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [nicknameModalOpen, setNicknameModalOpen] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const handleButtonClick = () => {
@@ -48,6 +49,11 @@ const CreateBaby = () => {
 
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
+        if (!babyInfo.nickname) {
+            setNicknameModalOpen(true);
+            return;
+        }
+        
         if (!datePattern.test(babyInfo.expected_date)) {
             setIsOpen(true);
             return;
@@ -154,6 +160,21 @@ const CreateBaby = () => {
                 </Button>
             </Box>
 
+            <Modal isOpen={nicknameModalOpen} onClose={() => setNicknameModalOpen(false)}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">필수</ModalHeader>
+                    <ModalBody fontFamily="'Nanum Gothic', cursive">
+                        태명은 필수항목입니다.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setNicknameModalOpen(false)} fontFamily="'Nanum Gothic', cursive">
+                            확인
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <ModalOverlay />
                 <ModalContent>
