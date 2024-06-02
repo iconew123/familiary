@@ -185,7 +185,7 @@ const UpdateBaby = () => {
                         yyyy-mm-dd 형식으로 입력해주세요.
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
+                        <Button contrastmr={3} bg='#e0ccb3' _hover={{ color: '#fffbf0' }} onClick={() => setIsOpen(false)} fontFamily="'Nanum Gothic', cursive">
                             확인
                         </Button>
                     </ModalFooter>
