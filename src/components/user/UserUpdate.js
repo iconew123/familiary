@@ -20,42 +20,107 @@ const UserUpdate = () => {
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
     const loggedIn = sessionStorage.getItem('isLoggedIn');
-    
+
     useEffect(() => {
         if (!loggedIn) {
             navigate('/');
         }
     }, [isLoggedIn, navigate]);
 
+    const checkDuplicate = async (field, value) => {
+        const formData = new URLSearchParams();
+        formData.append('field', field);
+        formData.append('value', value);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User/checkDuplicate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+            const data = await response.json();
+            return data.isDuplicate;
+        } catch (error) {
+            console.error('네트워크 오류', error);
+            return false;
+        }
+    };
+
+    const handleBlur = async (field, value, setError) => {
+        if (value) {
+            const isDuplicate = await checkDuplicate(field, value);
+            if (isDuplicate) {
+                setError(`${field}가 이미 사용 중입니다.`);
+            } else {
+                setError(false);
+            }
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!password || !newPassword) {
-            if (!password) {
-                setPasswordError('기존 비밀번호를 입력하세요.');
-            } else {
-                setPasswordError('');
-            }
+        let hasError = false;
 
-            if (!newPassword) {
-                setNewPasswordError('새로운 비밀번호를 입력하세요.');
-            } else {
-                setNewPasswordError('');
-            }
+        if (!password) {
+            setPasswordError('비밀번호를 입력하세요.');
+            hasError = true;
+        } else {
+            setPasswordError(false);
+        }
 
-            return;
+        if (!newPassword) {
+            setNewPasswordError('새로운 비밀번호를 입력하세요.');
+        } else {
+            setNewPasswordError(flase);
         }
 
         // 비밀번호가 일치하는지 확인
         if (password !== user.password) {
             setPasswordError('기존 비밀번호가 일치하지 않습니다.');
-            return;
+            hasError = true;
         } else {
-            setPasswordError('');
+            setPasswordError(flase);
+        }
+
+        if (nickname) {
+            const isDuplicate = await checkDuplicate('nickname', nickname);
+            if (isDuplicate) {
+                setNicknameError('닉네임이 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setNicknameError(false);
+            }
+        }
+
+        if (phone) {
+            const isDuplicate = await checkDuplicate('phone', phone);
+            if (isDuplicate) {
+                setPhoneError('핸드폰번호가 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setPhoneError(false);
+            }
+        }
+
+        if (email) {
+            const isDuplicate = await checkDuplicate('email', email);
+            if (isDuplicate) {
+                setEmailError('이메일이 이미 사용 중입니다.');
+                hasError = true;
+            } else {
+                setEmailError(false);
+            }
+        }
+
+        // 에러발생 > 멈춰
+        if (hasError) {
+            return;
         }
 
         const formData = new URLSearchParams();
-        formData.append('id', user.id); 
+        formData.append('id', user.id);
         formData.append('password', password);
         formData.append('newPassword', newPassword);
         formData.append('newNickname', newNickname || user.nickname);
@@ -113,7 +178,7 @@ const UserUpdate = () => {
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
-                    
+
                     <Input
                         type="password"
                         value={newPassword}
