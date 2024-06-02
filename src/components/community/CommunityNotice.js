@@ -1,12 +1,13 @@
 import { Heading } from '@chakra-ui/layout';
-import { Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CommunityNotice = () => {
     const [data, setData] = useState([]);
     const [category, setCategory] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/notice`)
@@ -26,6 +27,10 @@ const CommunityNotice = () => {
                 console.error('데이터를 가져오는 중 에러 발생', error);
             });
     }, []);
+
+    const handleCreate = () => {
+        navigate('/community/create'); // 작성하기 페이지로 이동
+    };
     
     return (
         <>
@@ -33,9 +38,8 @@ const CommunityNotice = () => {
                 <Heading>
                     공지사항
                 </Heading>
-
             </Box>
-            <TableContainer>
+            <Box>
                 <Table variant={"striped"} colorScheme="teal">
                     <Thead>
                         <Tr>
@@ -45,17 +49,24 @@ const CommunityNotice = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {data.map((item, index) => (
+                        {data.length > 0 ? data.map((item, index) => (
                             <Tr key={index}>
-                                <Td><Link to={`detail?command=read/detail&code=${item.code}&category=${category}`}>{item.title}</Link></Td>
+                                <Td><Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>{item.title}</Link></Td>
                                 <Td>{item.userNickName}</Td>
                                 <Td>{item.regDate}</Td>
                             </Tr>
-                        ))}
+                        )) : (
+                            <Tr>
+                                <Td colSpan="3">데이터가 없습니다</Td>
+                            </Tr>
+                        )}
                     </Tbody>
                     <Tfoot></Tfoot>
                 </Table>
-            </TableContainer>
+            </Box>
+            <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
+                작성하기
+            </Button>
         </>
     );
 };

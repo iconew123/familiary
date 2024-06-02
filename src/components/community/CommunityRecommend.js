@@ -1,12 +1,13 @@
 import { Heading } from '@chakra-ui/layout';
-import { Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CommunityRecommend = () => {
     const [data, setData] = useState([]);
     const [category, setCategory] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/recommend`)
@@ -26,6 +27,10 @@ const CommunityRecommend = () => {
                 console.error('데이터를 가져오는 중 에러 발생', error);
             });
     }, []);
+
+    const handleCreate = () => {
+        navigate('/community/create'); // 작성하기 페이지로 이동
+    };
     
     return (
         <>
@@ -35,8 +40,7 @@ const CommunityRecommend = () => {
                 </Heading>
 
             </Box>
-            <TableContainer>
-                <Table variant={"striped"} colorScheme="teal">
+                <Table>
                     <Thead>
                         <Tr>
                             <Th>제목</Th>
@@ -55,7 +59,10 @@ const CommunityRecommend = () => {
                     </Tbody>
                     <Tfoot></Tfoot>
                 </Table>
-            </TableContainer>
+
+            <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
+                작성하기
+            </Button>
         </>
     );
 };
