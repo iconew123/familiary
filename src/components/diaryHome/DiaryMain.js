@@ -7,7 +7,7 @@ import { Image } from '@chakra-ui/react';
 import { CiImageOff } from "react-icons/ci";
 import { useSession } from '../module/SessionComponent';
 
-const fetchDiaryDetailInfo = async (formatDate,selectedBabyCode) => {
+const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
     const now = new Date();
     const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}&babycode=${selectedBabyCode}`);
     const data = await response.json();
@@ -25,8 +25,8 @@ const DiaryMain = () => {
     // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
 
-    
-    const navigate = useNavigate(); 
+
+    const navigate = useNavigate();
     const [showRecordOptions, setShowRecordOptions] = useState(false);
     const [showSearchOptions, setShowSearchOptions] = useState(false);
     const [targetDate, setTargetDate] = useState('');
@@ -42,7 +42,7 @@ const DiaryMain = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
             .then(babyData => {
-                
+
                 if (!babyData.codes) {
                     handleModalOpen();
                 } else {
@@ -89,8 +89,8 @@ const DiaryMain = () => {
 
     useEffect(() => {
         if (formatDate && selectedBabyCode) {
-            fetchDiaryDetailInfo(formatDate,selectedBabyCode).then(data => {
-                setServerData(data,selectedBabyCode);
+            fetchDiaryDetailInfo(formatDate, selectedBabyCode).then(data => {
+                setServerData(data, selectedBabyCode);
             });
         }
     }, [formatDate]);
@@ -119,18 +119,18 @@ const DiaryMain = () => {
         }
     };
 
-    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false); 
+    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false);
 
     const handleBabyModalOpen = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
             .then(babyData => {
-                
+
                 if (!babyData.codes) {
                     handleModalOpen();
-                } else { 
-                        setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
-                        setIsBabyModalOpen(true);
+                } else {
+                    setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
+                    setIsBabyModalOpen(true);
                 }
             })
             .catch(error => {
@@ -140,7 +140,7 @@ const DiaryMain = () => {
 
 
     const handleBabyModalClose = () => {
-        setIsBabyModalOpen(false); 
+        setIsBabyModalOpen(false);
     };
 
     const handleModalOpen = () => {
@@ -154,7 +154,7 @@ const DiaryMain = () => {
     const handleDateSelect = (date) => {
         setFormatDate(date);
     };
-    
+
     // 다이어리 생성
     const [diary, setdiary] = useState({
         title: '',
@@ -163,7 +163,7 @@ const DiaryMain = () => {
     });
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         console.log("name : " + name);
         console.log("value : " + value);
         setdiary(prevState => ({
@@ -172,7 +172,7 @@ const DiaryMain = () => {
         }))
     };
 
-    const [photo,setPhoto] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setPhoto(file);
@@ -184,15 +184,15 @@ const DiaryMain = () => {
 
         setIsLoading(true);
 
-        if(!diary.title){
+        if (!diary.title) {
             alert("제목을 입력해주세요.");
             return;
         }
-        if(!diary.content){
+        if (!diary.content) {
             alert("제목을 입력해주세요.");
             return;
         }
-        if(!diary.category){
+        if (!diary.category) {
             alert("제목을 입력해주세요.");
             return;
         }
@@ -205,44 +205,44 @@ const DiaryMain = () => {
         if (photo !== null) {
             formData.append('photo', photo);
         }
-        
+
         fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=create`, {
             method: 'POST',
             body: formData
         })
-        .then(response => {
-            if (response.ok) {
-                console.log('데이터 전송 성공');
-                onRecordModalClose();
-                
-                // 입력 성공 후 서버로부터 데이터 가져오기
-                fetchDiaryDetailInfo(currentDate, selectedBabyCode)
-                    .then(data => {
-                        // 데이터 업데이트
-                        setServerData(data);
-                    })
-                    .catch(error => {
-                        console.error('데이터를 가져오는 중 에러 발생', error);
-                        alert('데이터를 가져오는 중 에러가 발생했습니다.');
-                    });
-            } else {
-                console.log('데이터 전송 실패');
-                alert('데이터 전송에 실패했습니다.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            if (data.status === 400) {
-                alert(data.message_diary);
-            }
-        })
-        .catch(error => {
-            console.error('데이터를 전송하는 중 에러 발생', error);
-            alert('데이터 전송 중 에러가 발생했습니다.');
-        });
+            .then(response => {
+                if (response.ok) {
+                    console.log('데이터 전송 성공');
+                    onRecordModalClose();
+
+                    // 입력 성공 후 서버로부터 데이터 가져오기
+                    fetchDiaryDetailInfo(currentDate, selectedBabyCode)
+                        .then(data => {
+                            // 데이터 업데이트
+                            setServerData(data);
+                        })
+                        .catch(error => {
+                            console.error('데이터를 가져오는 중 에러 발생', error);
+                            alert('데이터를 가져오는 중 에러가 발생했습니다.');
+                        });
+                } else {
+                    console.log('데이터 전송 실패');
+                    alert('데이터 전송에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data.status === 400) {
+                    alert(data.message_diary);
+                }
+            })
+            .catch(error => {
+                console.error('데이터를 전송하는 중 에러 발생', error);
+                alert('데이터 전송 중 에러가 발생했습니다.');
+            });
     };
-    
+
 
     return (
         <>
@@ -272,10 +272,11 @@ const DiaryMain = () => {
                                     <Image
                                         src={data.url}
                                         borderRadius='full'
-                                        w='500px'
-                                        h='300px'
+                                        width='300px'
+                                        height='auto'
                                         alt='Baby Image'
                                         marginTop='20px'
+                                        objectFit='cover'
                                     />
                                 ) : (
                                     <Icon as={CiImageOff} w={500} h={300} marginTop='20px' />
@@ -291,11 +292,11 @@ const DiaryMain = () => {
                                     <Text fontSize="xl"></Text>
                                 )}
                                 <Flex justifyContent="center">
-                                <Button onClick={() => handleOptionClick('infoBaby')} w='210px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
+                                    <Button onClick={() => handleOptionClick('infoBaby')} w='210px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
                                 </Flex>
                                 <Flex justifyContent="center">
-                                <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
-                                <Button onClick={handleBabyModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>선택하기</Button>
+                                    <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
+                                    <Button onClick={handleBabyModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>선택하기</Button>
                                 </Flex>
                             </>
                         )}
@@ -340,15 +341,15 @@ const DiaryMain = () => {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar onDateSelect={handleDateSelect} /> 
+                            <MyCalendar onDateSelect={handleDateSelect} />
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'} textAlign={'center'}>
                             <Grid
-                            w='100%'
-                            h='100%'
-                            templateAreas={`"dailyWrite"`}
-                            templateRows={'1fr'}
+                                w='100%'
+                                h='100%'
+                                templateAreas={`"dailyWrite"`}
+                                templateRows={'1fr'}
                             >
                                 <GridItem bg='blue.300' area={'dailyWrite'}>
                                     <Text fontSize='3xl'>
