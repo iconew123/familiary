@@ -38,9 +38,19 @@ const CreateCommunity = () => {
         }));
     };
 
+    const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = async () => {
+        setIsLoading(true);
+
         if (!community.title || !community.content || !community.category) {
             alert("제목, 내용, 카테고리를 모두 입력해주세요.");
+            return;
+        }
+
+        // 공지사항에 글을 작성할 수 있는지 여부를 판단
+        if (community.category === 'notice' && !user.is_admin) {
+            alert("권한이 없습니다. 공지사항에 글을 작성할 수 있는 권한이 필요합니다.");
+            setIsLoading(false);
             return;
         }
 
