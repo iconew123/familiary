@@ -7,7 +7,9 @@ import { Image } from '@chakra-ui/react';
 import { CiImageOff } from "react-icons/ci";
 import { useSession } from '../module/SessionComponent';
 
-const fetchDiaryDetailInfo = async (formatDate,selectedBabyCode) => {
+const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
+
+const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
     const now = new Date();
     const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}&babycode=${selectedBabyCode}`);
     const data = await response.json();
@@ -25,8 +27,8 @@ const DiaryMain = () => {
     // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
 
-    
-    const navigate = useNavigate(); 
+
+    const navigate = useNavigate();
     const [showRecordOptions, setShowRecordOptions] = useState(false);
     const [showSearchOptions, setShowSearchOptions] = useState(false);
     const [targetDate, setTargetDate] = useState('');
@@ -42,7 +44,7 @@ const DiaryMain = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
             .then(babyData => {
-                
+
                 if (!babyData.codes) {
                     handleModalOpen();
                 } else {
@@ -89,8 +91,8 @@ const DiaryMain = () => {
 
     useEffect(() => {
         if (formatDate && selectedBabyCode) {
-            fetchDiaryDetailInfo(formatDate,selectedBabyCode).then(data => {
-                setServerData(data,selectedBabyCode);
+            fetchDiaryDetailInfo(formatDate, selectedBabyCode).then(data => {
+                setServerData(data, selectedBabyCode);
             });
         }
     }, [formatDate]);
@@ -119,18 +121,18 @@ const DiaryMain = () => {
         }
     };
 
-    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false); 
+    const [isBabyModalOpen, setIsBabyModalOpen] = useState(false);
 
     const handleBabyModalOpen = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
             .then(babyData => {
-                
+
                 if (!babyData.codes) {
                     handleModalOpen();
-                } else { 
-                        setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
-                        setIsBabyModalOpen(true);
+                } else {
+                    setBabyData({ codes: babyData.codes, nicknames: babyData.nicknames });
+                    setIsBabyModalOpen(true);
                 }
             })
             .catch(error => {
@@ -140,7 +142,7 @@ const DiaryMain = () => {
 
 
     const handleBabyModalClose = () => {
-        setIsBabyModalOpen(false); 
+        setIsBabyModalOpen(false);
     };
 
     const handleModalOpen = () => {
@@ -154,7 +156,7 @@ const DiaryMain = () => {
     const handleDateSelect = (date) => {
         setFormatDate(date);
     };
-    
+
     // 다이어리 생성
     const [diary, setdiary] = useState({
         title: '',
@@ -163,7 +165,7 @@ const DiaryMain = () => {
     });
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         console.log("name : " + name);
         console.log("value : " + value);
         setdiary(prevState => ({
@@ -172,7 +174,7 @@ const DiaryMain = () => {
         }))
     };
 
-    const [photo,setPhoto] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setPhoto(file);
@@ -183,17 +185,17 @@ const DiaryMain = () => {
     const handleButtonClick = () => {
         setIsLoading(true);
     
-        if (!diary.title) {
+        if  (!diary.title)  {
             alert("제목을 입력해주세요.");
             setIsLoading(false);
             return;
         }
-        if (!diary.content) {
+        if  (!diary.content)  {
             alert("내용을 입력해주세요.");
             setIsLoading(false);
             return;
         }
-        if (!diary.category) {
+        if  (!diary.category)  {
             alert("카테고리를 선택해주세요.");
             setIsLoading(false);
             return;
@@ -246,7 +248,7 @@ const DiaryMain = () => {
             setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
         });
     };
-    
+
 
     return (
         <>
@@ -268,7 +270,7 @@ const DiaryMain = () => {
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Button onClick={handleModalOpen} w='200px' h='70px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>등록하기</Button>
+                                <Button onClick={handleModalOpen} w='200px' h='70px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">등록하기</Button>
                             </Box>
                         ) : (
                             <>
@@ -276,30 +278,31 @@ const DiaryMain = () => {
                                     <Image
                                         src={data.url}
                                         borderRadius='full'
-                                        w='500px'
-                                        h='300px'
+                                        width='300px'
+                                        height='auto'
                                         alt='Baby Image'
                                         marginTop='20px'
+                                        objectFit='cover'
                                     />
                                 ) : (
                                     <Icon as={CiImageOff} w={500} h={300} marginTop='20px' />
                                 )}
                                 <br />
-                                <Text fontSize='4xl' as='b'>{data.nickname}</Text>
-                                <Text fontSize='xl'>출산예정일 : {data.expected_date} </Text>
+                                <Text fontSize='4xl' as='b' fontFamily="'Nanum Gothic', cursive">{data.nickname}</Text>
+                                <Text fontSize='xl' fontFamily="'Nanum Gothic', cursive">출산예정일 : {data.expected_date} </Text>
                                 {dDay > 0 ? (
-                                    <Text fontSize="xl">태어나기까지 {dDay}일</Text>
+                                    <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive" >태어나기까지 {dDay}일</Text>
                                 ) : dDay < 0 ? (
-                                    <Text fontSize="xl">태어난지 {Math.abs(dDay)}일</Text>
+                                    <Text fontSize="xl" fontFamily="'Nanum Gothic'" >태어난지 {Math.abs(dDay)}일</Text>
                                 ) : (
                                     <Text fontSize="xl"></Text>
                                 )}
                                 <Flex justifyContent="center">
-                                <Button onClick={() => handleOptionClick('infoBaby')} w='210px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>정보보기</Button>
+                                    <Button onClick={() => handleOptionClick('infoBaby')} w='210px' bg='#e0ccb3' marginTop='20px' marginRight='10px' fontFamily="'Nanum Gothic'" _hover={{ color: '#fffbf0' }}>정보보기</Button>
                                 </Flex>
                                 <Flex justifyContent="center">
-                                <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' _hover={{ color: '#fffbf0' }}>추가하기</Button>
-                                <Button onClick={handleBabyModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' _hover={{ color: '#fffbf0' }}>선택하기</Button>
+                                    <Button onClick={handleModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' marginRight='10px' fontFamily="'Nanum Gothic'" _hover={{ color: '#fffbf0' }}>추가하기</Button>
+                                    <Button onClick={handleBabyModalOpen} w='100px' bg='#e0ccb3' marginTop='20px' fontFamily="'Nanum Gothic'" _hover={{ color: '#fffbf0' }}>선택하기</Button>
                                 </Flex>
                             </>
                         )}
@@ -310,8 +313,8 @@ const DiaryMain = () => {
                                 <ModalHeader>등록하기</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
-                                    <Button onClick={() => handleOptionClick('createBaby')} w='100%' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>아기등록</Button>
-                                    <Button onClick={() => handleOptionClick('joinBaby')} w='100%' bg='#e0ccb3' marginTop='10px' _hover={{ color: '#fffbf0' }}>아기코드입력</Button>
+                                    <Button onClick={() => handleOptionClick('createBaby')} w='100%' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">아기등록</Button>
+                                    <Button onClick={() => handleOptionClick('joinBaby')} w='100%' bg='#e0ccb3' marginTop='10px' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">아기코드입력</Button>
                                 </ModalBody>
                             </ModalContent>
                         </Modal>
@@ -319,12 +322,12 @@ const DiaryMain = () => {
                         <Modal isOpen={isBabyModalOpen} onClose={handleBabyModalClose}>
                             <ModalOverlay />
                             <ModalContent>
-                                <ModalHeader>선택하기</ModalHeader>
+                                <ModalHeader fontFamily="'Nanum Gothic', cursive">선택하기</ModalHeader>
                                 <ModalCloseButton />
                                 <ModalBody>
                                     <Flex direction="column">
                                         {babyData.nicknames.map((nickname, index) => (
-                                            <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} key={index} value={babyData.codes[index]} marginBottom="4px" onClick={() => { handleClick(babyData.codes[index]); handleBabyModalClose(); }} >
+                                            <Button bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive" key={index} value={babyData.codes[index]} marginBottom="4px" onClick={() => { handleClick(babyData.codes[index]); handleBabyModalClose(); }} >
                                                 {nickname}
                                             </Button>
                                         ))}
@@ -344,18 +347,18 @@ const DiaryMain = () => {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar onDateSelect={handleDateSelect} /> 
+                            <MyCalendar onDateSelect={handleDateSelect} />
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='pink' area={'diaryInfo'} textAlign={'center'}>
                             <Grid
-                            w='100%'
-                            h='100%'
-                            templateAreas={`"dailyWrite"`}
-                            templateRows={'1fr'}
+                                w='100%'
+                                h='100%'
+                                templateAreas={`"dailyWrite"`}
+                                templateRows={'1fr'}
                             >
                                 <GridItem bg='blue.300' area={'dailyWrite'}>
-                                    <Text fontSize='3xl'>
+                                    <Text fontSize='3xl' fontFamily="'Nanum Gothic', cursive">
                                         [일기] :
                                         {!serverData
                                             ? '해당일자의 정보가 없습니다'
@@ -370,7 +373,7 @@ const DiaryMain = () => {
                         <GridItem w='95%' area={'select'}>
                             <Flex justifyContent="flex-end">
                                 <Flex flexDirection="column" display={showSearchOptions ? 'flex' : 'none'}>
-                                    <Button onClick={() => handleOptionClick('showDiary')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} >일기 모아보기</Button>
+                                    <Button onClick={() => handleOptionClick('showDiary')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">일기 모아보기</Button>
                                 </Flex>
 
                                 <Button onClick={handleSearchClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
@@ -378,7 +381,7 @@ const DiaryMain = () => {
                                 </Button>
 
                                 <Flex flexDirection="column" display={showRecordOptions ? 'flex' : 'none'}>
-                                    <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>하루 기록</Button>
+                                    <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">하루 기록</Button>
                                 </Flex>
 
                                 <Button onClick={handleRecordClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
@@ -393,27 +396,27 @@ const DiaryMain = () => {
             <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>{currentDate}일의 다이어리 기록</ModalHeader>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">{currentDate}일의 다이어리 기록</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <VStack spacing={4}>
                             <FormControl isRequired>
-                                <FormLabel>제목</FormLabel>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">제목</FormLabel>
                                 <Input type="text" name="title" value={diary.title} onChange={handleInputChange} placeholder="제목을 입력하세요" />
                             </FormControl>
                             <FormControl isRequired>
-                                <FormLabel>내용</FormLabel>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">내용</FormLabel>
                                 <Textarea name="content" value={diary.content} onChange={handleInputChange} placeholder="내용을 입력하세요" />
                             </FormControl>
                             <FormControl isRequired>
-                                <FormLabel>타입</FormLabel>
-                                <Select name="category" value={diary.category} onChange={handleInputChange} placeholder="타입 선택">
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">타입</FormLabel>
+                                <Select name="category" value={diary.category} onChange={handleInputChange} placeholder="타입 선택" fontFamily="'Nanum Gothic', cursive">
                                     <option value="출산전">출산전</option>
                                     <option value="출산후">출산후</option>
                                 </Select>
                             </FormControl>
                             <FormControl>
-                                <FormLabel>이미지 업로드</FormLabel>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">이미지 업로드</FormLabel>
                                 <Input type="file" onChange={handleImageChange} accept="image/*" />
                             </FormControl>
                             <Button
