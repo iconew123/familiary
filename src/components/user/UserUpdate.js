@@ -6,20 +6,31 @@ import { useSession } from '../module/SessionComponent';
 const UserUpdate = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [newNickname, setNewNickname] = useState('');
-    const [newTelecom, setNewTelecom] = useState('');
-    const [newPhone, setNewPhone] = useState('');
-    const [newEmail, setNewEmail] = useState('');
-    const [newAddress, setNewAddress] = useState('');
-    const { isLoggedIn, userInfo, loginStatus } = useSession();
-    const [passwordError, setPasswordError] = useState('');
-    const [newPasswordError, setNewPasswordError] = useState('');
-    const [serverError, setServerError] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [telecom, setTelecom] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
 
+    const [passwordError, setPasswordError] = useState(false);
+    const [newPasswordError, setNewPasswordError] = useState(false);
+    const [nicknameError, setNicknameError] = useState(false);
+    const [telecomError, setTelecomError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+
+    const [idDuplError, setIdDuplError] = useState(false);
+    const [nicknameDuplError, setNicknameDuplError] = useState(false);
+    const [phoneDuplError, setPhoneDuplError] = useState(false);
+    const [emailDuplError, setEmailDuplError] = useState(false);
+
+
+    const [loading, setLoading] = useState(false);
+    const { isLoggedIn, loginStatus } = useSession();
     const navigate = useNavigate();
+    const loggedIn = sessionStorage.getItem('isLoggedIn');
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
-    const loggedIn = sessionStorage.getItem('isLoggedIn');
 
     useEffect(() => {
         if (!loggedIn) {
@@ -32,7 +43,7 @@ const UserUpdate = () => {
         formData.append('field', field);
         formData.append('value', value);
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User/checkDuplicate`, {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=checkDuplicate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -47,20 +58,10 @@ const UserUpdate = () => {
         }
     };
 
-    const handleBlur = async (field, value, setError) => {
-        if (value) {
-            const isDuplicate = await checkDuplicate(field, value);
-            if (isDuplicate) {
-                setError(`${field}가 이미 사용 중입니다.`);
-            } else {
-                setError(false);
-            }
-        }
-    };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        setLoading(true);
         let hasError = false;
 
         if (!password) {
@@ -72,16 +73,16 @@ const UserUpdate = () => {
 
         if (!newPassword) {
             setNewPasswordError('새로운 비밀번호를 입력하세요.');
+            hasError = true;
         } else {
-            setNewPasswordError(flase);
+            setNewPasswordError(false);
         }
 
-        // 비밀번호가 일치하는지 확인
         if (password !== user.password) {
             setPasswordError('기존 비밀번호가 일치하지 않습니다.');
             hasError = true;
         } else {
-            setPasswordError(flase);
+            setPasswordError(false);
         }
 
         if (nickname) {
@@ -114,8 +115,8 @@ const UserUpdate = () => {
             }
         }
 
-        // 에러발생 > 멈춰
         if (hasError) {
+            setLoading(false);
             return;
         }
 
@@ -123,13 +124,11 @@ const UserUpdate = () => {
         formData.append('id', user.id);
         formData.append('password', password);
         formData.append('newPassword', newPassword);
-        formData.append('newNickname', newNickname || user.nickname);
-        formData.append('newTelecom', newTelecom || user.telecom);
-        formData.append('newPhone', newPhone || user.phone);
-        formData.append('newEmail', newEmail || user.email);
-        formData.append('newAddress', newAddress || user.address);
-
-        console.log(userInfo.nickname);
+        formData.append('nickname', nickname || user.nickname);
+        formData.append('telecom', telecom || user.telecom);
+        formData.append('phone', phone || user.phone);
+        formData.append('email', email || user.email);
+        formData.append('address', address || user.address);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=update`, {
@@ -137,20 +136,27 @@ const UserUpdate = () => {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: formData
+                body: formData.toString()
             });
 
             if (response.ok) {
                 const userData = await response.json();
-                console.log('회원정보 변경 성공');
-                loginStatus(userData);
-                navigate('/user/myPage');
+                if (userData.status === 200) {
+                    console.log('회원 정보 변경 성공');
+                    loginStatus(userData);
+                    navigate('/myPage');
+                } else {
+                    console.log('회원 정보 변경 실패:', userData.message);
+                }
             } else {
-                const errorData = await response.json();
-                console.log('회원정보 변경 실패', errorData);
+                console.log('회원 정보 변경 요청 실패');
+                setPasswordError('서버 오류가 발생했습니다.');
             }
         } catch (error) {
-            console.error('회원정보변경 요청 중 에러 발생:', error);
+            console.error('회원 정보 변경 요청 중 에러 발생:', error);
+            setPasswordError('네트워크 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -178,6 +184,7 @@ const UserUpdate = () => {
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
+                    {passwordError && <Text color="red">{passwordError}</Text>}
 
                     <Input
                         type="password"
@@ -189,22 +196,25 @@ const UserUpdate = () => {
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
+                    {newPasswordError && <Text color="red">{newPasswordError}</Text>}
 
                     <Input
                         type="text"
                         defaultValue={user.nickname}
-                        id="newNickname"
-                        name="newNickname"
+                        id="nickname"
+                        name="nickname"
                         placeholder="닉네임"
-                        onChange={(e) => setNewNickname(e.target.value)}
+                        onChange={(e) => setNickname(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
+                    {nicknameError && <Text color="red">{nicknameError}</Text>}
+
                     <Select
-                        id="newTelecom"
-                        name="newTelecom"
+                        id="telecom"
+                        name="telecom"
                         defaultValue={user.telecom}
-                        onChange={(e) => setNewTelecom(e.target.value)}
+                        onChange={(e) => setTelecom(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     >
@@ -213,39 +223,43 @@ const UserUpdate = () => {
                         <option value="kt">KT</option>
                         <option value="lgt">LGU+</option>
                     </Select>
+                    {telecomError && <Text color="red">{telecomError}</Text>}
+
                     <Input
                         type="text"
                         defaultValue={user.phone}
-                        id="newPhone"
-                        name="newPhone"
+                        id="phone"
+                        name="phone"
                         placeholder="핸드폰번호"
-                        onChange={(e) => setNewPhone(e.target.value)}
+                        onChange={(e) => setPhone(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
+                    {phoneError && <Text color="red">{phoneError}</Text>}
+
                     <Input
-                        type="email"
+                        type="text"
                         defaultValue={user.email}
-                        id="newEmail"
-                        name="newEmail"
+                        id="email"
+                        name="email"
                         placeholder="이메일"
-                        onChange={(e) => setNewEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
+                    {emailError && <Text color="red">{emailError}</Text>}
+
                     <Input
                         type="text"
                         defaultValue={user.address}
-                        id="newAddress"
-                        name="newAddress"
+                        id="address"
+                        name="address"
                         placeholder="주소"
-                        onChange={(e) => setNewAddress(e.target.value)}
+                        onChange={(e) => setAddress(e.target.value)}
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
-                    {serverError && <Text color="red">{serverError}</Text>}
-                    {passwordError && <Text color="red">{passwordError}</Text>}
-                    {newPasswordError && <Text color="red">{newPasswordError}</Text>}
+
                     <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원정보수정</Button>
                 </form>
             </Box>
