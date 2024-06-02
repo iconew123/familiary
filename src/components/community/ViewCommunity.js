@@ -9,8 +9,16 @@ const ViewCommunity = () => {
     const navigate = useNavigate();
 
     const [data, setData] = useState({});
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
+        const userSample = sessionStorage.getItem('userInfo');
+        if (userSample) {
+            const user = JSON.parse(userSample);
+            setUser(user);
+            console.log("User ID from session:", user.id);
+        }
+        
         console.log("code: " + code);
         console.log("category: " + category);
 
@@ -25,6 +33,7 @@ const ViewCommunity = () => {
                 .then(responseData => {
                     console.log(responseData);
                     setData(responseData.community);  // `community` 객체로 데이터 설정
+                    console.log("커뮤니티 User ID:", responseData.community.userNickname);
                 })
                 .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
         }
@@ -41,7 +50,7 @@ const ViewCommunity = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('게시글 삭제 성공');
-                    navigate(`/familiary/community/${category}`); // 삭제 후 해당 리스트로 이동
+                    navigate(`/community/${category}`); // 삭제 후 해당 리스트로 이동
                 } else {
                     console.log('게시글 삭제 실패');
                 }
@@ -50,8 +59,11 @@ const ViewCommunity = () => {
     };
 
     const handleUpdate = () => {
-        navigate(`/community/update?code=${code}`); // 수정 페이지로 이동
+        navigate(`/community/update?command=update&code=${code}`); // 수정 페이지로 이동
     };
+
+    const isOwner = user && user.nickname === data.userNickname;
+    console.log("isOwner:", isOwner);
 
     return (
         <Box padding="20px">
@@ -59,8 +71,12 @@ const ViewCommunity = () => {
                 <Text fontSize="2xl" fontWeight="bold">{data.title}</Text>
                 <Text fontSize="md" color="gray.500">작성자: {data.userNickname}</Text>
                 <Text fontSize="lg">{data.content}</Text>
-                <Button onClick={handleUpdate} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
-                <Button onClick={handleDelete} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>삭제하기</Button>
+                {isOwner && (
+                    <>
+                        <Button onClick={handleUpdate} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>수정하기</Button>
+                        <Button onClick={handleDelete} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>삭제하기</Button>
+                    </>
+                )}
             </VStack>
         </Box>
     );
