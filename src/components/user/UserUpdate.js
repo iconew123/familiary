@@ -25,6 +25,7 @@ const UserUpdate = () => {
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
 
+    console.log(user.password);
     useEffect(() => {
         if (!loggedIn) {
             navigate('/');
@@ -137,7 +138,8 @@ const UserUpdate = () => {
                 const userData = await response.json();
                 if (userData.status === 200) {
                     console.log('회원 정보 변경 성공');
-                    navigate('/myPage');
+                    loginStatus(userData);
+                    navigate('/user/myPage');
                 } else {
                     console.log('회원 정보 변경 실패:', userData.message);
                 }
