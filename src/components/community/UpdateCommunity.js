@@ -20,7 +20,16 @@ const UpdateCommunity = () => {
         category: ''
     });
 
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
+        // 세션에서 사용자 정보 가져오기
+        const userSample = sessionStorage.getItem('userInfo');
+        const userInfo = JSON.parse(userSample);
+        if (userSample) {
+            setUser(userInfo);
+        }
+
         if (code) {
             fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
                 .then(response => {
@@ -38,6 +47,10 @@ const UpdateCommunity = () => {
 
     const [community, setCommunity] = useState(data);
 
+    useEffect(() => {
+        setCommunity(data);
+    }, [data]);
+
     // 입력 필드값이 변경 될 때마다 호출하는 함수
     const onChange = (event) => {
         const { value, name } = event.target;
@@ -47,14 +60,27 @@ const UpdateCommunity = () => {
         }));
     };
 
+    const [isLoading, setIsLoading] = useState(false);
     // 수정 버튼 클릭 핸들러
     const handleButtonClick = () => {
+        setIsLoading(true);
+
         const updatedData = {
             ...community,
             code: data.code
         };
 
+        // 공지사항에 글을 작성할 수 있는지 여부를 판단
+        if (community.category === 'notice' && !user.is_admin) {
+            alert("권한이 없습니다. 공지사항에 글을 작성할 수 있는 권한이 필요합니다.");
+            setIsLoading(false);
+            return;
+        }
+
         // 서버로 데이터 전송
+        const url = `${process.env.REACT_APP_SERVER_URL}/community?command=update`;
+        console.log('Sending request to:', url);
+        
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=update`, {
             method: 'POST',
             headers: {
@@ -65,13 +91,15 @@ const UpdateCommunity = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('데이터 전송 성공');
-                    navigate(`/community/detail?command=read/detail&code=${data.code}&category=${community.category}`);
+                    navigate(`/community/${community.category}/detail?command=read/detail&code=${data.code}&category=${community.category}`);
                 } else {
                     console.log('데이터 전송 실패');
+                    setIsLoading(false);
                 }
             })
             .catch(error => {
                 console.error('데이터를 전송하는 중 에러 발생', error);
+                setIsLoading(false);
             });
     };
 
@@ -79,7 +107,7 @@ const UpdateCommunity = () => {
         <>
             <Box id='input-container'>
                 <div>
-                    <Select value={community.category||data.category} variant='flushed' w='200px' padding='30px'
+                    <Select value={community.category || data.category} variant='flushed' w='200px' padding='30px'
                         onChange={(e) => setCommunity({ ...community, category: e.target.value })} >
                         <option disabled>게시판 선택</option>
                         <option value='notice'>공지사항</option>
@@ -88,7 +116,7 @@ const UpdateCommunity = () => {
                     </Select>
                 </div>
                 <VStack>
-                    <Input type="text" name='title' defaulutValue={community.title || data.title} onChange={onChange} placeholder='제목을 입력하세요' size='sm' bg='white' w='1400px' h="50px" marginTop='5px' />
+                    <Input type="text" name='title' defaultValue={community.title || data.title} onChange={onChange} placeholder='제목을 입력하세요' size='sm' bg='white' w='1400px' h="50px" marginTop='5px' />
                     <Textarea name='content' defaultValue={community.content || data.content} onChange={onChange} placeholder='내용을 입력하세요.' size='sm' w='1400px' h='1000px' />
                     <Button onClick={handleButtonClick} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} marginBottom='50px'>수정하기</Button>
                 </VStack>
