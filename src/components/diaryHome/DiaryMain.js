@@ -23,8 +23,8 @@ const DiaryMain = () => {
     const babySample = sessionStorage.getItem('babyInfo');
     const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
-    
 
+    console.log(user);
 
     // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
@@ -296,8 +296,8 @@ const DiaryMain = () => {
                                 <br />
                                 <Text fontSize='4xl' as='b' fontFamily="'Nanum Gothic', cursive">{data.nickname}</Text>
                                 <Text fontSize='xl' fontFamily="'Nanum Gothic', cursive">
-  {new Date(data.expected_date) <= new Date() ? '출산일' : '출산예정일'} : {data.expected_date} 
-</Text>
+                                        {new Date(data.expected_date) <= new Date() ? '출산일' : '출산예정일'} : {data.expected_date}
+                                    </Text>
                                 {dDay > 0 ? (
                                     <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive" >태어나기까지 {dDay}일</Text>
                                 ) : dDay < 0 ? (
