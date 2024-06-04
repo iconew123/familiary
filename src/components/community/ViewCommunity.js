@@ -133,6 +133,9 @@ const ViewCommunity = () => {
             setComments(prevComments => [jsonData, ...prevComments]); // 최신 댓글을 맨 위에 추가
             setComment(''); // 댓글 입력 필드 초기화
             console.log('댓글 등록 성공');
+            // 비동기 처리방식으로 바꿔도 댓글이 바로 안떠서 reload하는 방법을 채택
+            alert('댓글이 성공적으로 등록되었습니다.');
+            window.location.reload(); 
     
         } catch (error) {
             console.error('댓글 등록 중 에러 발생', error);
