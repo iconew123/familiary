@@ -35,6 +35,15 @@ const Header = () => {
             case 'guide':
                 url = 'http://localhost:3000/familiary/info/guide';
                 break;
+            case 'government':
+                url = 'http://localhost:3000/familiary/info/hospitalInfo';
+                break;
+            case 'hospital':
+                url = 'http://localhost:3000/familiary/info/government';
+                break;
+            case 'preantal':
+                url = 'http://localhost:3000/familiary/info/preantalEduation';
+                break;
             default:
                 break;
         }
@@ -81,11 +90,9 @@ const Header = () => {
                             </Select>
                             <Select placeholder='INFO' w='80px' size='lg' variant='unstyled' marginTop='11px' fontFamily="'Nanum Gothic', cursive">
                                 <option value='guide'>임산부 가이드</option>
-                                <option value='option2'>정부 지원사업</option>
-                                <option value='option3'>병원 정보</option>
-                                <option value='option4'>산후조리원 정보</option>
-                                <option value='option5'>영양제 정보</option>
-                                <option value='option6'>태교·운동</option>
+                                <option value='government'>정부 지원사업</option>
+                                <option value='hospital'>병원 정보</option>
+                                <option value='preantal'>태교·운동</option>
                             </Select>
                             <Link to="/user/MyPage"><Text fontSize='xl' marginTop='8px' color='#765d2f' fontFamily="'Nanum Gothic', cursive">MYPAGE</Text></Link>
                         </Flex>

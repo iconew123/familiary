@@ -158,13 +158,13 @@ const router = createBrowserRouter([
                 path: '/info/guide',
                 element: <GovernmentSupport  />,
             }, {
-                path: '/info/guide',
+                path: '/info/hospitalInfo',
                 element: <HospitalInfo />,
             }, {
-                path: '/info/guide',
+                path: '/info/government',
                 element: <PregnancyGuide />,
             }, {
-                path: '/info/guide',
+                path: '/info/preantalEduation',
                 element: <PrenatalEducation />,
             }
         ]
