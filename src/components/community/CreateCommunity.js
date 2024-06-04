@@ -82,7 +82,7 @@ const CreateCommunity = () => {
                 <div>
                     <Select value={community.category} variant='flushed' w='200px' padding='30px'
                         onChange={(e) => setCommunity({ ...community, category: e.target.value })}>
-                        <option>게시판 선택</option>
+                        <option disabled value=''>게시판 선택</option>
                         <option value='notice'>공지사항</option>
                         <option value='chat'>잡담</option>
                         <option value='recommend'>추천</option>

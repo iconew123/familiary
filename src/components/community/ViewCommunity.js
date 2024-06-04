@@ -14,6 +14,7 @@ const ViewCommunity = () => {
     const [comment, setComment] = useState('');
 
     useEffect(() => {
+        // 세션에 저장된 유저 불러오기
         const userSample = sessionStorage.getItem('userInfo');
         if (userSample) {
             const user = JSON.parse(userSample);
@@ -24,6 +25,7 @@ const ViewCommunity = () => {
         console.log("code: " + code);
         console.log("category: " + category);
 
+        // 글 상세보기 불러오기
         if (code && category) {
             fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
                 .then(response => {
@@ -35,12 +37,29 @@ const ViewCommunity = () => {
                 .then(responseData => {
                     console.log(responseData);
                     setData(responseData.community);  // `community` 객체로 데이터 설정
-                    setComments(responseData.comments || []); // 댓글 리스트 설정 (undefined인 경우 빈 배열로 설정)
                     console.log("커뮤니티 User ID:", responseData.community.userNickname);
                 })
                 .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
         }
     }, [code, category]);
+
+    // 댓글 리스트 데이터 불러오기
+    useEffect(() => {
+            fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=readComment&communityCode=${code}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('네트워크 응답이 올바르지 않습니다');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    setComments(data || []); // 댓글 리스트 설정 (undefined인 경우 빈 배열로 설정)
+                })
+                .catch(error => {
+                    console.error('데이터를 가져오는 중 에러 발생', error);
+                });
+    }, []);
 
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete&code=${code}`, {
@@ -70,52 +89,59 @@ const ViewCommunity = () => {
 
     // 댓글
     // 댓글 등록하기
-    const handleInputComment = (e) => {
+    const handleInputComment = async (e) => {
         if (!user) {
-            console.error('로그인이 필요합니다');
+            alert('댓글을 작성하려면 로그인이 필요합니다');
             return;
         }
-
-        const newComment = {
+    
+        if (comment.trim() === '') {
+            alert('댓글 내용을 입력하세요.');
+            return;
+        }
+    
+        const requestBody = {
             code: code,
             userId: user.id,
             userNickname: user.nickname,
-            content: comment
+            content: comment.trim()
         };
-
-        console.log("Sending Comment JSON: ", JSON.stringify(newComment)); // 콘솔에 출력
-
-        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=writeComment`, {
-            method: 'POST',
-            body: JSON.stringify(newComment),
-            headers: {
-                'Content-Type': 'application/json'
+    
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=writeComment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+    
+            if (!response.ok) {
+                throw new Error('댓글 등록 실패');
             }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('댓글 등록 실패');
-                }
-                return response.text(); // 응답 본문을 텍스트로 변환
-            })
-            .then(text => {
-                console.log("Response Text:", text); // 서버 응답 로그
-                if (text.trim() === "") {
-                    throw new Error('빈 응답');
-                }
-                const jsonData = JSON.parse(text); // JSON 파싱
-                console.log("Response Data:", jsonData); // 새로 추가된 댓글 콘솔에 출력
-                setComments(prevComments => [...prevComments, jsonData]);
-                setComment(''); // 댓글 입력 필드 초기화
-                console.log('댓글 등록 성공');
-            })
-            .catch(error => console.error('댓글 등록 중 에러 발생', error));
+    
+            const responseText = await response.text();
+            console.log("Response Text:", responseText); // 서버 응답 로그
+            if (responseText.trim() === "") {
+                console.error('빈 응답');
+                return;
+            }
+    
+            const jsonData = JSON.parse(responseText); // JSON 파싱
+            console.log("Response Data:", jsonData); // 새로 추가된 댓글 콘솔에 출력
+    
+            setComments(prevComments => [jsonData, ...prevComments]); // 최신 댓글을 맨 위에 추가
+            setComment(''); // 댓글 입력 필드 초기화
+            console.log('댓글 등록 성공');
+    
+        } catch (error) {
+            console.error('댓글 등록 중 에러 발생', error);
+        }
     };
 
     const handleInputChange = (e) => {
         setComment(e.target.value);
     };
-
 
     return (
         <Box padding="20px">
@@ -138,14 +164,14 @@ const ViewCommunity = () => {
             <Box>
                 {comments.map((comment, index) => (
                     <Box key={index} borderBottom="1px solid #ccc" p="10px">
-                        <Text fontSize="sm" color="gray.500">{comment.user_nickname}</Text>
+                        <Text fontSize="sm" color="gray.500">{comment.userNickname}</Text>
                         <Text fontSize="md">{comment.content}</Text>
                     </Box>
                 ))}
             </Box>
             <Box>
                 <Textarea name='comment' value={comment} onChange={handleInputChange} placeholder='내용을 입력하세요.' size='sm' width="100%" mt="10px" />
-                <Button onClick={handleInputComment} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>등록하기</Button>
+                <Button onClick={handleInputComment} mt="20px" w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>등록하기</Button>
             </Box>
         </Box>
     );
