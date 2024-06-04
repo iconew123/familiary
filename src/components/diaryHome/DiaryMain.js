@@ -16,6 +16,13 @@ const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
     return data;
 }
 
+const fetchInfoDetail = async (formatInfoDate, selectedBabyCode) => {
+    const now = new Date();
+    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=read&date=${formatInfoDate ? formatInfoDate : now.toDateString()}&code=${selectedBabyCode}`);
+    const data = await response.json();
+    return data;
+}
+
 const DiaryMain = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const selectedBaby = sessionStorage.getItem('isSelectedBaby');
@@ -36,12 +43,16 @@ const DiaryMain = () => {
     const [targetDate, setTargetDate] = useState('');
     const [dDay, setDDay] = useState();
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpenInfo, setIsOpenInfo] = useState(false);
     const [serverData, setServerData] = useState();
+    const [serverInfoData, setServerInfoData] = useState();
     const [formatDate, setFormatDate] = useState('');
+    const [formatInfoDate, setFormatInfoDate] = useState('');
     const [data, setData] = useState({});
     const [babyData, setBabyData] = useState({ codes: [], nicknames: [] });
-    const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
-
+    const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose} = useDisclosure();
+    const { isOpen: isInfoModalOpen, onOpen: onInfoModalOpen, onClose: onInfoModalClose } = useDisclosure();
+    
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
@@ -97,7 +108,17 @@ const DiaryMain = () => {
                 setServerData(data, selectedBabyCode);
             });
         }
+        
     }, [formatDate]);
+
+    useEffect(() => {
+        if (formatInfoDate && selectedBabyCode) {
+            formatInfoDate(formatInfoDate, selectedBabyCode).then(data => {
+                setServerInfoData(data, selectedBabyCode);
+            });
+        }
+        
+    }, [formatInfoDate]);
 
     const handleRecordClick = () => {
         setShowRecordOptions(!showRecordOptions);
@@ -159,6 +180,7 @@ const DiaryMain = () => {
         setFormatDate(date);
     };
 
+
     // 다이어리 생성
     const [diary, setdiary] = useState({
         title: '',
@@ -168,9 +190,15 @@ const DiaryMain = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log("name : " + name);
-        console.log("value : " + value);
         setdiary(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    };
+
+    const handleInputInfoChange = (e) => {
+        const { name, value } = e.target;
+        setInfo(prevState => ({
             ...prevState,
             [name]: value
         }))
@@ -237,6 +265,68 @@ const DiaryMain = () => {
             }
             return response.json();
         })
+        .catch(error => {
+            console.error('데이터를 전송하는 중 에러 발생', error);
+            alert('데이터 전송 중 에러가 발생했습니다.');
+            setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
+        });
+    };
+
+    const linkStyle = {
+        color: 'blue', // 원하는 색상으로 변경
+        textDecoration: 'none', // 밑줄 제거
+      };
+
+
+        // BabyInfo 생성
+        const [info, setInfo] = useState({
+            height: '',
+            weight: '',
+            memo: ''
+        });
+
+        
+    // BabyInfo
+    const handleInfoButtonClick = () => {
+        setIsLoading(true);
+    
+        if  (!info.height && !info.weight)  {
+            alert("키와 몸무게를 적어주세요.");
+            setIsLoading(false);
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append('babycode', selectedBabyCode);
+        formData.append('height', info.height);
+        formData.append('weight', info.weight);
+        formData.append('spec_note', info.memo);
+    
+        fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=create`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('데이터 전송 성공');
+                onInfoModalClose();
+                
+                // 입력 성공 후 서버로부터 데이터 가져오기
+                fetchInfoDetail(currentDate, selectedBabyCode)
+                    .then(data => {
+                        // 데이터 업데이트
+                        setServerInfoData(data);
+                    })
+                    .catch(error => {
+                        console.error('데이터를 가져오는 중 에러 발생', error);
+                        alert('데이터를 가져오는 중 에러가 발생했습니다.');
+                    });
+            } else {
+                console.log('데이터 전송 실패');
+                alert('데이터 전송에 실패했습니다.');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log(data);
             if (data.status === 400) {
@@ -250,11 +340,6 @@ const DiaryMain = () => {
             setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
         });
     };
-
-    const linkStyle = {
-        color: 'blue', // 원하는 색상으로 변경
-        textDecoration: 'none', // 밑줄 제거
-      };
 
     return (
         <>
@@ -365,19 +450,31 @@ const DiaryMain = () => {
                             <Grid
                                 w='100%'
                                 h='100%'
-                                templateAreas={`"dailyWrite"`}
-                                templateRows={'1fr'}
+                                templateAreas={`"dailyWrite" "infoWrite"`}
+                                templateRows={'1fr ifr'}
                             >
                                 <GridItem bg='#E0CCB3' area={'dailyWrite'} >
                                     <Text fontSize='3xl' fontFamily="'Nanum Gothic', cursive">
-                                        [일기] :
+                                        [일기]
                                         {!serverData
                                             ? '해당일자의 정보가 없습니다'
-                                            : (serverData.date ? `[${serverData.date}]일 ` : '해당일자의 정보가 없습니다')
+                                            : (serverData.date ? `[${serverData.date}] ` : '해당일자의 정보가 없습니다')
                                         }
                                         {serverData ? <Link style={linkStyle} to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
                                     </Text>
                                 </GridItem>
+
+                                <GridItem bg='#E0CCB3' area={'infoWrite'} >
+                                    <Text fontSize='3xl' fontFamily="'Nanum Gothic', cursive">
+                                        [정보]
+                                        {!serverInfoData
+                                            ? '해당일자의 정보가 없습니다'
+                                            : (serverInfoData.date ? `[${serverInfoData.date}]` : '해당일자의 정보가 없습니다')
+                                        }
+                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.title}</Link> : ""}
+                                    </Text>
+                                </GridItem>
+
                             </Grid>
                         </GridItem>
 
@@ -393,8 +490,9 @@ const DiaryMain = () => {
 
                                 <Flex flexDirection="column" display={showRecordOptions ? 'flex' : 'none'}>
                                     <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">하루 기록</Button>
+                                    <Button onClick={onInfoModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">정보 기록</Button>
                                 </Flex>
-
+                               
                                 <Button onClick={handleRecordClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
                                     <EditIcon />
                                 </Button>
@@ -404,6 +502,7 @@ const DiaryMain = () => {
                 </HStack>
             </Box>
 
+            {/* 다이어리 */}
             <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -432,7 +531,42 @@ const DiaryMain = () => {
                             </FormControl>
                             <Button
                                 onClick={handleButtonClick}
-                                colorScheme="teal"
+                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }} 
+                                size="lg"
+                                type="submit"
+                                isLoading={isLoading}
+                                disabled={isLoading}
+                            >
+                                저장
+                            </Button>
+                        </VStack>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+             {/* 아기 정보 */}
+             <Modal isOpen={isInfoModalOpen} onClose={onInfoModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader fontFamily="'Nanum Gothic', cursive">{currentDate}일의 정보 기록</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <VStack spacing={4}>
+                            <FormControl>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">키</FormLabel>
+                                <Input type="text" name="height" value={info.height} onChange={handleInputInfoChange} placeholder="키를 입력하세요(cm)" />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">몸무게</FormLabel>
+                                <Input type="text" name="weight" value={info.weight} onChange={handleInputInfoChange} placeholder="몸무게를 입력하세요(kg)" />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel fontFamily="'Nanum Gothic', cursive">메모</FormLabel>
+                                <Textarea name="spec_note" value={info.memo} onChange={handleInputInfoChange} placeholder="메모" />
+                            </FormControl>
+                            <Button
+                                onClick={handleInfoButtonClick}
+                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }} 
                                 size="lg"
                                 type="submit"
                                 isLoading={isLoading}
@@ -449,4 +583,5 @@ const DiaryMain = () => {
 };
 
 export { fetchDiaryDetailInfo };
+export { fetchInfoDetail };
 export default DiaryMain;
