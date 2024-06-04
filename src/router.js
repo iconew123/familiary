@@ -20,6 +20,10 @@ import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMai
 import ViewCommunity from "./components/community/ViewCommunity";
 import DiaryView from "./components/diaryHome/DiaryView";
 import DiaryShow from "./components/diaryHome/DiaryShow";
+import GovernmentSupport  from "./components/info/GovernmentSupport ";
+import HospitalInfo from "./components/info/HospitalInfo";
+import PregnancyGuide from "./components/info/PregnancyGuide";
+import PrenatalEducation from "./components/info/PrenatalEducation";
 
 const router = createBrowserRouter([
     {
@@ -145,7 +149,26 @@ const router = createBrowserRouter([
                 element: <ViewCommunity />,
             }
         ]
-    },
+    }, 
+    {
+        path: "/info",
+        element: <Root />,
+        children: [
+            {
+                path: '/info/guide',
+                element: <GovernmentSupport  />,
+            }, {
+                path: '/info/guide',
+                element: <HospitalInfo />,
+            }, {
+                path: '/info/guide',
+                element: <PregnancyGuide />,
+            }, {
+                path: '/info/guide',
+                element: <PrenatalEducation />,
+            }
+        ]
+    }
 ], {
     basename: "/familiary",
 });
