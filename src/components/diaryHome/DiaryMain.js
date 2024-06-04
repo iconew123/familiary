@@ -297,7 +297,7 @@ const DiaryMain = () => {
         }
     
         const formData = new FormData();
-        formData.append('babycode', selectedBabyCode);
+        formData.append('code', selectedBabyCode);
         formData.append('height', info.height);
         formData.append('weight', info.weight);
         formData.append('spec_note', info.memo);
@@ -562,7 +562,7 @@ const DiaryMain = () => {
                             </FormControl>
                             <FormControl>
                                 <FormLabel fontFamily="'Nanum Gothic', cursive">메모</FormLabel>
-                                <Textarea name="spec_note" value={info.memo} onChange={handleInputInfoChange} placeholder="메모" />
+                                <Textarea name="memo" value={info.memo} onChange={handleInputInfoChange} placeholder="메모" />
                             </FormControl>
                             <Button
                                 onClick={handleInfoButtonClick}
