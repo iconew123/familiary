@@ -2,6 +2,7 @@
 // 2. 해당 글이 자신의 것임을 미리 검증하는 부분이 필요
 
 import { Box, Button, Input, Select, Text, Textarea, VStack } from '@chakra-ui/react';
+import { HttpStatusCode } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ const UpdateCommunity = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const code = searchParams.get('code'); // URL에서 code 파라미터 가져오기
+    const category = searchParams.get('category');
 
     // 데이터 받아오기
     const [data, setData] = useState({
@@ -17,7 +19,7 @@ const UpdateCommunity = () => {
         userNickname: '',
         title: '',
         content: '',
-        category: ''
+        category: '',
     });
 
     const [user, setUser] = useState(null);
@@ -30,7 +32,7 @@ const UpdateCommunity = () => {
             setUser(userInfo);
         }
 
-        if (code) {
+        if (HttpStatusCode) {
             fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
                 .then(response => {
                     if (!response.ok) {
@@ -77,6 +79,12 @@ const UpdateCommunity = () => {
             return;
         }
 
+        if (!community.category) {
+            alert("카테고리 선택은 필수입니다.")
+            setIsLoading(false);
+            return;
+        }
+
         // 서버로 데이터 전송
         const url = `${process.env.REACT_APP_SERVER_URL}/community?command=update`;
         console.log('Sending request to:', url);
@@ -109,7 +117,7 @@ const UpdateCommunity = () => {
                 <div>
                     <Select value={community.category || data.category} variant='flushed' w='200px' padding='30px'
                         onChange={(e) => setCommunity({ ...community, category: e.target.value })} >
-                        <option disabled>게시판 선택</option>
+                        <option disabled value=''>게시판 선택</option>
                         <option value='notice'>공지사항</option>
                         <option value='chat'>잡담</option>
                         <option value='recommend'>추천</option>
