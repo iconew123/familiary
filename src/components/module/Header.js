@@ -32,6 +32,9 @@ const Header = () => {
             case 'recommend':
                 url = 'http://localhost:3000/familiary/community/recommend?command=read/recommend';
                 break;
+            case 'guide':
+                url = 'http://localhost:3000/familiary/info/guide';
+                break;
             default:
                 break;
         }
@@ -77,7 +80,7 @@ const Header = () => {
                                 <option value="recommend">추천 게시판</option>
                             </Select>
                             <Select placeholder='INFO' w='80px' size='lg' variant='unstyled' marginTop='11px' fontFamily="'Nanum Gothic', cursive">
-                                <option value='option1' >임산부 가이드</option>
+                                <option value='guide'>임산부 가이드</option>
                                 <option value='option2'>정부 지원사업</option>
                                 <option value='option3'>병원 정보</option>
                                 <option value='option4'>산후조리원 정보</option>

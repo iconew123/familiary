@@ -6,6 +6,7 @@ import { useSession } from '../module/SessionComponent';
 const Join = () => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('');
     const [nickname, setNickname] = useState('');
     const [name, setName] = useState('');
     const [securityNumber, setSecurityNumber] = useState('');
@@ -16,6 +17,7 @@ const Join = () => {
 
     const [idError, setIdError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [rePasswordError, setRePasswordError] = useState(false);
     const [nicknameError, setNicknameError] = useState(false);
     const [nameError, setNameError] = useState(false);
     const [securityNumberError, setSecurityNumberError] = useState(false);
@@ -78,6 +80,18 @@ const Join = () => {
             setPasswordError(false);
         }
 
+        if (!rePassword) {
+            setRePasswordError('비밀번호 확인을 입력하세요.');
+            hasError = true;
+        } else {
+            setRePasswordError(false);
+        }
+
+        if (rePassword !== password) {
+            setRePasswordError('비밀번호가 일치하지 않습니다.');
+            hasError = true;
+        }
+
         if (!nickname) {
             setNicknameError('닉네임을 입력하세요.');
             hasError = true;
@@ -112,6 +126,8 @@ const Join = () => {
         } else {
             setPhoneError(false);
         }
+
+
 
         // Check for duplicates only if there are no validation errors
         if (!hasError) {
@@ -227,6 +243,15 @@ const Join = () => {
                         size='lg' bg='white' w='100%'
                     />
                     <Input
+                        type="password"
+                        value={rePassword}
+                        id="rePassword"
+                        name="rePassword"
+                        placeholder="비밀번호 확인"
+                        onChange={(e) => setRePassword(e.target.value)}
+                        size='lg' bg='white' w='100%'
+                    />
+                    <Input
                         type="text"
                         value={nickname}
                         id="nickname"
@@ -296,6 +321,7 @@ const Join = () => {
                     {idError && <Text color="red">{idError}</Text>}
                     {idDuplError && <Text color="red">{idDuplError}</Text>}
                     {passwordError && <Text color="red">{passwordError}</Text>}
+                    {rePasswordError && <Text color="red">{rePasswordError}</Text>}
                     {nicknameError && <Text color="red">{nicknameError}</Text>}
                     {nicknameDuplError && <Text color="red">{nicknameDuplError}</Text>}
                     {nameError && <Text color="red">{nameError}</Text>}
