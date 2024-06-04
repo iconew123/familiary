@@ -25,7 +25,6 @@ const UserUpdate = () => {
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
 
-    console.log(user.password);
     useEffect(() => {
         if (!loggedIn) {
             navigate('/');
@@ -52,11 +51,32 @@ const UserUpdate = () => {
         }
     };
 
+    const checkPassword = async (password) => {
+        const formData = new URLSearchParams();
+        formData.append('id', user.id);
+        formData.append('password', password);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=verifyPassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+            const data = await response.json();
+            return data.isVerity;
+        } catch (error) {
+            console.error('네트워크 오류', error);
+            return false;
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         setLoading(true);
         let hasError = false;
+
 
         if (!password) {
             setPasswordError('비밀번호를 입력하세요.');
@@ -72,12 +92,19 @@ const UserUpdate = () => {
             setNewPasswordError(false);
         }
 
-        if (password !== user.password) {
-            setPasswordError('기존 비밀번호가 일치하지 않습니다.');
-            hasError = true;
-        } else {
-            setPasswordError(false);
+
+        if (password) {
+            const isVerity = await checkPassword(password);
+            if (!isVerity) {
+                setPasswordError("비밀번호가 일치하지 않습니다.");
+                hasError = true;
+            }
+            else {
+                setPasswordError(false);
+            }
+            console.log(isVerity);
         }
+
 
         if (nickname) {
             const isDuplicate = await checkDuplicate('nickname', nickname);
