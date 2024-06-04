@@ -8,6 +8,7 @@ const UserDelete = () => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [serverError, setServerError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const userSample = sessionStorage.getItem('userInfo');
@@ -22,30 +23,64 @@ const UserDelete = () => {
         }
     }, [isLoggedIn, navigate]);
 
-    const handleSubmit = async (e) => {
-        const formData = new URLSearchParams();
 
+    const checkPassword = async (password) => {
+        const formData = new URLSearchParams();
         formData.append('id', user.id);
         formData.append('password', password);
-        console.log(user.id);
-        console.log(user.password);
         try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=verifyPassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+            const data = await response.json();
+            return data.isVerity;
+        } catch (error) {
+            console.error('네트워크 오류', error);
+            return false;
+        }
+    };
 
-            if (!password) {
-                setPasswordError('비밀번호를 입력하세요.');
-                return;
-            } else {
-                setPasswordError('');
+    
+
+    const handleSubmit = async (e) => {
+
+        setLoading(true);
+        let hasError = false;
+
+        if (!password) {
+            setPasswordError('비밀번호를 입력하세요.');
+            hasError = true;
+        } else {
+            setPasswordError(false);
+        }
+
+
+        if (password) {
+            const isVerity = await checkPassword(password);
+            if (!isVerity) {
+                setPasswordError("비밀번호가 일치하지 않습니다.");
+                hasError = true;
             }
-
-            // 비밀번호가 일치하는지 확인
-            if (password !== user.password) {
-                setPasswordError('기존 비밀번호가 일치하지 않습니다.');
-                return;
-            } else {
-                setPasswordError('');
+            else {
+                setPasswordError(false);
             }
+            console.log(isVerity);
+        }
+ 
+        if (hasError) {
+            setLoading(false);
+            return;
+        }
 
+        const formData = new URLSearchParams();
+        formData.append('id', user.id);
+        formData.append('password', password);
+
+        try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=delete`, {
                 method: 'POST',
                 headers: {

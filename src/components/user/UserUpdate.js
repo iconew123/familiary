@@ -85,13 +85,6 @@ const UserUpdate = () => {
             setPasswordError(false);
         }
 
-        if (!newPassword) {
-            setNewPasswordError('새로운 비밀번호를 입력하세요.');
-            hasError = true;
-        } else {
-            setNewPasswordError(false);
-        }
-
 
         if (password) {
             const isVerity = await checkPassword(password);
