@@ -75,7 +75,7 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
     );
 };
 
-export default function MyCalendar({ onDateSelect }) {
+export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [formatDate, setFormatDate] = useState(format(selectedDate, 'yyyy-MM-dd'));
@@ -91,11 +91,14 @@ export default function MyCalendar({ onDateSelect }) {
     const onDateClick = (day) => {
         setSelectedDate(day);
         const newFormatDate = format(day, 'yyyy-MM-dd');
-        setFormatDate(newFormatDate);
-        console.log(newFormatDate);
+        setFormatDate(newFormatDate); 
 
         if (typeof onDateSelect === 'function') {
             onDateSelect(newFormatDate);
+        }
+
+        if(typeof onDateInfoSelect === 'function'){
+            onDateInfoSelect(newFormatDate);
         }
     };
 

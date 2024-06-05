@@ -31,6 +31,8 @@ const DiaryMain = () => {
     const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
 
+    console.log(user);
+
     // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
 
@@ -111,7 +113,7 @@ const DiaryMain = () => {
 
     useEffect(() => {
         if (formatInfoDate && selectedBabyCode) {
-            formatInfoDate(formatInfoDate, selectedBabyCode).then(data => {
+            fetchInfoDetail(formatInfoDate, selectedBabyCode).then(data => {
                 setServerInfoData(data, selectedBabyCode);
             });
         }
@@ -178,6 +180,10 @@ const DiaryMain = () => {
         setFormatDate(date);
     };
 
+    const handleInfoDateSelect = (date) => {
+        setFormatInfoDate(date);
+    };
+
 
     // 다이어리 생성
     const [diary, setdiary] = useState({
@@ -212,7 +218,7 @@ const DiaryMain = () => {
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
-
+    
         if  (!diary.title)  {
             alert("제목을 입력해주세요.");
             setIsLoading(false);
@@ -252,7 +258,6 @@ const DiaryMain = () => {
                     .then(data => {
                         // 데이터 업데이트
                         setServerData(data);
-                        setIsLoading(false);
                     })
                     .catch(error => {
                         console.error('데이터를 가져오는 중 에러 발생', error);
@@ -262,24 +267,17 @@ const DiaryMain = () => {
                 console.log('데이터 전송 실패');
                 alert('데이터 전송에 실패했습니다.');
             }
-            return response.json(); // 여기서 JSON 형식으로 변환
-        })
-        .then(json => {
-            if(json.status === 400){
-                alert("금일 다이어리를 작성하셨습니다. 수정기능을 이용해주세요")
-                setIsLoading(false);
-            }
+            return response.json();
         })
         .catch(error => {
             console.error('데이터를 전송하는 중 에러 발생', error);
             alert('데이터 전송 중 에러가 발생했습니다.');
             setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
         });
-        
     };
 
     const linkStyle = {
-        color: 'blue', // 원하는 색상으로 변경
+        color: '#fffbf0', // 원하는 색상으로 변경
         textDecoration: 'none', // 밑줄 제거
       };
 
@@ -302,20 +300,19 @@ const DiaryMain = () => {
             return;
         }
     
-        const formData = new FormData();
-        formData.append('code', selectedBabyCode);
-        formData.append('height', info.height);
-        formData.append('weight', info.weight);
-        formData.append('spec_note', info.memo);
+        const formInfoData = new FormData();
+        formInfoData.append('code', selectedBabyCode);
+        formInfoData.append('height', info.height);
+        formInfoData.append('weight', info.weight);
+        formInfoData.append('spec_note', info.memo);
     
         fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=create`, {
             method: 'POST',
-            body: formData
+            body: formInfoData
         })
         .then(response => {
             if (response.ok) {
                 console.log('데이터 전송 성공');
-                console.log("res : " + response);
                 onInfoModalClose();
                 
                 // 입력 성공 후 서버로부터 데이터 가져오기
@@ -450,7 +447,7 @@ const DiaryMain = () => {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar onDateSelect={handleDateSelect} />
+                            <MyCalendar onDateSelect={handleDateSelect} onDateInfoSelect={handleInfoDateSelect} />
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='#E0CCB3' area={'diaryInfo'} textAlign={'center'}>
@@ -464,8 +461,8 @@ const DiaryMain = () => {
                                     <Text fontSize='3xl' fontFamily="'Nanum Gothic', cursive">
                                         [일기]
                                         {!serverData
-                                            ? '해당일자의 정보가 없습니다'
-                                            : (serverData.date ? `[${serverData.date}] ` : '해당일자의 정보가 없습니다')
+                                            ? '해당일자의 일기가 없습니다'
+                                            : (serverData.date ? `[${serverData.date}] ` : '해당일자의 일기가 없습니다')
                                         }
                                         {serverData ? <Link style={linkStyle} to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
                                     </Text>
@@ -478,7 +475,7 @@ const DiaryMain = () => {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverInfoData.date ? `[${serverInfoData.date}]` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.title}</Link> : ""}
+                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
                                     </Text>
                                 </GridItem>
 
@@ -561,11 +558,11 @@ const DiaryMain = () => {
                         <VStack spacing={4}>
                             <FormControl>
                                 <FormLabel fontFamily="'Nanum Gothic', cursive">키</FormLabel>
-                                <Input type="text" name="height" value={info.height} onChange={handleInputInfoChange} placeholder="키를 입력하세요(cm)" />
+                                <Input type="number" name="height" value={info.height} onChange={handleInputInfoChange} placeholder="키를 입력하세요(cm)" />
                             </FormControl>
                             <FormControl>
                                 <FormLabel fontFamily="'Nanum Gothic', cursive">몸무게</FormLabel>
-                                <Input type="text" name="weight" value={info.weight} onChange={handleInputInfoChange} placeholder="몸무게를 입력하세요(kg)" />
+                                <Input type="number" name="weight" value={info.weight} onChange={handleInputInfoChange} placeholder="몸무게를 입력하세요(kg)" />
                             </FormControl>
                             <FormControl>
                                 <FormLabel fontFamily="'Nanum Gothic', cursive">메모</FormLabel>
