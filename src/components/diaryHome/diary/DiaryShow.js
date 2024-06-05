@@ -8,6 +8,7 @@ const DiaryShow = () => {
     const [contentType, setContentType] = useState('text');
     const [contentData, setContentData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1); // totalPages 상태 추가
     const itemsPerPage = 8;
 
     useEffect(() => {
@@ -27,10 +28,14 @@ const DiaryShow = () => {
                 const start = (page - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
                 setContentData(data.slice(start, end));
+
+                // totalPages 설정
+                setTotalPages(Math.ceil(data.length / itemsPerPage));
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
                 setContentData([]);
+                setTotalPages(1); // 에러 발생 시 totalPages 초기화
             });
     };
 
@@ -46,10 +51,10 @@ const DiaryShow = () => {
     const renderPagination = () => {
         return (
             <Box display="flex" justifyContent="center" mt="20px">
-                <Button onClick={() => handlePageChange(-1)} disabled={currentPage === 1} mr="10px">
+                <Button onClick={() => handlePageChange(-1)} isDisabled={currentPage === 1} mr="10px">
                     이전
                 </Button>
-                <Button onClick={() => handlePageChange(1)} disabled={contentData.length < itemsPerPage}>
+                <Button onClick={() => handlePageChange(1)} isDisabled={currentPage === totalPages}> {/* totalPages와 currentPage 비교 */}
                     다음
                 </Button>
             </Box>
