@@ -20,9 +20,14 @@ import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMai
 import ViewCommunity from "./components/community/ViewCommunity";
 import DiaryView from "./components/diaryHome/DiaryView";
 import DiaryShow from "./components/diaryHome/DiaryShow";
-import GovernmentSupport  from "./components/info/GovernmentSupport ";
+import GovernmentSupport from "./components/info/GovernmentSupport ";
 import HospitalInfo from "./components/info/HospitalInfo";
-import PregnancyGuide from "./components/info/PregnancyGuide";
+import PregnancyGuideEPU from "./components/info/PregnancyGuideEPU";
+import PregnancyGuideEPH from "./components/info/PregnancyGuideEPH";
+import PregnancyGuideMPU from "./components/info/PregnancyGuideMPU";
+import PregnancyGuideMPH from "./components/info/PregnancyGuideMPH";
+import PregnancyGuideLPU from "./components/info/PregnancyGuideLPU";
+import PregnancyGuideLPH from "./components/info/PregnancyGuideLPH";
 import PrenatalEducation from "./components/info/PrenatalEducation";
 
 const router = createBrowserRouter([
@@ -71,44 +76,44 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path:"/diary",
+        path: "/diary",
         element: <Root />,
-        children:[
+        children: [
             {
-                path:"",
-                element: <DiaryMain/>
-                
+                path: "",
+                element: <DiaryMain />
+
             },
             {
-                path:"/diary/:date/:babycode",
-                element: <DiaryView/>
+                path: "/diary/:date/:babycode",
+                element: <DiaryView />
             },
             {
-                path:"/diary/show/:babycode",
+                path: "/diary/show/:babycode",
                 element: <DiaryShow />
             }
         ]
     },
     {
-        path:"/baby",
+        path: "/baby",
         element: <Root />,
-        children:[
+        children: [
             {
-                path:"/baby/update",
-                element: <UpdateBaby/>
-                
+                path: "/baby/update",
+                element: <UpdateBaby />
+
             },
             {
-                path:"/baby/info",
-                element: <InfoBaby/>
+                path: "/baby/info",
+                element: <InfoBaby />
             },
             {
-                path:"/baby/create",
-                element: <CreateBaby/>
+                path: "/baby/create",
+                element: <CreateBaby />
             },
             {
-                path:"/baby/join",
-                element: <JoinBabyByCode/>
+                path: "/baby/join",
+                element: <JoinBabyByCode />
             }
         ]
     },
@@ -149,20 +154,40 @@ const router = createBrowserRouter([
                 element: <ViewCommunity />,
             }
         ]
-    }, 
+    },
     {
         path: "/info",
         element: <Root />,
         children: [
             {
-                path: '/info/guide',
-                element: <GovernmentSupport  />,
+                path: '/info/guide/EPU',
+                element: <PregnancyGuideEPU />,
+            },
+            {
+                path: '/info/guide/EPH',
+                element: <PregnancyGuideEPH />,
+            },
+            {
+                path: '/info/guide/MPU',
+                element: <PregnancyGuideMPU />,
+            },
+            {
+                path: '/info/guide/MPH',
+                element: <PregnancyGuideMPH />,
+            },
+            {
+                path: '/info/guide/LPU',
+                element: <PregnancyGuideLPU />,
+            },
+            {
+                path: '/info/guide/LPH',
+                element: <PregnancyGuideLPH />,
             }, {
                 path: '/info/hospitalInfo',
                 element: <HospitalInfo />,
             }, {
                 path: '/info/government',
-                element: <PregnancyGuide />,
+                element: <GovernmentSupport />,
             }, {
                 path: '/info/preantalEduation',
                 element: <PrenatalEducation />,

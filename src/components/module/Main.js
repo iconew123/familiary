@@ -69,9 +69,9 @@ const Main = () => {
 
     return (
         <Grid
-            h='100vh'
-            templateAreas={`"adArea hospital guide login"
-                        "adArea board board adArea2"`}
+            h='auto'
+            templateAreas={`"adArea board board login"
+                        "adArea ideology ideology adArea2"`}
             gridTemplateColumns={'1fr 1fr 1fr 1fr'}
             gap={1}
         >
@@ -82,14 +82,9 @@ const Main = () => {
                 </Link>
             </GridItem>
 
-            {/* 병원 정보 */}
-            <GridItem w='100%' bg='#E3D2AA' area={'hospital'}>
-                병원INFO
-            </GridItem>
-
             {/* 임산부 가이드 */}
-            <GridItem w='100%' bg='#E4CBAB' area={'guide'}>
-                임산부 가이드
+            <GridItem w='100%' bg='#E4CBAB' area={'ideology'}>
+                아이가 없는 사람들도 자유롭게 사용이 가능한 사이트
             </GridItem>
 
             {/* 로그인 */}
@@ -146,7 +141,7 @@ const Main = () => {
 
             {/* 광고단2 */}
             <GridItem w='100%' h='55px' area={'adArea2'} rowSpan={3} display="flex" justifyContent="center" alignItems="center">
-                <Link href="https://youtu.be/vXXHdzikJz4?si=28AQ0sXwFBam8RD1">
+                <Link href="https://kidikidi.elandmall.co.kr/p/planshop?exhibitionNo=202309008823">
                     <Image src={adImage2} alt="ad Image2" width="100%" height="100%" objectFit="cover" />
                 </Link>
             </GridItem>
