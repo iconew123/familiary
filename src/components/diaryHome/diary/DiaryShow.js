@@ -36,8 +36,8 @@ const DiaryShow = () => {
     };
 
     const linkStyle = {
-        color: 'blue', // 원하는 색상으로 변경
-        textDecoration: 'none', // 밑줄 제거
+        color: '#fffbf0',
+        textDecoration: 'none'
     };
 
     return (

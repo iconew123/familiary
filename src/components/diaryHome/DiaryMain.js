@@ -218,7 +218,7 @@ const DiaryMain = () => {
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
-
+    
         if  (!diary.title)  {
             alert("제목을 입력해주세요.");
             setIsLoading(false);
@@ -258,7 +258,6 @@ const DiaryMain = () => {
                     .then(data => {
                         // 데이터 업데이트
                         setServerData(data);
-                        setIsLoading(false);
                     })
                     .catch(error => {
                         console.error('데이터를 가져오는 중 에러 발생', error);
@@ -281,16 +280,14 @@ const DiaryMain = () => {
             alert('데이터 전송 중 에러가 발생했습니다.');
             setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
         });
-        
     };
 
     const linkStyle = {
         color: '#fffbf0', // 원하는 색상으로 변경
-        textDecoration: 'none', // 밑줄 제거
+        textDecoration: 'none',
       };
 
 
-        // BabyInfo 생성
         const [info, setInfo] = useState({
             height: '',
             weight: '',
@@ -337,14 +334,13 @@ const DiaryMain = () => {
                 console.log('데이터 전송 실패');
                 alert('데이터 전송에 실패했습니다.');
             }
-            return response.json();
+            return response.json(); // 여기서 JSON 형식으로 변환
         })
-        .then(data => {
-            console.log(data);
-            if (data.status === 400) {
-                alert(data.message_diary);
+        .then(json => {
+            if(json.status === 400){
+                alert("금일 아기 정보를 작성하셨습니다. 수정기능을 이용해주세요")
+                setIsLoading(false);
             }
-            setIsLoading(false); // 데이터 전송 완료 후 로딩 상태를 false로 설정하여 버튼 활성화
         })
         .catch(error => {
             console.error('데이터를 전송하는 중 에러 발생', error);
@@ -483,7 +479,7 @@ const DiaryMain = () => {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverInfoData.date ? `[${serverInfoData.date}]` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
+                                        {serverInfoData && serverInfoData.date === formatInfoDate ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
                                     </Text>
                                 </GridItem>
 

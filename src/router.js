@@ -18,8 +18,8 @@ import UserUpdate from "./components/user/UserUpdate";
 import UserDelete from "./components/user/UserDelete";
 import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMain";
 import ViewCommunity from "./components/community/ViewCommunity";
-import DiaryView from "./components/diaryHome/DiaryView";
-import DiaryShow from "./components/diaryHome/DiaryShow";
+import DiaryView from "./components/diaryHome/diary/DiaryView";
+import DiaryShow from "./components/diaryHome/diary/DiaryShow";
 import GovernmentSupport  from "./components/info/GovernmentSupport ";
 import HospitalInfo from "./components/info/HospitalInfo";
 import PregnancyGuide from "./components/info/PregnancyGuide";
@@ -85,6 +85,25 @@ const router = createBrowserRouter([
             },
             {
                 path:"/diary/show/:babycode",
+                element: <DiaryShow />
+            }
+        ]
+    },
+    {
+        path:"/babyInfo",
+        element: <Root />,
+        children:[
+            {
+                path:"",
+                element: <DiaryMain/>
+                
+            },
+            {
+                path:"/babyInfo/:date/:babycode",
+                element: <babyInfoView/>
+            },
+            {
+                path:"/babyInfo/show/:babycode",
                 element: <DiaryShow />
             }
         ]

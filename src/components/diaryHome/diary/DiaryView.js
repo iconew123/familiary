@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchDiaryDetailInfo } from './DiaryMain';
+import { fetchDiaryDetailInfo } from '../DiaryMain';
 import { Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select } from '@chakra-ui/react';
 
 const DiaryView = () => {
