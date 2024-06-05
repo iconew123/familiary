@@ -18,9 +18,8 @@ import UserUpdate from "./components/user/UserUpdate";
 import UserDelete from "./components/user/UserDelete";
 import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMain";
 import ViewCommunity from "./components/community/ViewCommunity";
-import DiaryView from "./components/diaryHome/DiaryView";
-import DiaryShow from "./components/diaryHome/DiaryShow";
-import GovernmentSupport from "./components/info/GovernmentSupport ";
+import DiaryView from "./components/diaryHome/diary/DiaryView";
+import DiaryShow from "./components/diaryHome/diary/DiaryShow";
 import HospitalInfo from "./components/info/HospitalInfo";
 import PregnancyGuideEPU from "./components/info/PregnancyGuideEPU";
 import PregnancyGuideEPH from "./components/info/PregnancyGuideEPH";
@@ -29,6 +28,10 @@ import PregnancyGuideMPH from "./components/info/PregnancyGuideMPH";
 import PregnancyGuideLPU from "./components/info/PregnancyGuideLPU";
 import PregnancyGuideLPH from "./components/info/PregnancyGuideLPH";
 import PrenatalEducation from "./components/info/PrenatalEducation";
+import BabyInfoView from "./components/diaryHome/diary/BabyInfoView";
+import GovernmentSupport from "./components/info/GovernmentSupport";
+import GovernmentSupportMain from "./components/info/GovernmentSupportMain";
+import BabyInfoShow from "./components/diaryHome/diary/BabyInfoShow";
 
 const router = createBrowserRouter([
     {
@@ -44,7 +47,7 @@ const router = createBrowserRouter([
             <h1>오류 페이지입니다.</h1>
         </>
     },
-    {
+    {   
         path: "/user",
         element: <Root />,
         children: [
@@ -91,6 +94,25 @@ const router = createBrowserRouter([
             {
                 path:"/diary/show/:babycode/:id",
                 element: <DiaryShow />
+            }
+        ]
+    },
+    {
+        path:"/babyInfo",
+        element: <Root />,
+        children:[
+            {
+                path:"",
+                element: <DiaryMain/>
+                
+            },
+            {
+                path:"/babyInfo/:date/:babycode",
+                element: <BabyInfoView />
+            },
+            {
+                path:"/babyInfo/show/:babycode",
+                element: <BabyInfoShow/>
             }
         ]
     },
@@ -191,7 +213,11 @@ const router = createBrowserRouter([
             }, {
                 path: '/info/preantalEduation',
                 element: <PrenatalEducation />,
+            }, {
+                path: '/info/governmentMain',
+                element: <GovernmentSupportMain />,
             }
+            
         ]
     }
 ], {
