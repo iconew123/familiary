@@ -80,11 +80,11 @@ const router = createBrowserRouter([
                 
             },
             {
-                path:"/diary/:date/:babycode",
+                path:"/diary/:date/:babycode/:id",
                 element: <DiaryView/>
             },
             {
-                path:"/diary/show/:babycode",
+                path:"/diary/show/:babycode/:id",
                 element: <DiaryShow />
             }
         ]

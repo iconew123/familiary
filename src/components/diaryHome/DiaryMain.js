@@ -132,7 +132,7 @@ const DiaryMain = () => {
         if (option === 'writeInfo') {
             navigate('/info-record/');
         } else if (option === 'showDiary') {
-            navigate(`/diary/show/${selectedBabyCode}`);
+            navigate(`/diary/show/${selectedBabyCode}/${user.id}`);
         } else if (option === 'showInfo') {
             navigate('/show-info');
         } else if (option === 'infoBaby') {
@@ -472,7 +472,7 @@ const DiaryMain = () => {
                                             ? '해당일자의 일기가 없습니다'
                                             : (serverData.date ? `[${serverData.date}] ` : '해당일자의 일기가 없습니다')
                                         }
-                                        {serverData ? <Link style={linkStyle} to={`/diary/${serverData.date}/${serverData.baby_code}`}>{serverData.title}</Link> : ""}
+                                        {serverData ? <Link style={linkStyle} to={`/diary/${serverData.date}/${serverData.baby_code}/${user.id}`}>{serverData.title}</Link> : ""}
                                     </Text>
                                 </GridItem>
 
