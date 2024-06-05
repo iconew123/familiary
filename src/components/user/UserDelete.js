@@ -44,7 +44,7 @@ const UserDelete = () => {
         }
     };
 
-    
+
 
     const handleSubmit = async (e) => {
 
@@ -70,7 +70,7 @@ const UserDelete = () => {
             }
             console.log(isVerity);
         }
- 
+
         if (hasError) {
             setLoading(false);
             return;
@@ -105,20 +105,20 @@ const UserDelete = () => {
 
     const handleCheckClick = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=checkDeleteBaby&user_id=${user.id}`)
-        .then(response => response.json())
-        .then(data => {
+            .then(response => response.json())
+            .then(data => {
 
-            if(data.isExist){
-                onOpen();  // 모달창 호출
-            } else {
-                handleSubmit();
-            }
-            
-        })
-        .catch(error => {
-            console.error('데이터를 가져오는 중 에러 발생', error);
-        });
-};
+                if (data.isExist) {
+                    onOpen();  // 모달창 호출
+                } else {
+                    handleSubmit();
+                }
+
+            })
+            .catch(error => {
+                console.error('데이터를 가져오는 중 에러 발생', error);
+            });
+    };
 
     return (
         <Box
@@ -130,19 +130,19 @@ const UserDelete = () => {
             textAlign='center'>
             <Box maxW='500px'>
                 <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>회원탈퇴</Text>
-                    <Input
-                        type="password"
-                        value={password}
-                        id="password"
-                        name="password"
-                        placeholder="비밀번호"
-                        onChange={(e) => setPassword(e.target.value)}
-                        size='lg' bg='white' w='100%'
-                        mb={4}
-                    />
-                    {serverError && <Text color="red">{serverError}</Text>}
-                    {passwordError && <Text color="red">{passwordError}</Text>}
-                    <Button onClick={() => handleCheckClick()} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원탈퇴</Button>
+                <Input
+                    type="password"
+                    value={password}
+                    id="password"
+                    name="password"
+                    placeholder="비밀번호"
+                    onChange={(e) => setPassword(e.target.value)}
+                    size='lg' bg='white' w='100%'
+                    mb={4}
+                />
+                {serverError && <Text color="red">{serverError}</Text>}
+                {passwordError && <Text color="red">{passwordError}</Text>}
+                <Button onClick={() => handleCheckClick()} w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>회원탈퇴</Button>
             </Box>
 
             <Modal isOpen={isOpen} onClose={onClose}>

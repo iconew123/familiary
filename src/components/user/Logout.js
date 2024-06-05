@@ -19,7 +19,7 @@ const Logout = () => {
         navigate('/');
     }, [logoutStatus, cancelStatus, navigate]);
 
-    return null; // 이 컴포넌트는 화면에 아무것도 렌더링하지 않음
+    return null;
 };
 
 export default Logout;

@@ -127,9 +127,6 @@ const Join = () => {
             setPhoneError(false);
         }
 
-
-
-        // Check for duplicates only if there are no validation errors
         if (!hasError) {
             const idDuplicate = await checkDuplicate('id', id);
             if (idDuplicate) {
@@ -166,7 +163,6 @@ const Join = () => {
             }
         }
 
-        // 에러 발생 시 제출 중단
         if (hasError) {
             setLoading(false);
             return;
