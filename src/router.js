@@ -20,13 +20,13 @@ import DiaryMain, { fetchDiaryDetailInfo } from "./components/diaryHome/DiaryMai
 import ViewCommunity from "./components/community/ViewCommunity";
 import DiaryView from "./components/diaryHome/diary/DiaryView";
 import DiaryShow from "./components/diaryHome/diary/DiaryShow";
-import GovernmentSupport  from "./components/info/GovernmentSupport ";
 import HospitalInfo from "./components/info/HospitalInfo";
 import PregnancyGuide from "./components/info/PregnancyGuide";
 import PrenatalEducation from "./components/info/PrenatalEducation";
 import BabyInfoShow from "./components/diaryHome/diary/BabyInfoShow";
 import BabyInfoView from "./components/diaryHome/diary/BabyInfoView";
-
+import GovernmentSupport from "./components/info/GovernmentSupport";
+import GovernmentSupportMain from "./components/info/GovernmentSupportMain";
 
 const router = createBrowserRouter([
     {
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
             <h1>오류 페이지입니다.</h1>
         </>
     },
-    {
+    {   
         path: "/user",
         element: <Root />,
         children: [
@@ -107,7 +107,7 @@ const router = createBrowserRouter([
             },
             {
                 path:"/babyInfo/show/:babycode",
-                element: <BabyInfoShow />
+                element: <BabyInfoShow/>
             }
         ]
     },
@@ -178,17 +178,21 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/info/guide',
-                element: <GovernmentSupport  />,
+                element: <PregnancyGuide  />,
             }, {
                 path: '/info/hospitalInfo',
                 element: <HospitalInfo />,
             }, {
                 path: '/info/government',
-                element: <PregnancyGuide />,
+                element: <GovernmentSupport />,
             }, {
                 path: '/info/preantalEduation',
                 element: <PrenatalEducation />,
+            }, {
+                path: '/info/governmentMain',
+                element: <GovernmentSupportMain />,
             }
+            
         ]
     }
 ], {
