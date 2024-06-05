@@ -14,8 +14,6 @@ const Main = () => {
     // 문자열(JSON)을 다시 리스트로 파싱하여 사용
     const user = JSON.parse(userSample);
 
-    console.log('홈2'
-    )
     return (
         <>
 
