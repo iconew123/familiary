@@ -24,8 +24,6 @@ const Login = () => {
         formData.append('id', id);
         formData.append('password', password);
 
-
-        // 입력 검증
         if (!id || !password) {
             if (!id) {
                 setIdError('아이디를 입력하세요.');
@@ -40,7 +38,6 @@ const Login = () => {
             }
             return;
         }
-
 
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=login`, {
