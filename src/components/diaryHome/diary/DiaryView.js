@@ -1,21 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchDiaryDetailInfo } from '../DiaryMain';
-import { Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select } from '@chakra-ui/react';
+import {
+    Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton,
+    ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select
+} from '@chakra-ui/react';
 
 const DiaryView = () => {
     const { date, babycode, id } = useParams();
     const navigate = useNavigate();
     const [serverData, setServerData] = useState();
+    const [position, setPosition] = useState();
+    const [comments, setComments] = useState([]);
     const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
+    const { isOpen: isCommentEditModalOpen, onOpen: onCommentEditModalOpen, onClose: onCommentEditModalClose } = useDisclosure();
+    const [commentInput, setCommentInput] = useState('');
+    const [isCommentSubmitting, setIsCommentSubmitting] = useState(false);
+    const [editCommentInput, setEditCommentInput] = useState('');
+    const [editCommentId, setEditCommentId] = useState(null);
+    const userSample = sessionStorage.getItem('userInfo');
+    const user = JSON.parse(userSample);
 
     useEffect(() => {
         fetchDiaryDetailInfo(date, babycode).then(response => {
             setServerData(response);
+            fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&baby_code=${babycode}&user_id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    setPosition(data.position);
+                })
+                .catch(error => {
+                    console.error('Error fetching enroll command:', error);
+                });
         });
-    }, [date, babycode]);
+    }, [date, babycode, id]);
 
-    const [diary, setdiary] = useState({
+    useEffect(() => {
+        if (serverData) {
+            fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=find&diaryCode=${serverData.code}`)
+                .then(response => response.json())
+                .then(data => {
+                    setComments(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching comments:', error);
+                });
+        }
+    }, [serverData]);
+
+    const [diary, setDiary] = useState({
         title: '',
         content: '',
         category: ''
@@ -23,7 +56,7 @@ const DiaryView = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setdiary(prevState => ({
+        setDiary(prevState => ({
             ...prevState,
             [name]: value
         }));
@@ -107,7 +140,7 @@ const DiaryView = () => {
     const handleEdit = () => {
         onRecordModalOpen();
         if (serverData) {
-            setdiary({
+            setDiary({
                 title: serverData.title || '',
                 content: serverData.content || '',
                 category: serverData.category || ''
@@ -137,6 +170,109 @@ const DiaryView = () => {
         return <Box textAlign="center" fontSize="22px" color="#333" mt="40px">Loading...</Box>;
     }
 
+    const isOwner = position && position !== "family";
+
+    const handleCommentSubmit = () => {
+        setIsCommentSubmitting(true);
+
+        const formData = new FormData();
+        formData.append('userId', user.id);
+        formData.append('diaryCode', serverData.code);
+        formData.append('userNickName', user.nickname);
+        formData.append('content', commentInput);
+
+        if (commentInput === null || commentInput === "") {
+            alert("댓글 내용을 입력해주세요");
+            setIsCommentSubmitting(false)
+            return;
+        }
+
+        fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=create`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=find&diaryCode=${serverData.code}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            setComments(data);
+                            setCommentInput('');
+                            setIsCommentSubmitting(false);
+                        })
+                        .catch(error => {
+                            console.error('댓글 목록 가져오기 에러:', error);
+                            setIsCommentSubmitting(false);
+                        });
+                } else {
+                    setIsCommentSubmitting(false);
+                }
+            })
+            .catch(error => {
+                console.error('댓글 작성 중 에러:', error);
+                setIsCommentSubmitting(false);
+            });
+    };
+
+    const handleCommentEdit = (comment) => {
+        setEditCommentId(comment.code);
+        setEditCommentInput(comment.content);
+        onCommentEditModalOpen();
+    };
+
+    const handleCommentUpdate = () => {
+        const formData = new FormData();
+        formData.append('code', editCommentId);
+        formData.append('content', editCommentInput);
+
+        if (editCommentInput === null || editCommentInput === '') {
+            alert("수정할 내용을 입력해주세요.");
+            return;
+        }
+
+        fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=update`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=find&diaryCode=${serverData.code}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            setComments(data);
+                            onCommentEditModalClose();
+                        })
+                        .catch(error => {
+                            console.error('댓글 목록 가져오기 에러:', error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('댓글 수정 중 에러:', error);
+            });
+    };
+
+    const handleCommentDelete = (commentId) => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=delete&code=${commentId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (response.ok) {
+                    fetch(`${process.env.REACT_APP_SERVER_URL}/diaryComment?command=find&diaryCode=${serverData.code}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            setComments(data);
+                        })
+                        .catch(error => {
+                            console.error('댓글 목록 가져오기 에러:', error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('댓글 삭제 중 에러:', error);
+            });
+    };
+
     return (
         <>
             <Box
@@ -154,6 +290,15 @@ const DiaryView = () => {
                     pb="30px"
                     mb="30px"
                 >
+                    <Heading color="#333" fontSize="32px" fontWeight="700" textTransform="uppercase" letterSpacing="2px">
+                        {serverData.date}일의 다이어리({serverData.category})
+                        {console.log(serverData)}
+                    </Heading>
+                    <Box
+                        borderBottom="2px solid #ccc"
+                        pb="30px"
+                        mb="30px"
+                    ></Box>
                     <Heading color="#333" fontSize="32px" fontWeight="700" textTransform="uppercase" letterSpacing="2px">
                         {serverData.title}
                     </Heading>
@@ -190,43 +335,91 @@ const DiaryView = () => {
                     </Text>
                 </Box>
                 <Flex justifyContent="center" gap="20px">
-                    <Button
-                        onClick={handleEdit}
-                        p="15px 30px"
-                        borderRadius="30px"
-                        fontSize="18px"
-                        fontWeight="700"
-                        bg="#ffd700"
-                        color="#333"
-                        boxShadow="0 6px 12px rgba(255, 215, 0, 0.4)"
-                        transition="background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease"
-                        _hover={{
-                            bg: '#ffcc00',
-                            boxShadow: '0 8px 16px rgba(255, 215, 0, 0.6)',
-                            transform: 'translateY(-2px)'
-                        }}
-                    >
-                        수정하기
-                    </Button>
-                    <Button
-                        onClick={handleDelete}
-                        p="15px 30px"
-                        borderRadius="30px"
-                        fontSize="18px"
-                        fontWeight="700"
-                        bg="#ff6347"
-                        color="#fff"
-                        boxShadow="0 6px 12px rgba(255, 99, 71, 0.4)"
-                        transition="background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease"
-                        _hover={{
-                            bg: '#ff4500',
-                            boxShadow: '0 8px 16px rgba(255, 99, 71, 0.6)',
-                            transform: 'translateY(-2px)'
-                        }}
-                    >
-                        삭제하기
-                    </Button>
+                    {isOwner && (
+                        <>
+                            <Button
+                                onClick={handleEdit}
+                                p="15px 30px"
+                                borderRadius="30px"
+                                fontSize="18px"
+                                fontWeight="700"
+                                bg="#ffd700"
+                                color="#333"
+                                boxShadow="0 6px 12px rgba(255, 215, 0, 0.4)"
+                                transition="background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease"
+                                _hover={{
+                                    bg: '#ffcc00',
+                                    boxShadow: '0 8px 16px rgba(255, 215, 0, 0.6)',
+                                    transform: 'translateY(-2px)'
+                                }}
+                            >
+                                수정하기
+                            </Button>
+                            <Button
+                                onClick={handleDelete}
+                                p="15px 30px"
+                                borderRadius="30px"
+                                fontSize="18px"
+                                fontWeight="700"
+                                bg="#ff6347"
+                                color="#fff"
+                                boxShadow="0 6px 12px rgba(255, 99, 71, 0.4)"
+                                transition="background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease"
+                                _hover={{
+                                    bg: '#ff4500',
+                                    boxShadow: '0 8px 16px rgba(255, 99, 71, 0.6)',
+                                    transform: 'translateY(-2px)'
+                                }}
+                            >
+                                삭제하기
+                            </Button>
+                        </>
+                    )}
                 </Flex>
+
+                <Box mt="30px">
+                    <Heading fontSize="24px" color="#333" mb="20px">댓글</Heading>
+                    {comments.length > 0 && comments[0].status !== 400 ? (
+                        comments.map((comment) => (
+                            <Box key={comment.code} p="20px" mb="10px" bg="#f9f9f9" borderRadius="10px" boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)">
+                                <Flex justifyContent="space-between" alignItems="center" mb="5px">
+                                    <Text fontSize="14px" color="#777">{`작성자: ${comment.userNickName}`}</Text>
+                                    <Text fontSize="14px" color="#777">{`작성시각: ${comment.regDate}`}{comment.regDate !== comment.modDate ? " (수정됨)" : ""}</Text>
+                                </Flex>
+                                <Text fontSize="16px" color="#777" textAlign="left">{comment.content}</Text>
+                                {user.id === comment.userId && (
+                                    <Flex justifyContent="flex-end" mt="10px">
+                                        <Button size="sm" colorScheme="blue" mr="5px" onClick={() => handleCommentEdit(comment)}>수정</Button>
+                                        <Button size="sm" colorScheme="red" onClick={() => handleCommentDelete(comment.code)}>삭제</Button>
+                                    </Flex>
+                                )}
+                            </Box>
+                        ))
+                    ) : (
+                        <Text>현재 글에 등록된 댓글이 없습니다.</Text>
+                    )}
+                    {/* Comment Form */}
+                    <Box mt="30px">
+                        <Heading fontSize="20px" color="#333" mb="10px">댓글 추가</Heading>
+                        <FormControl>
+                            <Textarea
+                                placeholder="댓글을 작성해주세요."
+                                value={commentInput}
+                                onChange={(e) => setCommentInput(e.target.value)}
+                            />
+                        </FormControl>
+                        <Button
+                            onClick={handleCommentSubmit}
+                            bg={'#AF8F6F'}
+                            size="lg"
+                            mt="10px"
+                            isLoading={isCommentSubmitting}
+                        >
+                            댓글 작성
+                        </Button>
+                    </Box>
+                </Box>
+
                 <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
                     <ModalOverlay />
                     <ModalContent>
@@ -260,6 +453,30 @@ const DiaryView = () => {
                                     type="submit"
                                     isLoading={isLoading}
                                     disabled={isLoading}
+                                >
+                                    저장
+                                </Button>
+                            </VStack>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+
+                <Modal isOpen={isCommentEditModalOpen} onClose={onCommentEditModalClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>댓글 수정</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <VStack spacing={4}>
+                                <FormControl isRequired>
+                                    <FormLabel>댓글 내용</FormLabel>
+                                    <Textarea value={editCommentInput} onChange={(e) => setEditCommentInput(e.target.value)} placeholder="댓글 내용을 수정하세요" />
+                                </FormControl>
+                                <Button
+                                    onClick={handleCommentUpdate}
+                                    bg={'#AF8F6F'}
+                                    size="lg"
+                                    type="submit"
                                 >
                                     저장
                                 </Button>

@@ -39,7 +39,7 @@ const DiaryShow = () => {
     };
 
     const linkStyle = {
-        color: '#fffbf0',
+        color: 'blue',
         textDecoration: 'none'
     };
 

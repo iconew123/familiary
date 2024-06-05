@@ -259,6 +259,7 @@ if (option === 'showDiary') {
                     .then(data => {
                         // 데이터 업데이트
                         setServerData(data);
+                        setIsLoading(false);
                     })
                     .catch(error => {
                         console.error('데이터를 가져오는 중 에러 발생', error);
@@ -284,7 +285,7 @@ if (option === 'showDiary') {
     };
 
     const linkStyle = {
-        color: '#fffbf0', // 원하는 색상으로 변경
+        color: 'blue', // 원하는 색상으로 변경
         textDecoration: 'none',
       };
 

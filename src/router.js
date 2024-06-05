@@ -112,7 +112,7 @@ const router = createBrowserRouter([
             },
             {
                 path:"/babyInfo/show/:babycode",
-                element: <BabyInfoShow/>
+                element: <BabyInfoShow />
             }
         ]
     },
