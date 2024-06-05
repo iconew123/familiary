@@ -127,9 +127,6 @@ const Join = () => {
             setPhoneError(false);
         }
 
-
-
-        // Check for duplicates only if there are no validation errors
         if (!hasError) {
             const idDuplicate = await checkDuplicate('id', id);
             if (idDuplicate) {
@@ -166,7 +163,6 @@ const Join = () => {
             }
         }
 
-        // 에러 발생 시 제출 중단
         if (hasError) {
             setLoading(false);
             return;
@@ -232,6 +228,7 @@ const Join = () => {
                         placeholder="아이디"
                         onChange={(e) => setId(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="password"
@@ -241,6 +238,7 @@ const Join = () => {
                         placeholder="비밀번호"
                         onChange={(e) => setPassword(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="password"
@@ -250,6 +248,7 @@ const Join = () => {
                         placeholder="비밀번호 확인"
                         onChange={(e) => setRePassword(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="text"
@@ -259,6 +258,7 @@ const Join = () => {
                         placeholder="닉네임"
                         onChange={(e) => setNickname(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="text"
@@ -268,6 +268,7 @@ const Join = () => {
                         placeholder="이름"
                         onChange={(e) => setName(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="text"
@@ -277,6 +278,7 @@ const Join = () => {
                         placeholder="주민등록번호"
                         onChange={(e) => setSecurityNumber(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Select
                         id="telecom"
@@ -285,6 +287,7 @@ const Join = () => {
                         onChange={(e) => setTelecom(e.target.value)}
                         size='lg' bg='white' w='100%'
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        marginBottom="10px"
                     >
                         <option value="" disabled>통신사 선택</option>
                         <option value="skt">SKT</option>
@@ -299,6 +302,7 @@ const Join = () => {
                         placeholder="핸드폰번호"
                         onChange={(e) => setPhone(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="text"
@@ -308,6 +312,7 @@ const Join = () => {
                         placeholder="주소"
                         onChange={(e) => setAddress(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     <Input
                         type="email"
@@ -317,6 +322,7 @@ const Join = () => {
                         placeholder="이메일"
                         onChange={(e) => setEmail(e.target.value)}
                         size='lg' bg='white' w='100%'
+                        marginBottom="10px"
                     />
                     {idError && <Text color="red">{idError}</Text>}
                     {idDuplError && <Text color="red">{idDuplError}</Text>}

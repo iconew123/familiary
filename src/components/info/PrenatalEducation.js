@@ -1,19 +1,9 @@
-import { Box, Grid, GridItem, Image, Link, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
-const PrenatalEducation  = () => {
-    return (
-        <>
 
-            <box>태교</box>
-    
-
-
-
-        </>
-    );
-
-
+const PrenatalEducation = () => {
+   <Box>태교</Box>
 }
 
 export default PrenatalEducation;
