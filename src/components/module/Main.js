@@ -2,6 +2,16 @@ import { Box, Grid, GridItem, Image, Link, Text, Input, Button } from '@chakra-u
 import React, { useState } from 'react';
 import adImage1 from '../image/ad1.jpg';
 import adImage2 from '../image/ad2.jpg';
+import info1 from '../image/info1.jpg'
+import info2 from '../image/info2.jpg'
+import info3 from '../image/info3.jpg'
+import info4 from '../image/info4.jpg'
+import info5 from '../image/info5.jpg'
+import info6 from '../image/info6.jpg'
+import info7 from '../image/info7.jpg'
+import info8 from '../image/info8.jpg'
+
+
 import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
@@ -68,27 +78,65 @@ const Main = () => {
     };
 
     return (
+        <Box padding="20px">
         <Grid
             h='auto'
-            templateAreas={`"adArea board board login"
-                        "adArea ideology ideology adArea2"`}
+            templateAreas={`"adArea info info login"
+                            "adArea info info adArea2"
+                            "adArea board board adArea2"`}
             gridTemplateColumns={'1fr 1fr 1fr 1fr'}
-            gap={1}
+            gridTemplateRows={'auto 1fr 1fr'}
+            gap={6} 
         >
             {/* 광고단 */}
-            <GridItem w='100%' area={'adArea'} display="flex" justifyContent="center" alignItems="center">
+            <GridItem w='100%' area={'adArea'} display="flex" justifyContent="center" alignItems="center" padding={4}>
                 <Link href="https://www.gg.go.kr/contents/contents.do?ciIdx=987110&menuId=266074">
                     <Image src={adImage1} alt="ad Image" width="100%" height="100%" objectFit="cover" />
                 </Link>
             </GridItem>
 
             {/* 임산부 가이드 */}
-            <GridItem w='100%' bg='#E4CBAB' area={'ideology'}>
-                아이가 없는 사람들도 자유롭게 사용이 가능한 사이트
-            </GridItem>
+            <GridItem area={'info'} padding={4} rowSpan={2} display="flex" flexDirection="column" justifyContent="space-between">
+                    <Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(2, 1fr)" gap={6} height="100%">
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info1} alt="Image 1" width="100%" height="200px" objectFit="cover" />
+                            <Text>임신초기 이상 증상 확인</Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info2} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>임신초기 입덧 관리 </Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info3} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>임신 중기 임신중독증 진단</Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info4} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>임신 말기 조기진통 숙지</Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info5} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>가다실 예방 접종 권장</Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info7} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>임산부 신고</Text>
+                        </GridItem>
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info6} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>산후 우울증 진단 및 치료</Text>
+                        </GridItem>
+                     
+                        <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
+                            <Image src={info8} alt="info Image" width="100%" height="200px" objectFit="cover" />
+                            <Text>아이 돌봄교실 신청</Text>
+                        </GridItem>
+            
+                    </Grid>
+                </GridItem>
 
             {/* 로그인 */}
-            <GridItem w='100%' bg='white' area={'login'} rowSpan={1}>
+            <GridItem w='100%' bg='white' area={'login'} padding={4} rowSpan={1}>
                 {!loggedIn ? (
                     <Box maxW='500px' mx='auto' textAlign='center'>
                         <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>로그인</Text>
@@ -140,17 +188,18 @@ const Main = () => {
             </GridItem>
 
             {/* 광고단2 */}
-            <GridItem w='100%' h='55px' area={'adArea2'} rowSpan={3} display="flex" justifyContent="center" alignItems="center">
+            <GridItem w='100%' area={'adArea2'} display="flex" justifyContent="center" alignItems="center" padding={4} rowSpan={2}>
                 <Link href="https://kidikidi.elandmall.co.kr/p/planshop?exhibitionNo=202309008823">
                     <Image src={adImage2} alt="ad Image2" width="100%" height="100%" objectFit="cover" />
                 </Link>
             </GridItem>
 
             {/* 게시판(최신순) */}
-            <GridItem w='100%' bg='#E6D7C3' area={'board'}>
+            <GridItem w='100%' bg='#E6D7C3' area={'board'} padding={4} rowSpan={2}>
                 게시판(최신순)
             </GridItem>
         </Grid>
+    </Box>
     );
 };
 
