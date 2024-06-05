@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Code, HStack, Text, Textarea, VStack } from '@chakra-ui/react';
+import { Box, Button, Code, HStack, IconButton, Text, Textarea, VStack } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CloseIcon } from '@chakra-ui/icons';
 
 const ViewCommunity = () => {
     const [searchParams] = useSearchParams();
@@ -45,22 +46,23 @@ const ViewCommunity = () => {
 
     // 댓글 리스트 데이터 불러오기
     useEffect(() => {
-            fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=readComment&communityCode=${code}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('네트워크 응답이 올바르지 않습니다');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
-                    setComments(data || []); // 댓글 리스트 설정 (undefined인 경우 빈 배열로 설정)
-                })
-                .catch(error => {
-                    console.error('데이터를 가져오는 중 에러 발생', error);
-                });
+        fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=readComment&communityCode=${code}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 올바르지 않습니다');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setComments(data || []); // 댓글 리스트 설정 (undefined인 경우 빈 배열로 설정)
+            })
+            .catch(error => {
+                console.error('데이터를 가져오는 중 에러 발생', error);
+            });
     }, []);
 
+    // 게시글 삭제 버튼
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete&code=${code}`, {
             method: 'DELETE',
@@ -80,6 +82,7 @@ const ViewCommunity = () => {
             .catch(error => console.error('게시글을 삭제하는 중 에러 발생', error));
     };
 
+    // 게시글 수정 버튼
     const handleUpdate = () => {
         navigate(`/community/update?command=update&code=${code}`); // 수정 페이지로 이동
     };
@@ -94,19 +97,19 @@ const ViewCommunity = () => {
             alert('댓글을 작성하려면 로그인이 필요합니다');
             return;
         }
-    
+
         if (comment.trim() === '') {
             alert('댓글 내용을 입력하세요.');
             return;
         }
-    
+
         const requestBody = {
             code: code,
             userId: user.id,
             userNickname: user.nickname,
             content: comment.trim()
         };
-    
+
         try {
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=writeComment`, {
                 method: 'POST',
@@ -115,31 +118,52 @@ const ViewCommunity = () => {
                 },
                 body: JSON.stringify(requestBody)
             });
-    
+
             if (!response.ok) {
                 throw new Error('댓글 등록 실패');
             }
-    
+
             const responseText = await response.text();
             console.log("Response Text:", responseText); // 서버 응답 로그
             if (responseText.trim() === "") {
                 console.error('빈 응답');
                 return;
             }
-    
+
             const jsonData = JSON.parse(responseText); // JSON 파싱
             console.log("Response Data:", jsonData); // 새로 추가된 댓글 콘솔에 출력
-    
-            setComments(prevComments => [jsonData, ...prevComments]); // 최신 댓글을 맨 위에 추가
+
+            setComments(prevComments => [jsonData, ...prevComments]);
             setComment(''); // 댓글 입력 필드 초기화
             console.log('댓글 등록 성공');
             // 비동기 처리방식으로 바꿔도 댓글이 바로 안떠서 reload하는 방법을 채택
-            alert('댓글이 성공적으로 등록되었습니다.');
-            window.location.reload(); 
-    
+            // 등록이 한 번 일어나면 alert 창이 뜨기 때문에 도배 방지 가능
+            window.location.reload();
+
         } catch (error) {
             console.error('댓글 등록 중 에러 발생', error);
         }
+    };
+
+    // 댓글 삭제하기
+    const handleDeleteComment = async (commentCode) => {
+        console.log("Attempting to delete comment with code:", commentCode); // commentCode 확인
+        fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=deleteComment&commentCode=${commentCode}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('댓글 삭제 성공');
+                    alert('댓글이 성공적으로 삭제되었습니다.');
+                    window.location.reload();
+                } else {
+                    console.log('댓글 삭제 실패');
+                }
+            })
+            .catch(error => console.error('게시글을 삭제하는 중 에러 발생', error));
     };
 
     const handleInputChange = (e) => {
@@ -167,8 +191,19 @@ const ViewCommunity = () => {
             <Box>
                 {comments.map((comment, index) => (
                     <Box key={index} borderBottom="1px solid #ccc" p="10px">
-                        <Text fontSize="sm" color="gray.500">{comment.userNickname}</Text>
-                        <Text fontSize="md">{comment.content}</Text>
+                        <HStack>
+                            <Text fontSize="sm" color="gray.500">{comment.userNickname}</Text>
+                            <Text fontSize="md">{comment.content}</Text>
+                            {user && user.nickname === comment.userNickname && (
+                            <IconButton
+                                onClick={() => handleDeleteComment(comment.code)}
+                                variant='outline'
+                                colorScheme='#ccc'
+                                aria-label='Delete Comment'
+                                icon={<CloseIcon />}
+                            />
+                            )}
+                        </HStack>
                     </Box>
                 ))}
             </Box>
