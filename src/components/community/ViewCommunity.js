@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Code, HStack, IconButton, Text, Textarea, VStack } from '@chakra-ui/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Code, HStack, IconButton, Text, Textarea, VStack } from '@chakra-ui/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CloseIcon } from '@chakra-ui/icons';
 
@@ -13,6 +13,10 @@ const ViewCommunity = () => {
     const [user, setUser] = useState(null);
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
+
+    const [isOpen, setIsOpen] = useState(false); // 모달 상태
+    const [selectedCommentCode, setSelectedCommentCode] = useState(null); // 삭제할 댓글 코드
+    const cancelRef = useRef(); // 모달 취소 버튼 참조
 
     useEffect(() => {
         // 세션에 저장된 유저 불러오기
@@ -147,23 +151,35 @@ const ViewCommunity = () => {
 
     // 댓글 삭제하기
     const handleDeleteComment = async (commentCode) => {
-        console.log("Attempting to delete comment with code:", commentCode); // commentCode 확인
-        fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=deleteComment&commentCode=${commentCode}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('댓글 삭제 성공');
-                    alert('댓글이 성공적으로 삭제되었습니다.');
-                    window.location.reload();
-                } else {
-                    console.log('댓글 삭제 실패');
+        setSelectedCommentCode(commentCode); // 삭제할 댓글 코드 설정
+        setIsOpen(true); // 모달 열기
+    };
+
+    // 모달에서 확인 버튼을 눌렀을 때 댓글 삭제
+    const confirmDeleteComment = async () => {
+        if (!selectedCommentCode) return;
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=deleteComment&commentCode=${selectedCommentCode}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            })
-            .catch(error => console.error('게시글을 삭제하는 중 에러 발생', error));
+            });
+
+            if (response.ok) {
+                console.log('댓글 삭제 성공');
+                alert('댓글이 성공적으로 삭제되었습니다.');
+                setComments(comments.filter(comment => comment.code !== selectedCommentCode)); // 댓글 리스트 갱신
+            } else {
+                console.log('댓글 삭제 실패');
+            }
+        } catch (error) {
+            console.error('댓글을 삭제하는 중 에러 발생', error);
+        } finally {
+            setIsOpen(false); // 모달 닫기
+            setSelectedCommentCode(null); // 선택된 댓글 코드 초기화
+        }
     };
 
     const handleInputChange = (e) => {
@@ -211,6 +227,33 @@ const ViewCommunity = () => {
                 <Textarea name='comment' value={comment} onChange={handleInputChange} placeholder='내용을 입력하세요.' size='sm' width="100%" mt="10px" />
                 <Button onClick={handleInputComment} mt="20px" w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>등록하기</Button>
             </Box>
+
+            <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={() => setIsOpen(false)}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            댓글 삭제 확인
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            선택한 댓글을 삭제하시겠습니까?
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={() => setIsOpen(false)}>
+                                취소
+                            </Button>
+                            <Button colorScheme="red" onClick={confirmDeleteComment} ml={3}>
+                                삭제
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </Box>
     );
 };
