@@ -24,6 +24,9 @@ import GovernmentSupport  from "./components/info/GovernmentSupport ";
 import HospitalInfo from "./components/info/HospitalInfo";
 import PregnancyGuide from "./components/info/PregnancyGuide";
 import PrenatalEducation from "./components/info/PrenatalEducation";
+import BabyInfoShow from "./components/diaryHome/diary/BabyInfoShow";
+import BabyInfoView from "./components/diaryHome/diary/BabyInfoView";
+
 
 const router = createBrowserRouter([
     {
@@ -100,11 +103,11 @@ const router = createBrowserRouter([
             },
             {
                 path:"/babyInfo/:date/:babycode",
-                element: <babyInfoView/>
+                element: <BabyInfoView />
             },
             {
                 path:"/babyInfo/show/:babycode",
-                element: <DiaryShow />
+                element: <BabyInfoShow />
             }
         ]
     },

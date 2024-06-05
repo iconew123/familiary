@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchDiaryDetailInfo } from '../DiaryMain';
+import { fetchInfoDetail } from '../DiaryMain';
 import { Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select } from '@chakra-ui/react';
 
-const DiaryView = () => {
+const BabyInfoView = () => {
     const { date, babycode, id } = useParams();
     const navigate = useNavigate();
-    const [serverData, setServerData] = useState();
+    const [serverInfoData, setServerInfoData] = useState();
     const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
 
     useEffect(() => {
-        fetchDiaryDetailInfo(date, babycode).then(response => {
+        fetchInfoDetail(date, babycode).then(response => {
             setServerInfoData(response);
         });
     }, [date, babycode]);
@@ -35,17 +35,18 @@ const DiaryView = () => {
     const handleButtonClick = () => {
         setIsLoading(true);
 
-        if  (!info.height && !info.weight)  {
+        if (!info.height && !info.weight) {
             alert("키와 몸무게를 적어주세요.");
             setIsLoading(false);
             return;
         }
 
-        const formInfoData = new FormData();
-        formInfoData.append('code', selectedBabyCode);
-        formInfoData.append('height', info.height);
-        formInfoData.append('weight', info.weight);
-        formInfoData.append('spec_note', info.memo);
+        const formData = new FormData();
+        formData.append('date', serverInfoData.date);
+        formData.append('baby_code', serverInfoData.baby_code);
+        formData.append('height', info.height);
+        formData.append('weight', info.weight);
+        formData.append('spec_note', info.memo);
 
         fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=update`, {
             method: 'POST',
@@ -56,9 +57,9 @@ const DiaryView = () => {
                     console.log('데이터 전송 성공');
                     onRecordModalClose();
 
-                    fetchDiaryDetailInfo(serverInfoData.date, serverInfoData.baby_code)
+                    fetchInfoDetail(serverInfoData.date, serverInfoData.baby_code)
                         .then(data => {
-                            setServerData(data);
+                            setServerInfoData(data);
                         })
                         .catch(error => {
                             console.error('데이터를 가져오는 중 에러 발생', error);
@@ -87,22 +88,22 @@ const DiaryView = () => {
 
     const handleEdit = () => {
         onRecordModalOpen();
-        if (serverData) {
-            setdiary({
-                title: serverData.title || '',
-                content: serverData.content || '',
-                category: serverData.category || ''
+        if (serverInfoData) {
+            setInfo({
+                height: serverInfoData.height || '',
+                weight: serverInfoData.weight || '',
+                spec_note: serverInfoData.spec_note || ''
             });
         }
     };
 
     const handleDelete = () => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=delete&babycode=${serverData.baby_code}&date=${serverData.date}`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=delete&baby_code=${serverInfoData.baby_code}&date=${serverInfoData.date}`, {
             method: 'DELETE'
         })
             .then(response => {
                 if (response.ok) {
-                    alert("다이어리 삭제 성공");
+                    alert("정보 삭제 성공");
                     navigate('/diary');
                 } else {
                     navigate('/');
@@ -114,7 +115,7 @@ const DiaryView = () => {
             });
     };
 
-    if (!serverData) {
+    if (!serverInfoData) {
         return <Box textAlign="center" fontSize="22px" color="#333" mt="40px">Loading...</Box>;
     }
 
@@ -136,38 +137,20 @@ const DiaryView = () => {
                     mb="30px"
                 >
                     <Heading color="#333" fontSize="32px" fontWeight="700" textTransform="uppercase" letterSpacing="2px">
-                        {serverData.title}
+                        {serverInfoData.date}
                     </Heading>
                 </Box>
-                {serverData.imgUrl && (
-                    <Box
-                        borderBottom="2px solid #ccc"
-                        pb="30px"
-                        mb="30px"
-                    >
-                        <Flex justifyContent="center">
-                            <Image
-                                src={serverData.imgUrl}
-                                alt="Diary"
-                                maxW="600px"
-                                borderRadius="20px"
-                                boxShadow="0 8px 16px rgba(0, 0, 0, 0.2)"
-                                transition="transform 0.4s ease, box-shadow 0.4s ease"
-                                _hover={{
-                                    transform: 'scale(1.1)',
-                                    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.3)'
-                                }}
-                            />
-                        </Flex>
-                    </Box>
-                )}
+
                 <Box
                     borderBottom="2px solid #ccc"
                     pb="30px"
                     mb="30px"
                 >
                     <Text fontSize="20px" color="#666" lineHeight="1.8" px="20px">
-                        {serverData.content}
+                        키 | {serverInfoData.height}cm
+                    </Text>
+                    <Text fontSize="20px" color="#666" lineHeight="1.8" px="20px">
+                        몸무게 | {serverInfoData.weight}kg
                     </Text>
                 </Box>
                 <Flex justifyContent="center" gap="20px">
@@ -211,24 +194,21 @@ const DiaryView = () => {
                 <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
                     <ModalOverlay />
                     <ModalContent>
-                        <ModalHeader>{serverData.date}일의 다이어리 기록</ModalHeader>
+                        <ModalHeader>{serverInfoData.date}일의 정보 기록</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
                             <VStack spacing={4}>
                                 <FormControl isRequired>
-                                    <FormLabel>제목</FormLabel>
-                                    <Input type="text" name="title" value={diary.title} onChange={handleInputChange} placeholder="제목을 입력하세요" />
+                                    <FormLabel>키</FormLabel>
+                                    <Textarea name="height" value={info.height} onChange={handleInputChange} placeholder="키를 입력하세요" />
                                 </FormControl>
                                 <FormControl isRequired>
-                                    <FormLabel>내용</FormLabel>
-                                    <Textarea name="content" value={diary.content} onChange={handleInputChange} placeholder="내용을 입력하세요" />
+                                    <FormLabel>몸무게</FormLabel>
+                                    <Textarea name="weight" value={info.weight} onChange={handleInputChange} placeholder="몸무게를 입력하세요" />
                                 </FormControl>
-                                <FormControl isRequired>
-                                    <FormLabel>타입</FormLabel>
-                                    <Select name="category" value={diary.category} onChange={handleInputChange} placeholder="타입 선택">
-                                        <option value="출산전">출산전</option>
-                                        <option value="출산후">출산후</option>
-                                    </Select>
+                                <FormControl>
+                                    <FormLabel>메모</FormLabel>
+                                    <Textarea name="spec_note" value={info.spec_note} onChange={handleInputChange} placeholder="메모" />
                                 </FormControl>
                                 <Button
                                     onClick={handleButtonClick}
@@ -249,4 +229,4 @@ const DiaryView = () => {
     );
 };
 
-export default DiaryView;
+export default BabyInfoView;
