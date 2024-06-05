@@ -10,6 +10,9 @@ import { useSession } from '../module/SessionComponent';
 const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
 
 const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
+    console.log("formatDate" + formatDate);
+    console.log("selectedBabyCode" + selectedBabyCode);
+
     const now = new Date();
     const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}&babycode=${selectedBabyCode}`);
     const data = await response.json();
@@ -31,7 +34,7 @@ const DiaryMain = () => {
     const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
 
-    console.log(user);
+    // console.log(user);
 
     // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
@@ -129,12 +132,10 @@ const DiaryMain = () => {
     };
 
     const handleOptionClick = (option) => {
-        if (option === 'writeInfo') {
-            navigate('/info-record/');
-        } else if (option === 'showDiary') {
+if (option === 'showDiary') {
             navigate(`/diary/show/${selectedBabyCode}`);
         } else if (option === 'showInfo') {
-            navigate('/show-info');
+            navigate(`/babyInfo/show/${selectedBabyCode}`);
         } else if (option === 'infoBaby') {
             navigate('/baby/info');
         } else if (option === 'joinBaby') {
@@ -490,6 +491,7 @@ const DiaryMain = () => {
                             <Flex justifyContent="flex-end">
                                 <Flex flexDirection="column" display={showSearchOptions ? 'flex' : 'none'}>
                                     <Button onClick={() => handleOptionClick('showDiary')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">일기 모아보기</Button>
+                                    <Button onClick={() => handleOptionClick('showInfo')} w='120px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">정보 모아보기</Button>
                                 </Flex>
 
                                 <Button onClick={handleSearchClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>

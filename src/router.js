@@ -23,10 +23,10 @@ import DiaryShow from "./components/diaryHome/diary/DiaryShow";
 import HospitalInfo from "./components/info/HospitalInfo";
 import PregnancyGuide from "./components/info/PregnancyGuide";
 import PrenatalEducation from "./components/info/PrenatalEducation";
-import BabyInfoShow from "./components/diaryHome/diary/BabyInfoShow";
 import BabyInfoView from "./components/diaryHome/diary/BabyInfoView";
 import GovernmentSupport from "./components/info/GovernmentSupport";
 import GovernmentSupportMain from "./components/info/GovernmentSupportMain";
+import BabyInfoShow from "./components/diaryHome/diary/BabyInfoShow";
 
 const router = createBrowserRouter([
     {
