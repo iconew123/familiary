@@ -4,7 +4,6 @@ import App from './App';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import GlobalStyles from "./GlobalStyles"; // 글로벌 스타일을 임포트합니다
 
-
 // 커스텀 테마 설정
 const theme = extendTheme({
   fonts: {
@@ -15,8 +14,10 @@ const theme = extendTheme({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <ChakraProvider theme={theme}>
-    <GlobalStyles /> 
-    <App />
-  </ChakraProvider>
+  <>
+    <ChakraProvider theme={theme}>
+      <GlobalStyles />
+      <App />
+    </ChakraProvider>
+  </>
 );
