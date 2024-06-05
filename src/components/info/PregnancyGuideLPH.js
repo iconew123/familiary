@@ -16,8 +16,9 @@ const PregnancyGuideLPH = () => {
         >
             {/* 상단 버튼들 */}
             <GridItem area={'header'} bg='#e0ccb3' display="flex" justifyContent="space-around" alignItems="center">
+                <Button onClick={() => navigate('/info/guide/LPU')} mb="10px" hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>임신 말기 이해</Button>
                 <Button
-                    onClick={() => navigate('/info/guide/EPU')}
+                    onClick={() => navigate('/info/guide/LPH')}
                     mb="10px"
                     fontSize="md"
                     py="3"
@@ -26,8 +27,7 @@ const PregnancyGuideLPH = () => {
                     bg="#FFFEF0  "
                     color="#000000 "
                     _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}
-                >임신 말기 이해</Button>
-                <Button onClick={() => navigate('/info/guide/LPH')} mb="10px" hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>임신 말기 생활 습관</Button>
+                >임신 말기 생활 습관</Button>
             </GridItem>
 
             {/* 좌측 버튼들 */}
@@ -49,7 +49,7 @@ const PregnancyGuideLPH = () => {
 
             {/* 메인 컨텐츠 */}
             <GridItem area={'main'} bg='#FFFEF0  ' display="flex" flexDirection="column" alignItems="center" padding="20px">
-                <Text fontSize="3xl" mb="20px">임신 초기 생활 습관</Text>
+                <Text fontSize="3xl" mb="20px">임신 말기 생활 습관</Text>
 
                 <Box>
                     <Text fontSize="3xl" mb="10px">영양 및 체중관리</Text>

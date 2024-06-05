@@ -17,7 +17,7 @@ const PregnancyGuideLPU = () => {
             {/* 상단 버튼들 */}
             <GridItem area={'header'} bg='#e0ccb3' display="flex" justifyContent="space-around" alignItems="center">
                 <Button
-                    onClick={() => navigate('/info/guide/EPU')}
+                    onClick={() => navigate('/info/guide/LPU')}
                     mb="10px"
                     fontSize="md"
                     py="3"
@@ -37,7 +37,7 @@ const PregnancyGuideLPU = () => {
                 <Button onClick={() => navigate('/info/guide/EPU')} mb="10px"_hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>임신초기(3~13주)</Button>
                 <Button onClick={() => navigate('/info/guide/MPU')} mb="10px"_hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>임신중기(14~27주)</Button>
                 <Button
-                    onClick={() => navigate('/info/guide/EPU')}
+                    onClick={() => navigate('/info/guide/LPU')}
                     mb="10px"
                     fontSize="md"
                     py="3"

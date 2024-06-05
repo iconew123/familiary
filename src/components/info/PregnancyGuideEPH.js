@@ -31,22 +31,27 @@ const PregnancyGuideEPH = () => {
             </GridItem>
 
             {/* 좌측 버튼들 */}
-            <GridItem area={'sidebar'} bg='#e0ccb3' display="flex" flexDirection="column" alignItems="center" padding="10px">
-                <Button
-                    onClick={() => navigate('/info/guide/EPU')}
-                    mb="10px"
-                    fontSize="md"
-                    py="3"
-                    px="6"
-                    rounded="md"
-                    bg="#FFFEF0  "
-                    color="#000000 "
-                    _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}
-                >임신초기(3~13주)</Button>
-                <Button onClick={() => navigate('/info/guide/MPU')} _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} >임신중기(14~27주)</Button>
-                <Button onClick={() => navigate('/info/guide/LPU')} _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} >임신후기(28~40주)</Button>
-            </GridItem>
-
+            <GridItem area={'sidebar'} bg='#e0ccb3' display="flex" flexDirection="column" alignItems="center" padding="40px">
+    <Button
+        onClick={() => navigate('/info/guide/EPU')}
+        mb="10px"
+        fontSize="md"
+        py="3"
+        px="6"
+        rounded="md"
+        bg="#FFFEF0"
+        color="#000000"
+        _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}
+    >
+        임신초기(3~13주)
+    </Button>
+    <Button onClick={() => navigate('/info/guide/MPU')} mb="10px" fontSize="md" py="3" px="6" rounded="md" bg="#FFFEF0" color="#000000" _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>
+        임신중기(14~27주)
+    </Button>
+    <Button onClick={() => navigate('/info/guide/LPU')} mb="10px" fontSize="md" py="3" px="6" rounded="md" bg="#FFFEF0" color="#000000" _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}>
+        임신후기(28~40주)
+    </Button>
+</GridItem>
             {/* 메인 컨텐츠 */}
             <GridItem area={'main'} bg='#FFFEF0  ' display="flex" flexDirection="column" alignItems="center" padding="20px">
                 <Text fontSize="3xl" mb="20px">임신 초기 생활 습관</Text>
