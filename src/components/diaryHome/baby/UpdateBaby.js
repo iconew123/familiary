@@ -89,7 +89,6 @@ const UpdateBaby = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     navigate('/diary');
                 } else {
                     console.log('데이터 전송 실패');

@@ -61,7 +61,6 @@ const Main = () => {
             if (response.ok) {
                 const userData = await response.json();
                 if (userData.status === 200) {
-                    console.log('로그인 성공');
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userInfo', JSON.stringify(userData));
                     navigate(0); 

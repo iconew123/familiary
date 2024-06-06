@@ -74,9 +74,8 @@ const ViewCommunity = () => {
             .catch(error => console.error('게시글을 삭제하는 중 에러 발생', error));
     };
 
-    // 게시글 수정 버튼
     const handleUpdate = () => {
-        navigate(`/community/update?command=update&code=${code}`); // 수정 페이지로 이동
+        navigate(`/community/update?command=update&code=${code}`);
     };
 
     const isOwner = user && user.nickname === data.userNickname;

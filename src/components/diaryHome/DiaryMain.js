@@ -486,7 +486,6 @@ if (option === 'showDiary') {
                 </HStack>
             </Box>
 
-            {/* 다이어리 */}
             <Modal isOpen={isRecordModalOpen} onClose={onRecordModalClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -528,7 +527,6 @@ if (option === 'showDiary') {
                 </ModalContent>
             </Modal>
 
-             {/* 아기 정보 */}
              <Modal isOpen={isInfoModalOpen} onClose={onInfoModalClose}>
                 <ModalOverlay />
                 <ModalContent>

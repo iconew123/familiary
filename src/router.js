@@ -60,7 +60,7 @@ const router = createBrowserRouter([
                 element: <Login />
             },
             {
-                path: "/user/logout", // Logout 경로 추가
+                path: "/user/logout",
                 element: <Logout />
             },
             {

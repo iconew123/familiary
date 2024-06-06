@@ -52,7 +52,6 @@ const BabyInfoView = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     onRecordModalClose();
 
                     fetchInfoDetail(serverInfoData.date, serverInfoData.baby_code)

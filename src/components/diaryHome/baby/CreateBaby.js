@@ -77,7 +77,6 @@ const CreateBaby = () => {
             .then(response => {
                 setLoading(false); 
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     navigate('/diary');
                 } else {
                     console.log('데이터 전송 실패')
@@ -87,7 +86,6 @@ const CreateBaby = () => {
                 console.error('데이터를 전송하는 중 에러 발생', error);
             });
     };
-
 
 
     return (

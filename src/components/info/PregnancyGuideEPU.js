@@ -25,14 +25,13 @@ const PregnancyGuideEPU = () => {
                     rounded="md"
                     bg="#FFFEF0  "
                     color="#000000 "
-                    _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} // 호버시 배경색과 텍스트 색상 변경
+                    _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}
                 >
                     임신 초기 이해
                 </Button>
                 <Button onClick={() => navigate('/info/guide/EPH')} mb="10px" _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} >임신 초기 생활 습관</Button>
             </GridItem>
 
-            {/* 좌측 버튼들 */}
             <GridItem area={'sidebar'} bg='#e0ccb3' display="flex" flexDirection="column" alignItems="center" padding="10px">
                 <Button
                     onClick={() => navigate('/info/guide/EPU')}
@@ -49,7 +48,6 @@ const PregnancyGuideEPU = () => {
                 <Button onClick={() => navigate('/info/guide/LPU')} _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} >임신후기(28~40주)</Button>
             </GridItem>
 
-            {/* 메인 컨텐츠 */}
             <GridItem area={'main'} bg='#FFFEF0  ' display="flex" flexDirection="column" alignItems="center" padding="20px">
                 <Text fontFamily="'Nanum Gothic', cursive" fontSize="3xl" mb="20px">임신 초기 이해</Text>
 

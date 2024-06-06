@@ -24,7 +24,7 @@ const PregnancyGuideLPU = () => {
                     rounded="md"
                     bg="#FFFEF0  "
                     color="#000000 "
-                    _hover={{ bg: "#FFAA00", color: "#FFFFFF" }} // 호버시 배경색과 텍스트 색상 변경
+                    _hover={{ bg: "#FFAA00", color: "#FFFFFF" }}
                 >
                     임신 말기 이해
                 </Button>
