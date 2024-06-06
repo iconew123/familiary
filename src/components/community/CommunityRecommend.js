@@ -7,23 +7,36 @@ import { Link, useNavigate } from 'react-router-dom';
 const CommunityRecommend = () => {
     const [data, setData] = useState([]);
     const [category, setCategory] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
+    const itemsPerPage = 8;
 
     useEffect(() => {
+        fetchData(currentPage);
+    }, [currentPage]);
+
+    const fetchData = (page) => {
         fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/recommend`)
-            .then(response => {
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                setData(data);
-                if (data.length > 0) {
-                    setCategory(data[0].category);
+                if (data && data.length) {
+                    setData(data);
+                    setTotalPages(Math.ceil(data.length / itemsPerPage));
+                    if (data.length > 0) {
+                        setCategory(data[0].category);
+                    }
+                } else {
+                    setData([]);
+                    setTotalPages(1);
                 }
             })
             .catch(error => {
-                console.error('데이터를 가져오는 중 에러 발생', error);
+                console.error('Error fetching data:', error);
+                setData([]);
+                setTotalPages(1);
             });
-    }, []);
+    };
 
     const handleCreate = () => {
         const loggedIn = sessionStorage.getItem('isLoggedIn');
@@ -35,11 +48,25 @@ const CommunityRecommend = () => {
         navigate('/community/create?command=create');
     };
 
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
     return (
         <>
             <Box>
                 <Heading>
-                    추천게시판
+                    추천 게시판
                 </Heading>
                 <Box>
                     <Table>
@@ -51,8 +78,8 @@ const CommunityRecommend = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                        {data.length > 0 ? (
-                                data.map((item, index) => (
+                            {paginatedData.length > 0 ? (
+                                paginatedData.map((item, index) => (
                                     <Tr key={index}>
                                         <Td>
                                             <Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>
@@ -72,9 +99,19 @@ const CommunityRecommend = () => {
                         <Tfoot></Tfoot>
                     </Table>
                 </Box>
-                <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
-                    작성하기
-                </Button>
+                <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+                    <Button onClick={handlePreviousPage} isDisabled={currentPage === 1}>
+                        이전
+                    </Button>
+                    <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>
+                        다음
+                    </Button>
+                </Box>
+                <Box>
+                    <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
+                        작성하기
+                    </Button>
+                </Box>
             </Box>
         </>
     );
