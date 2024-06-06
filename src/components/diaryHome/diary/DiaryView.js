@@ -30,7 +30,7 @@ const DiaryView = () => {
                     setPosition(data.position);
                 })
                 .catch(error => {
-                    console.error('Error fetching enroll command:', error);
+                    console.error('에러', error);
                 });
         });
     }, [date, babycode, id]);
@@ -43,7 +43,7 @@ const DiaryView = () => {
                     setComments(data);
                 })
                 .catch(error => {
-                    console.error('Error fetching comments:', error);
+                    console.error('에러', error);
                 });
         }
     }, [serverData]);
@@ -68,7 +68,6 @@ const DiaryView = () => {
         setPhoto(file);
     };
 
-    // 다중 클릭방지
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
@@ -105,31 +104,25 @@ const DiaryView = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     onRecordModalClose();
-
                     fetchDiaryDetailInfo(serverData.date, serverData.baby_code)
                         .then(data => {
                             setServerData(data);
                         })
                         .catch(error => {
-                            console.error('데이터를 가져오는 중 에러 발생', error);
                             alert('데이터를 가져오는 중 에러가 발생했습니다.');
                         });
                 } else {
-                    console.log('데이터 전송 실패');
                     alert('데이터 전송에 실패했습니다.');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 if (data.status === 400) {
                     alert(data.message_diary);
                 }
             })
             .catch(error => {
-                console.error('데이터를 전송하는 중 에러 발생', error);
                 alert('데이터 전송 중 에러가 발생했습니다.');
             })
             .finally(() => {
@@ -161,7 +154,7 @@ const DiaryView = () => {
                 }
             })
             .catch(error => {
-                console.error('Error deleting diary entry:', error);
+                console.error('에러', error);
                 navigate('/');
             });
     };
@@ -292,7 +285,6 @@ const DiaryView = () => {
                 >
                     <Heading color="#333" fontSize="32px" fontWeight="700" textTransform="uppercase" letterSpacing="2px">
                         {serverData.date}일의 다이어리({serverData.category})
-                        {console.log(serverData)}
                     </Heading>
                     <Box
                         borderBottom="2px solid #ccc"
@@ -398,7 +390,7 @@ const DiaryView = () => {
                     ) : (
                         <Text>현재 글에 등록된 댓글이 없습니다.</Text>
                     )}
-                    {/* Comment Form */}
+
                     <Box mt="30px">
                         <Heading fontSize="20px" color="#333" mb="10px">댓글 추가</Heading>
                         <FormControl>
