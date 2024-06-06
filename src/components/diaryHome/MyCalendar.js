@@ -133,7 +133,6 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
             const now = new Date();
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=allInfo&code=${baby.code}`);
             const data = await response.json();
-            console.log(data);
             setInfoData(data);
         } catch (error) {
             console.error('Error fetching diary data:', error);

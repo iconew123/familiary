@@ -18,7 +18,7 @@ const UserUpdate = () => {
     const [phoneDuplError, setPhoneDuplError] = useState(false);
     const [emailDuplError, setEmailDuplError] = useState(false);
 
-    const [setLoading] = useState(false);
+    const [loading,setLoading] = useState(false);
     const { isLoggedIn, loginStatus } = useSession();
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
@@ -155,7 +155,6 @@ const UserUpdate = () => {
             if (response.ok) {
                 const userData = await response.json();
                 if (userData.status === 200) {
-                    console.log('회원 정보 변경 성공');
                     loginStatus(userData);
                     navigate('/user/myPage');
                 } else {

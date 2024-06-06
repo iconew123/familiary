@@ -26,7 +26,6 @@ const InfoBaby = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     cancelStatus();
                     navigate('/diary');
                 } else {
@@ -53,7 +52,6 @@ const InfoBaby = () => {
             .then(response => response.json())
             .then(data => {
                 setData(data);
-                console.log('데이터 받아오기 성공', data);
             })
             .catch(error => {
                 console.error('데이터를 받아오는 중 에러 발생', error);

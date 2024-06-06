@@ -51,7 +51,6 @@ const Login = () => {
             if (response.ok) {
                 const userData = await response.json();
                 if (userData.status === 200) {
-                    console.log('로그인 성공');
                     loginStatus(userData);
                     navigate('/');
                 } else {

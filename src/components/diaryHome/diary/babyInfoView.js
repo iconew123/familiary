@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchInfoDetail } from '../DiaryMain';
-import { Box, Button, Image, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Input, Textarea, useDisclosure, Select } from '@chakra-ui/react';
+import { Box, Button, Heading, Text, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, VStack, FormControl, FormLabel, Textarea, useDisclosure } from '@chakra-ui/react';
 
 const BabyInfoView = () => {
     const { date, babycode, id } = useParams();

@@ -8,7 +8,7 @@ const UserDelete = () => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [serverError, setServerError] = useState('');
-    const [ setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const userSample = sessionStorage.getItem('userInfo');
@@ -87,7 +87,6 @@ const UserDelete = () => {
                 body: formData.toString()
             });
             if (response.ok) {
-                console.log('회원 탈퇴 성공');
                 logoutStatus();
                 navigate('/');
             } else {
