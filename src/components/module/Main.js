@@ -1,5 +1,5 @@
 import { Box, Grid, GridItem, Image, Link, Text, Input, Button } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import adImage1 from '../image/ad1.jpg';
 import adImage2 from '../image/ad2.jpg';
 import info1 from '../image/info1.jpg'
@@ -20,11 +20,13 @@ const Main = () => {
     const [password, setPassword] = useState('');
     const [idError, setIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [latestPosts, setLatestPosts] = useState([]);
     const navigate = useNavigate();
 
     const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -77,26 +79,44 @@ const Main = () => {
         }
     };
 
+    useEffect(() => {
+        // 최신 글 가져오기
+        const fetchLatestPosts = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/main`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setLatestPosts(data);
+                } else {
+                    console.error('최신 글 가져오기 실패');
+                }
+            } catch (error) {
+                console.error('최신 글 가져오는 중 에러 발생:', error);
+            }
+        };
+        fetchLatestPosts();
+    }, []);
+
     return (
         <Box padding="20px">
-        <Grid
-            h='auto'
-            templateAreas={`"adArea info info login"
+            <Grid
+                h='auto'
+                templateAreas={`"adArea info info login"
                             "adArea info info adArea2"
                             "adArea board board adArea2"`}
-            gridTemplateColumns={'1fr 1fr 1fr 1fr'}
-            gridTemplateRows={'auto 1fr 1fr'}
-            gap={6} 
-        >
-            {/* 광고단 */}
-            <GridItem w='100%' area={'adArea'} display="flex" justifyContent="center" alignItems="center" padding={4}>
-                <Link href="https://www.gg.go.kr/contents/contents.do?ciIdx=987110&menuId=266074">
-                    <Image src={adImage1} alt="ad Image" width="100%" height="100%" objectFit="cover" />
-                </Link>
-            </GridItem>
+                gridTemplateColumns={'1fr 1fr 1fr 1fr'}
+                gridTemplateRows={'auto 1fr 1fr'}
+                gap={6}
+            >
+                {/* 광고단 */}
+                <GridItem w='100%' area={'adArea'} display="flex" justifyContent="center" alignItems="center" padding={4}>
+                    <Link href="https://www.gg.go.kr/contents/contents.do?ciIdx=987110&menuId=266074">
+                        <Image src={adImage1} alt="ad Image" width="100%" height="100%" objectFit="cover" />
+                    </Link>
+                </GridItem>
 
-            {/* 임산부 가이드 */}
-            <GridItem area={'info'} padding={4} rowSpan={2} display="flex" flexDirection="column" justifyContent="space-between">
+                {/* 임산부 가이드 */}
+                <GridItem area={'info'} padding={4} rowSpan={2} display="flex" flexDirection="column" justifyContent="space-between">
                     <Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(2, 1fr)" gap={6} height="100%">
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info1} alt="Image 1" width="100%" height="200px" objectFit="cover" />
@@ -126,80 +146,87 @@ const Main = () => {
                             <Image src={info6} alt="info Image" width="100%" height="200px" objectFit="cover" />
                             <Text>산후 우울증 진단 및 치료</Text>
                         </GridItem>
-                     
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info8} alt="info Image" width="100%" height="200px" objectFit="cover" />
                             <Text>아이 돌봄교실 신청</Text>
                         </GridItem>
-            
+
                     </Grid>
                 </GridItem>
 
-            {/* 로그인 */}
-            <GridItem w='100%' bg='white' area={'login'} padding={4} rowSpan={1}>
-                {!loggedIn ? (
-                    <Box maxW='500px' mx='auto' textAlign='center'>
-                        <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>로그인</Text>
-                        <form onSubmit={handleLogin}>
-                            <Input
-                                type="text"
-                                value={id}
-                                id="id"
-                                name="id"
-                                placeholder="아이디"
-                                onChange={(e) => setId(e.target.value)}
-                                size='lg'
-                                bg='white'
-                                w='100%'
-                                mb={4}
-                            />
-                            {idError && <Text color="red">{idError}</Text>}
-                            <Input
-                                type="password"
-                                value={password}
-                                id="password"
-                                name="password"
-                                placeholder="비밀번호"
-                                onChange={(e) => setPassword(e.target.value)}
-                                size='lg'
-                                bg='white'
-                                w='100%'
-                                mb={4}
-                            />
-                            {passwordError && <Text color="red">{passwordError}</Text>}
-                            <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>
-                                로그인
-                            </Button>
-                        </form>
-                    </Box>
-                ) : (
-                    <Box marginLeft='10px'>
-                        <Text fontSize="2xl" fontWeight="bold" mb="20px">
-                            {user.id}님의 회원 정보
-                        </Text>
-                        <Text fontSize="xl">
-                            닉네임: {user.nickname}
-                        </Text>
-                        <Text fontSize="xl">
-                            이름: {user.name}
-                        </Text>
-                    </Box>
-                )}
-            </GridItem>
+                {/* 로그인 */}
+                <GridItem w='100%' bg='white' area={'login'} padding={4} rowSpan={1}>
+                    {!loggedIn ? (
+                        <Box maxW='500px' mx='auto' textAlign='center'>
+                            <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>로그인</Text>
+                            <form onSubmit={handleLogin}>
+                                <Input
+                                    type="text"
+                                    value={id}
+                                    id="id"
+                                    name="id"
+                                    placeholder="아이디"
+                                    onChange={(e) => setId(e.target.value)}
+                                    size='lg'
+                                    bg='white'
+                                    w='100%'
+                                    mb={4}
+                                />
+                                {idError && <Text color="red">{idError}</Text>}
+                                <Input
+                                    type="password"
+                                    value={password}
+                                    id="password"
+                                    name="password"
+                                    placeholder="비밀번호"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    size='lg'
+                                    bg='white'
+                                    w='100%'
+                                    mb={4}
+                                />
+                                {passwordError && <Text color="red">{passwordError}</Text>}
+                                <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>
+                                    로그인
+                                </Button>
+                            </form>
+                        </Box>
+                    ) : (
+                        <Box marginLeft='10px'>
+                            <Text fontSize="2xl" fontWeight="bold" mb="20px">
+                                {user.id}님의 회원 정보
+                            </Text>
+                            <Text fontSize="xl">
+                                닉네임: {user.nickname}
+                            </Text>
+                            <Text fontSize="xl">
+                                이름: {user.name}
+                            </Text>
+                        </Box>
+                    )}
+                </GridItem>
 
-            {/* 광고단2 */}
-            <GridItem w='100%' area={'adArea2'} display="flex" justifyContent="center" alignItems="center" padding={4} rowSpan={2}>
-                <Link href="https://kidikidi.elandmall.co.kr/p/planshop?exhibitionNo=202309008823">
-                    <Image src={adImage2} alt="ad Image2" width="100%" height="100%" objectFit="cover" />
-                </Link>
-            </GridItem>
-
-            {/* 게시판(최신순) */}
-            <GridItem w='100%' bg='#E6D7C3' area={'board'} padding={4} rowSpan={2}>
-                게시판(최신순)
-            </GridItem>
-        </Grid>
-    </Box>
+                {/* 게시판(최신순) */}
+                <GridItem w='100%' bg='#E6D7C3' area={'board'} padding={4} rowSpan={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mb="20px">
+                        최신 글 목록
+                    </Text>
+                    <Box>
+                        <Box>
+                            {latestPosts && latestPosts.length > 0 ? (
+                                latestPosts.map(post => (
+                                    <Box key={post.code} mb="20px">
+                                        <Text fontSize="lg">{post.category} | {post.title}</Text>
+                                    </Box>
+                                ))
+                            ) : (
+                                <Text>최신 게시물이 없습니다.</Text>
+                            )}
+                        </Box>
+                    </Box>
+                </GridItem>
+            </Grid>
+        </Box>
     );
 };
 
