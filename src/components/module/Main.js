@@ -117,35 +117,35 @@ const Main = () => {
                     <Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(2, 1fr)" gap={6} height="100%">
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info1} alt="Image 1" width="100%" height="200px" objectFit="cover" />
-                            <Text>임신초기 이상 증상 확인</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">임신초기 이상 증상 확인</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info2} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>임신초기 입덧 관리 </Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">임신초기 입덧 관리 </Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info3} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>임신 중기 임신중독증 진단</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">임신 중기 임신중독증 진단</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info4} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>임신 말기 조기진통 숙지</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">임신 말기 조기진통 숙지</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info5} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>가다실 예방 접종 권장</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">가다실 예방 접종 권장</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info7} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>임산부 신고</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">임산부 신고</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info6} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>산후 우울증 진단 및 치료</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">산후 우울증 진단 및 치료</Text>
                         </GridItem>
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
                             <Image src={info8} alt="info Image" width="100%" height="200px" objectFit="cover" />
-                            <Text>아이 돌봄교실 신청</Text>
+                            <Text fontSize='sm' fontFamily="'Nanum Gothic', cursive">아이 돌봄교실 신청</Text>
                         </GridItem>
 
                     </Grid>
@@ -154,7 +154,7 @@ const Main = () => {
                 <GridItem w='100%' bg='white' area={'login'} padding={4} rowSpan={1}>
                     {!loggedIn ? (
                         <Box maxW='500px' mx='auto' textAlign='center'>
-                            <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px'>로그인</Text>
+                            <Text fontSize='5xl' as='b' color='#765d2f' marginBottom='30px' fontFamily="'Nanum Gothic', cursive">로그인</Text>
                             <form onSubmit={handleLogin}>
                                 <Input
                                     type="text"
@@ -168,7 +168,7 @@ const Main = () => {
                                     w='100%'
                                     mb={4}
                                 />
-                                {idError && <Text color="red">{idError}</Text>}
+                                {idError && <Text fontFamily="'Nanum Gothic', cursive" color="red">{idError}</Text>}
                                 <Input
                                     type="password"
                                     value={password}
@@ -182,28 +182,28 @@ const Main = () => {
                                     mb={4}
                                 />
                                 {passwordError && <Text color="red">{passwordError}</Text>}
-                                <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }}>
+                                <Button type="submit" w='100px' bg='#e0ccb3' marginTop='40px' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">
                                     로그인
                                 </Button>
                             </form>
                         </Box>
                     ) : (
                         <Box marginLeft='10px'>
-                            <Text fontSize="2xl" fontWeight="bold" mb="20px">
+                            <Text fontSize="2xl" fontWeight="bold" mb="20px" fontFamily="'Nanum Gothic', cursive">
                                 {user.id}님의 회원 정보
                             </Text>
-                            <Text fontSize="xl">
+                            <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive">
                                 닉네임: {user.nickname}
                             </Text>
-                            <Text fontSize="xl">
+                            <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive">
                                 이름: {user.name}
                             </Text>
                         </Box>
                     )}
                 </GridItem>
                 
-                <GridItem w='100%' bg='#E6D7C3' area={'board'} padding={4} rowSpan={2}>
-                    <Text fontSize="2xl" fontWeight="bold" mb="20px">
+                <GridItem w='100%' bg='#fffbf0' area={'board'} padding={4} rowSpan={2}>
+                    <Text fontSize="2xl" fontWeight="bold" mb="20px" fontFamily="'Nanum Gothic', cursive">
                         최신 글 목록
                     </Text>
                     <Box>
@@ -211,11 +211,11 @@ const Main = () => {
                             {latestPosts && latestPosts.length > 0 ? (
                                 latestPosts.map(post => (
                                     <Box key={post.code} mb="20px">
-                                        <Text fontSize="lg">{post.category} | {post.title}</Text>
+                                        <Text fontFamily="'Nanum Gothic', cursive" fontSize="lg">{post.category} | {post.title}</Text>
                                     </Box>
                                 ))
                             ) : (
-                                <Text>최신 게시물이 없습니다.</Text>
+                                <Text fontFamily="'Nanum Gothic', cursive">최신 게시물이 없습니다.</Text>
                             )}
                         </Box>
                     </Box>
