@@ -477,7 +477,7 @@ if (option === 'showDiary') {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverInfoData.date ? `[${serverInfoData.date}]` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverInfoData && serverInfoData.date === formatInfoDate ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
+                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
                                     </Text>
                                 </GridItem>
 
