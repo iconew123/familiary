@@ -1,10 +1,9 @@
 import { Heading } from '@chakra-ui/layout';
-import { Button, Icon, SimpleGrid, Text, Table, Tbody, Td, Tfoot, Th, Thead, Tr, Tabs, TabList, Tab, TabIndicator } from '@chakra-ui/react';
+import { Button, SimpleGrid, Text, Tabs, TabList, Tab, TabIndicator } from '@chakra-ui/react';
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/card';
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, HStack } from '@chakra-ui/react'
 import { Image } from '@chakra-ui/react'
-import { MdOndemandVideo } from "react-icons/md";
 
 const PrenatalEducation = () => {
     const [PrenatalEducationVideoList, setPrenatalEducationVideoList] = useState([]);
@@ -20,7 +19,7 @@ const PrenatalEducation = () => {
             {
                 method: "GET",
                 headers: {
-                    Authorization: `KakaoAK ${process.env.REACT_APP_API_KEY}`,
+                    Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_VIDEO_API_KEY}`,
                 },
             }
         );
@@ -30,7 +29,6 @@ const PrenatalEducation = () => {
             ? Math.floor(data.meta.pageable_count / 6) + 1
             : Math.floor(data.meta.pageable_count / 6);
         pageCount.current = Math.ceil(data.meta.pageable_count / 5);
-        console.log(pageCount.current);
 
         setPrenatalEducationVideoList(data.documents);
     }

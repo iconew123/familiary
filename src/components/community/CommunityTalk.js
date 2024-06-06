@@ -15,12 +15,9 @@ const CommunityTalk = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setData(data);
-                // 데이터에서 첫 번째 아이템의 카테고리 정보 가져오기
                 if (data.length > 0) {
                     setCategory(data[0].category);
-                    console.log(data[0].category);
                 }
             })
             .catch(error => {
@@ -29,14 +26,13 @@ const CommunityTalk = () => {
     }, []);
 
     const handleCreate = () => {
-        // 여기서 사용자가 로그인되어 있는지 확인
         const loggedIn = sessionStorage.getItem('isLoggedIn');
 
         if (!loggedIn) {
             alert("글을 작성하려면 로그인이 필요합니다.");
             return;
         }
-        navigate('/community/create?command=create'); // 작성하기 페이지로 이동
+        navigate('/community/create?command=create');
     };
 
     return (
@@ -44,7 +40,6 @@ const CommunityTalk = () => {
             <Box>
                 <Heading>자유 게시판</Heading>
                 <Box>
-
                     <Table>
                         <Thead>
                             <Tr>
