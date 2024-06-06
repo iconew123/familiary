@@ -49,10 +49,10 @@ const DiaryShow = () => {
     const renderPagination = () => {
         return (
             <Box display="flex" justifyContent="center" mt="20px">
-                <Button onClick={() => handlePageChange(-1)} isDisabled={currentPage === 1} mr="10px">
+                <Button onClick={() => handlePageChange(-1)} bg='#e0ccb3' isDisabled={currentPage === 1} mr="10px">
                     이전
                 </Button>
-                <Button onClick={() => handlePageChange(1)} isDisabled={currentPage === totalPages}>
+                <Button onClick={() => handlePageChange(1)} bg='#e0ccb3' isDisabled={currentPage === totalPages}>
                     다음
                 </Button>
             </Box>
@@ -97,7 +97,6 @@ const DiaryShow = () => {
                         ))}
                     </Box>
                 ) : null}
-
                 {renderPagination()}
             </Box>
         </ChakraProvider>

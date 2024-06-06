@@ -43,9 +43,10 @@ const DiaryMain = () => {
     const [formatInfoDate, setFormatInfoDate] = useState('');
     const [data, setData] = useState({});
     const [babyData, setBabyData] = useState({ codes: [], nicknames: [] });
-    const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose} = useDisclosure();
+    const { isOpen: isRecordModalOpen, onOpen: onRecordModalOpen, onClose: onRecordModalClose } = useDisclosure();
     const { isOpen: isInfoModalOpen, onOpen: onInfoModalOpen, onClose: onInfoModalClose } = useDisclosure();
-    
+    const [position, setPosition] = useState();
+
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/enroll?command=giveCode&user_id=${user.id}`)
             .then(response => response.json())
@@ -77,6 +78,18 @@ const DiaryMain = () => {
             setData(data);
             setTargetDate(data.expected_date);
             enrollStatus(data);
+            console.log(data);
+            if (data) {
+                fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=read&baby_code=${data.code}&user_id=${user.id}`)
+                    .then(response => response.json())
+                    .then(datas => {
+                        setPosition(datas.position);
+                        console.log(position);
+                    })
+                    .catch(error => {
+                        console.error('에러', error);
+                    });
+            }
         } catch (error) {
             console.error('데이터를 가져오는 중 에러 발생', error);
         }
@@ -101,7 +114,7 @@ const DiaryMain = () => {
                 setServerData(data, selectedBabyCode);
             });
         }
-        
+
     }, [formatDate]);
 
     useEffect(() => {
@@ -110,7 +123,7 @@ const DiaryMain = () => {
                 setServerInfoData(data, selectedBabyCode);
             });
         }
-        
+
     }, [formatInfoDate]);
 
     const handleRecordClick = () => {
@@ -122,7 +135,7 @@ const DiaryMain = () => {
     };
 
     const handleOptionClick = (option) => {
-if (option === 'showDiary') {
+        if (option === 'showDiary') {
             navigate(`/diary/show/${selectedBabyCode}/${user.id}`);
         } else if (option === 'showInfo') {
             navigate(`/babyInfo/show/${selectedBabyCode}`);
@@ -206,23 +219,22 @@ if (option === 'showDiary') {
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
-    
-        if  (!diary.title)  {
+        if (!diary.title) {
             alert("제목을 입력해주세요.");
             setIsLoading(false);
             return;
         }
-        if  (!diary.content)  {
+        if (!diary.content) {
             alert("내용을 입력해주세요.");
             setIsLoading(false);
             return;
         }
-        if  (!diary.category)  {
+        if (!diary.category) {
             alert("카테고리를 선택해주세요.");
             setIsLoading(false);
             return;
         }
-    
+
         const formData = new FormData();
         formData.append('babycode', selectedBabyCode);
         formData.append('title', diary.title);
@@ -231,98 +243,100 @@ if (option === 'showDiary') {
         if (photo !== null) {
             formData.append('photo', photo);
         }
-    
+
         fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=create`, {
             method: 'POST',
             body: formData
         })
-        .then(response => {
-            if (response.ok) {
-                onRecordModalClose();
-                
-                fetchDiaryDetailInfo(currentDate, selectedBabyCode)
-                    .then(data => {
-                        setServerData(data);
-                        setIsLoading(false);
-                    })
-                    .catch(error => {
-                        alert('데이터를 가져오는 중 에러가 발생했습니다.');
-                    });
-            } else {
-                alert('데이터 전송에 실패했습니다.');
-            }
-            return response.json();
-        })
-        .then(json => {
-            if(json.status === 400){
-                alert("금일 다이어리를 작성하셨습니다. 수정기능을 이용해주세요")
+            .then(response => {
+                if (response.ok) {
+                    onRecordModalClose();
+
+                    fetchDiaryDetailInfo(currentDate, selectedBabyCode)
+                        .then(data => {
+                            setServerData(data);
+                            setIsLoading(false);
+                        })
+                        .catch(error => {
+                            alert('데이터를 가져오는 중 에러가 발생했습니다.');
+                        });
+                } else {
+                    alert('데이터 전송에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(json => {
+                if (json.status === 400) {
+                    alert("금일 다이어리를 작성하셨습니다. 수정기능을 이용해주세요")
+                    setIsLoading(false);
+                }
+            })
+            .catch(error => {
+                alert('데이터 전송 중 에러가 발생했습니다.');
                 setIsLoading(false);
-            }
-        })
-        .catch(error => {
-            alert('데이터 전송 중 에러가 발생했습니다.');
-            setIsLoading(false);
-        });
+            });
     };
 
     const linkStyle = {
         color: 'blue',
         textDecoration: 'none',
-      };
+    };
 
 
-        const [info, setInfo] = useState({
-            height: '',
-            weight: '',
-            memo: ''
-        });
+    const [info, setInfo] = useState({
+        height: '',
+        weight: '',
+        memo: ''
+    });
 
     const handleInfoButtonClick = () => {
         setIsLoading(true);
-    
-        if  (!info.height && !info.weight)  {
+
+        if (!info.height && !info.weight) {
             alert("키와 몸무게를 적어주세요.");
             setIsLoading(false);
             return;
         }
-    
+
         const formInfoData = new FormData();
         formInfoData.append('code', selectedBabyCode);
         formInfoData.append('height', info.height);
         formInfoData.append('weight', info.weight);
         formInfoData.append('spec_note', info.memo);
-    
+
         fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=create`, {
             method: 'POST',
             body: formInfoData
         })
-        .then(response => {
-            if (response.ok) {
-                onInfoModalClose();
-                
-                fetchInfoDetail(currentDate, selectedBabyCode)
-                    .then(data => {
-                        setServerInfoData(data);
-                    })
-                    .catch(error => {
-                        alert('데이터를 가져오는 중 에러가 발생했습니다.');
-                    });
-            } else {
-                alert('데이터 전송에 실패했습니다.');
-            }
-            return response.json();
-        })
-        .then(json => {
-            if(json.status === 400){
-                alert("금일 아기 정보를 작성하셨습니다. 수정기능을 이용해주세요")
+            .then(response => {
+                if (response.ok) {
+                    onInfoModalClose();
+
+                    fetchInfoDetail(currentDate, selectedBabyCode)
+                        .then(data => {
+                            setServerInfoData(data);
+                        })
+                        .catch(error => {
+                            alert('데이터를 가져오는 중 에러가 발생했습니다.');
+                        });
+                } else {
+                    alert('데이터 전송에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(json => {
+                if (json.status === 400) {
+                    alert("금일 아기 정보를 작성하셨습니다. 수정기능을 이용해주세요")
+                    setIsLoading(false);
+                }
+            })
+            .catch(error => {
+                alert('데이터 전송 중 에러가 발생했습니다.');
                 setIsLoading(false);
-            }
-        })
-        .catch(error => {
-            alert('데이터 전송 중 에러가 발생했습니다.');
-            setIsLoading(false);
-        });
+            });
     };
+
+    const isEdit = position !== "family";
 
     return (
         <>
@@ -364,8 +378,8 @@ if (option === 'showDiary') {
                                 <br />
                                 <Text fontSize='4xl' as='b' fontFamily="'Nanum Gothic', cursive">{data.nickname}</Text>
                                 <Text fontSize='xl' fontFamily="'Nanum Gothic', cursive">
-                                        {new Date(data.expected_date) <= new Date() ? '출산일' : '출산예정일'} : {data.expected_date}
-                                    </Text>
+                                    {new Date(data.expected_date) <= new Date() ? '출산일' : '출산예정일'} : {data.expected_date}
+                                </Text>
                                 {dDay > 0 ? (
                                     <Text fontSize="xl" fontFamily="'Nanum Gothic', cursive" >태어나기까지 {dDay}일</Text>
                                 ) : dDay < 0 ? (
@@ -418,7 +432,7 @@ if (option === 'showDiary') {
                     <Grid boxSize={
                         window.screen.width >= 760 ? "49vw" : "100vw"
                     }
-                        h ='auto'
+                        h='auto'
                         templateAreas={`"calendar"
                                  "select"
                                  "diaryInfo"`}
@@ -471,12 +485,14 @@ if (option === 'showDiary') {
                                 <Button onClick={handleSearchClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
                                     <HamburgerIcon />
                                 </Button>
-
-                                <Flex flexDirection="column" display={showRecordOptions ? 'flex' : 'none'}>
-                                    <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">하루 기록</Button>
-                                    <Button onClick={onInfoModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">정보 기록</Button>
-                                </Flex>
-                               
+                                {
+                                    isEdit && (
+                                        <Flex flexDirection="column" display={showRecordOptions ? 'flex' : 'none'}>
+                                            <Button onClick={onRecordModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">하루 기록</Button>
+                                            <Button onClick={onInfoModalOpen} w='100px' bg='#e0ccb3' _hover={{ color: '#fffbf0' }} fontFamily="'Nanum Gothic', cursive">정보 기록</Button>
+                                        </Flex>
+                                    )
+                                }
                                 <Button onClick={handleRecordClick} bg='#e0ccb3' _hover={{ color: '#fffbf0' }}>
                                     <EditIcon />
                                 </Button>
@@ -514,7 +530,7 @@ if (option === 'showDiary') {
                             </FormControl>
                             <Button
                                 onClick={handleButtonClick}
-                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }} 
+                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }}
                                 size="lg"
                                 type="submit"
                                 isLoading={isLoading}
@@ -527,7 +543,7 @@ if (option === 'showDiary') {
                 </ModalContent>
             </Modal>
 
-             <Modal isOpen={isInfoModalOpen} onClose={onInfoModalClose}>
+            <Modal isOpen={isInfoModalOpen} onClose={onInfoModalClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader fontFamily="'Nanum Gothic', cursive">{currentDate}일의 정보 기록</ModalHeader>
@@ -548,7 +564,7 @@ if (option === 'showDiary') {
                             </FormControl>
                             <Button
                                 onClick={handleInfoButtonClick}
-                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }} 
+                                bg='#e0ccb3' _hover={{ color: '#fffbf0' }}
                                 size="lg"
                                 type="submit"
                                 isLoading={isLoading}

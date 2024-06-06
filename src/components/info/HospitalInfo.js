@@ -169,8 +169,8 @@ const HospitalInfo = () => {
     <>
       <div>
         <Box textAlign={"center"} margin={"auto"}>
-          <Button onClick={() => handleButtonClick("병원")}>병원</Button>
-          <Button onClick={() => handleButtonClick("산부인과")}>산부인과</Button>
+          <Button bg='#e0ccb3' onClick={() => handleButtonClick("병원")}>병원</Button>
+          <Button bg='#e0ccb3' onClick={() => handleButtonClick("산부인과")}>산부인과</Button>
         </Box>
         <div
           id="map"
