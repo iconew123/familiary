@@ -65,29 +65,29 @@ const CommunityNotice = () => {
     return (
         <>
             <Box>
-                <Heading>
+            <Heading textAlign='center' marginBottom='20px' fontFamily="'Nanum Gothic', cursive">
                     공지사항
                 </Heading>
-                <Box>
-                    <Table>
+                <Box display='flex' alignItems='center' justifyContent='center'>
+                <Table width='800px'>
                         <Thead>
                             <Tr>
-                                <Th>제목</Th>
-                                <Th>작성자</Th>
-                                <Th>작성일</Th>
+                                <Th fontFamily="'Nanum Gothic', cursive">제목</Th>
+                                <Th fontFamily="'Nanum Gothic', cursive">작성자</Th>
+                                <Th fontFamily="'Nanum Gothic', cursive">작성일</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                         {paginatedData.length > 0 ? (
                             paginatedData.map((item, index) => (
                                 <Tr key={index}>
-                                    <Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">
                                         <Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>
                                             {item.title}
                                         </Link>
                                     </Td>
-                                    <Td>{item.userNickName}</Td>
-                                    <Td>{item.regDate}</Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">{item.userNickName}</Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">{item.regDate}</Td>
                                 </Tr>
                             ))
                         ) : (
@@ -107,7 +107,7 @@ const CommunityNotice = () => {
                         다음
                     </Button>
                 </Box>
-                <Box>
+                <Box display='flex' alignItems='center' justifyContent='center' marginTop='20px'>
                     <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
                         작성하기
                     </Button>

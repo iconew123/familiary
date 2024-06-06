@@ -64,32 +64,35 @@ const CommunityTalk = () => {
 
     return (
         <Box>
-            <Heading>자유 게시판</Heading>
-            <Box>
-                <Table>
+<Heading textAlign='center' marginBottom='20px' fontFamily="'Nanum Gothic', cursive">
+                    자유 게시판
+                </Heading>
+                <Box display='flex' alignItems='center' justifyContent='center'>
+                <Table width='800px'>
+
                     <Thead>
                         <Tr>
-                            <Th>제목</Th>
-                            <Th>작성자</Th>
-                            <Th>작성일</Th>
+                            <Th fontFamily="'Nanum Gothic', cursive">제목</Th>
+                            <Th fontFamily="'Nanum Gothic', cursive">작성자</Th>
+                            <Th fontFamily="'Nanum Gothic', cursive">작성일</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {paginatedData.length > 0 ? (
                             paginatedData.map((item, index) => (
                                 <Tr key={index}>
-                                    <Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">
                                         <Link to={`detail?command=read/detail&code=${item.code}&category=${item.category}`}>
                                             {item.title}
                                         </Link>
                                     </Td>
-                                    <Td>{item.userNickName}</Td>
-                                    <Td>{item.regDate}</Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">{item.userNickName}</Td>
+                                    <Td fontFamily="'Nanum Gothic', cursive">{item.regDate}</Td>
                                 </Tr>
                             ))
                         ) : (
                             <Tr>
-                                <Td colSpan="3">데이터가 없습니다</Td>
+                                <Td colSpan="3" fontFamily="'Nanum Gothic', cursive">데이터가 없습니다</Td>
                             </Tr>
                         )}
                     </Tbody>
@@ -104,7 +107,7 @@ const CommunityTalk = () => {
                     다음
                 </Button>
             </Box>
-            <Box>
+            <Box display='flex' alignItems='center' justifyContent='center' marginTop='20px'>
                 <Button onClick={handleCreate} w="100px" bg="#e0ccb3" _hover={{ color: '#fffbf0' }}>
                     작성하기
                 </Button>
