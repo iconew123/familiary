@@ -17,11 +17,9 @@ const InfoBaby = () => {
 
     const { cancelStatus } = useSession();
 
-        // 삭제 모달 관련
         const { isOpen, onOpen, onClose } = useDisclosure();
         const cancelRef = useRef();
 
-    // 삭제하기
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=delete&code=${baby.code}`, {
             method: 'DELETE',
@@ -40,7 +38,6 @@ const InfoBaby = () => {
             });
     };
 
-    // 데이터 받아오기
     const [data, setData] = useState({
         nickname: '',
         name: '',
@@ -48,7 +45,7 @@ const InfoBaby = () => {
         expected_date: '',
         blood_type: '',
         position: '',
-        url: '' // 추가: url 필드도 초기화
+        url: ''
     });
 
     useEffect(() => {
@@ -57,7 +54,6 @@ const InfoBaby = () => {
             .then(data => {
                 setData(data);
                 console.log('데이터 받아오기 성공', data);
-                console.log('position : ' + data.position)
             })
             .catch(error => {
                 console.error('데이터를 받아오는 중 에러 발생', error);

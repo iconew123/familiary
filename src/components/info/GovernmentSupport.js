@@ -6,18 +6,17 @@ const GovernmentSupport = () => {
 
 
     const [data, setData] = useState([]);
-    const API_KEY = `${process.env.REACT_APP_API_KEY}`; // API 키를 설정합니다.
-    const API_URL = `https://openapi.gg.go.kr/BrthspprtMnychldprvtrtbz?KEY=${API_KEY}&Type=json`; // API 요청 URL을 설정합니다.
+    const API_KEY = `${process.env.REACT_APP_API_KEY}`; 
+    const API_URL = `https://openapi.gg.go.kr/BrthspprtMnychldprvtrtbz?KEY=${API_KEY}&Type=json`;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(API_URL);
                 const json = await response.json();
-                console.log(json);
 
                 setData(json.BrthspprtMnychldprvtrtbz[1].row);
-                // 데이터를 'BrthspprtMnychldprvtrtbz' 배열에 있는 'row' 속성으로 설정합니다.
+                
             } catch (error) {
                 console.error('Error fetching data: ', error);
             }
@@ -28,7 +27,7 @@ const GovernmentSupport = () => {
 
     return (
         <>
-            <Box width="800px" margin="auto" align='center'> {/* 테이블을 중앙에 정렬하기 위해 Box 컴포넌트로 감쌉니다. */}
+            <Box width="800px" margin="auto" align='center'>
                 <Text fontSize='4xl' fontFamily="'Nanum Gothic', cursive" as='b'>경기도 양육비 지원현황</Text>
                 <React.Fragment>
                     <Table size='sm' variant="simple" boxShadow="md" marginTop='40px'>

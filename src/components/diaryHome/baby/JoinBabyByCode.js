@@ -37,9 +37,6 @@ const JoinBabyByCode = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('data : ' + data);
-                console.log('baby : ' + data.baby);
-
                 if (!babyInfo.position) {
                     setModalOpen(true);
                     return;
@@ -50,16 +47,15 @@ const JoinBabyByCode = () => {
                     openErrorModal();
                 }
                 else if (data.baby) {
-                    console.log('exist: ' + data.exists)
                     if (data.exists) {
                         setModalMessage("이미 존재하는 포지션입니다.");
-                        openErrorModal(); // 에러 모달 열기
+                        openErrorModal();
                     } else {
                         navigate('/diary');
                     }
                 } else {
                     setModalMessage("존재하지 않는 코드입니다.");
-                    openErrorModal(); // 에러 모달 열기
+                    openErrorModal();
                 }
             })
             .catch(error => {

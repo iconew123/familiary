@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const CreateBaby = () => {
 
-    // 데이터 받아오기
     const [data, setData] = useState({});
     const navigate = useNavigate();
 
@@ -29,13 +28,10 @@ const CreateBaby = () => {
     const [photo, setPhoto] = useState(null);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setPhoto(file); // 이미지 파일을 photo state에 저장
+        setPhoto(file); 
     };
 
-
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
     const userSample = sessionStorage.getItem('userInfo');
-    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
     const user = JSON.parse(userSample);
 
 
@@ -45,8 +41,6 @@ const CreateBaby = () => {
 
     const [loading, setLoading] = useState(false);
     const handleButtonClick = () => {
-        console.log("id: " + user.id);
-
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
         if (!babyInfo.nickname) {
@@ -64,7 +58,7 @@ const CreateBaby = () => {
             return;
         }
 
-        setLoading(true); // 로딩 상태 시작
+        setLoading(true); 
 
         const formData = new FormData();
         formData.append('user_id', user.id);
@@ -74,14 +68,14 @@ const CreateBaby = () => {
         formData.append('expected_date', babyInfo.expected_date);
         formData.append('blood_type', babyInfo.blood_type);
         formData.append('position', babyInfo.position);
-        formData.append('photo', photo); // 이미지 파일을 formData에 추가
+        formData.append('photo', photo);
 
         fetch(`${process.env.REACT_APP_SERVER_URL}/baby?command=create`, {
             method: 'POST',
             body: formData
         })
             .then(response => {
-                setLoading(false); // 로딩 상태 종료
+                setLoading(false); 
                 if (response.ok) {
                     console.log('데이터 전송 성공');
                     navigate('/diary');
