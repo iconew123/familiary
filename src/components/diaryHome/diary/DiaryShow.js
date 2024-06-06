@@ -8,7 +8,7 @@ const DiaryShow = () => {
     const [contentType, setContentType] = useState('text');
     const [contentData, setContentData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1); // totalPages 상태 추가
+    const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 8;
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const DiaryShow = () => {
 
     const handleIconClick = (type) => {
         setContentType(type);
-        setCurrentPage(1); // 페이지 번호를 초기화합니다.
+        setCurrentPage(1);
     };
 
     const fetchContent = (type, page) => {
@@ -28,14 +28,12 @@ const DiaryShow = () => {
                 const start = (page - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
                 setContentData(data.slice(start, end));
-
-                // totalPages 설정
                 setTotalPages(Math.ceil(data.length / itemsPerPage));
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('에러', error);
                 setContentData([]);
-                setTotalPages(1); // 에러 발생 시 totalPages 초기화
+                setTotalPages(1);
             });
     };
 
@@ -54,7 +52,7 @@ const DiaryShow = () => {
                 <Button onClick={() => handlePageChange(-1)} isDisabled={currentPage === 1} mr="10px">
                     이전
                 </Button>
-                <Button onClick={() => handlePageChange(1)} isDisabled={currentPage === totalPages}> {/* totalPages와 currentPage 비교 */}
+                <Button onClick={() => handlePageChange(1)} isDisabled={currentPage === totalPages}>
                     다음
                 </Button>
             </Box>

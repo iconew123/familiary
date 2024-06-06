@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, HStack, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, Square, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormLabel, Grid, GridItem, HStack, Icon, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Select, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import MyCalendar from './MyCalendar';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,8 +6,6 @@ import { EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
 import { CiImageOff } from "react-icons/ci";
 import { useSession } from '../module/SessionComponent';
-
-const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
 
 const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
     const now = new Date();
@@ -30,9 +28,6 @@ const DiaryMain = () => {
     const user = JSON.parse(userSample);
     const baby = JSON.parse(babySample);
 
-    // console.log(user);
-
-    // 오늘날짜 출력
     const [currentDate, setCurrentDate] = useState(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate());
 
 
@@ -42,7 +37,6 @@ const DiaryMain = () => {
     const [targetDate, setTargetDate] = useState('');
     const [dDay, setDDay] = useState();
     const [isOpen, setIsOpen] = useState(false);
-    const [isOpenInfo, setIsOpenInfo] = useState(false);
     const [serverData, setServerData] = useState();
     const [serverInfoData, setServerInfoData] = useState();
     const [formatDate, setFormatDate] = useState('');
@@ -73,7 +67,7 @@ const DiaryMain = () => {
             });
     }, [user.id]);
 
-    const { isSelectedBaby, enrollStatus } = useSession();
+    const { enrollStatus } = useSession();
     const [selectedBabyCode, setSelectedBabyCode] = useState(null);
     const handleClick = async (value) => {
         setSelectedBabyCode(value);
@@ -114,7 +108,6 @@ const DiaryMain = () => {
         if (formatInfoDate && selectedBabyCode) {
             fetchInfoDetail(formatInfoDate, selectedBabyCode).then(data => {
                 setServerInfoData(data, selectedBabyCode);
-                console.log(serverInfoData);
             });
         }
         
@@ -182,8 +175,6 @@ if (option === 'showDiary') {
         setFormatInfoDate(date);
     };
 
-
-    // 다이어리 생성
     const [diary, setdiary] = useState({
         title: '',
         content: '',
@@ -212,7 +203,6 @@ if (option === 'showDiary') {
         setPhoto(file);
     }
 
-    // 다중 클릭방지
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
@@ -248,25 +238,20 @@ if (option === 'showDiary') {
         })
         .then(response => {
             if (response.ok) {
-                console.log('데이터 전송 성공');
                 onRecordModalClose();
                 
-                // 입력 성공 후 서버로부터 데이터 가져오기
                 fetchDiaryDetailInfo(currentDate, selectedBabyCode)
                     .then(data => {
-                        // 데이터 업데이트
                         setServerData(data);
                         setIsLoading(false);
                     })
                     .catch(error => {
-                        console.error('데이터를 가져오는 중 에러 발생', error);
                         alert('데이터를 가져오는 중 에러가 발생했습니다.');
                     });
             } else {
-                console.log('데이터 전송 실패');
                 alert('데이터 전송에 실패했습니다.');
             }
-            return response.json(); // 여기서 JSON 형식으로 변환
+            return response.json();
         })
         .then(json => {
             if(json.status === 400){
@@ -275,14 +260,13 @@ if (option === 'showDiary') {
             }
         })
         .catch(error => {
-            console.error('데이터를 전송하는 중 에러 발생', error);
             alert('데이터 전송 중 에러가 발생했습니다.');
-            setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
+            setIsLoading(false);
         });
     };
 
     const linkStyle = {
-        color: 'blue', // 원하는 색상으로 변경
+        color: 'blue',
         textDecoration: 'none',
       };
 
@@ -293,8 +277,6 @@ if (option === 'showDiary') {
             memo: ''
         });
 
-        
-    // BabyInfo
     const handleInfoButtonClick = () => {
         setIsLoading(true);
     
@@ -316,24 +298,19 @@ if (option === 'showDiary') {
         })
         .then(response => {
             if (response.ok) {
-                console.log('데이터 전송 성공');
                 onInfoModalClose();
                 
-                // 입력 성공 후 서버로부터 데이터 가져오기
                 fetchInfoDetail(currentDate, selectedBabyCode)
                     .then(data => {
-                        // 데이터 업데이트
                         setServerInfoData(data);
                     })
                     .catch(error => {
-                        console.error('데이터를 가져오는 중 에러 발생', error);
                         alert('데이터를 가져오는 중 에러가 발생했습니다.');
                     });
             } else {
-                console.log('데이터 전송 실패');
                 alert('데이터 전송에 실패했습니다.');
             }
-            return response.json(); // 여기서 JSON 형식으로 변환
+            return response.json();
         })
         .then(json => {
             if(json.status === 400){
@@ -342,9 +319,8 @@ if (option === 'showDiary') {
             }
         })
         .catch(error => {
-            console.error('데이터를 전송하는 중 에러 발생', error);
             alert('데이터 전송 중 에러가 발생했습니다.');
-            setIsLoading(false); // 오류 발생 시에도 다시 시도할 수 있도록 로딩 상태를 false로 설정하여 버튼 활성화
+            setIsLoading(false);
         });
     };
 
