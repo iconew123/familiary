@@ -78,7 +78,7 @@ const BabyInfoShow = () => {
                                 <Tr key={index}>
                                     <Td textAlign="center" fontSize="20px">
                                         <Link style={linkStyle} to={`/babyInfo/${item.date}/${babycode}`}>{item.date}</Link>
-                                        <Text>{item.height}cm {item.weight}kg</Text>
+                                        {item.height && item.weight && <Text>{item.height}cm {item.weight}kg</Text>}
                                     </Td>
                                 </Tr>
                             ))}

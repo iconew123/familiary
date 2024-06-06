@@ -113,3 +113,11 @@
     color: var(--gray-color);
 }
 
+.data {
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+   
+    background-color: antiquewhite;
+}

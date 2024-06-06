@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addDays, addMonths, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { Icon } from '@iconify/react';
 import './style.css';
@@ -35,7 +35,7 @@ const RenderDate = () => {
     return <div className='row-days'>{days}</div>;
 };
 
-const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
+const RenderDay = ({ currentMonth, selectedDate, onDateClick, diaryData, infoData }) => {
     const startMonth = startOfMonth(currentMonth);
     const endMonth = endOfMonth(startMonth);
     const startDay = startOfWeek(startMonth);
@@ -50,6 +50,8 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
         for (let i = 0; i < 7; i++) {
             formatDay = format(day, 'd');
             const cloneDay = day;
+            const dataForDay = diaryData.find(data => format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd'));
+            const dataForDayInfo = infoData.find(data => format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd'));
 
             days.push(
                 <div className={`rows-day ${!isSameMonth(day, currentMonth) ? 'disabled' :
@@ -61,6 +63,16 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick }) => {
                         className={`${i === 0 ? 'sunday' : i === 6 ? 'saturday' : ''}`}>
                         {formatDay}
                     </span>
+                    {dataForDay && (
+                        <div className="data-container">
+                            <div className="data">{dataForDay.title}</div>
+                        </div>
+                    )}
+                    {dataForDayInfo && (
+                        <div className="infoData-container">
+                            <div className="infoData">⭐</div>
+                        </div>
+                    )}
                 </div>
             );
             day = addDays(day, 1);
@@ -79,6 +91,39 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [formatDate, setFormatDate] = useState(format(selectedDate, 'yyyy-MM-dd'));
+    const [diaryData, setDiaryData] = useState([]);
+    const [infoData, setInfoData] = useState([]);
+    const selectedBaby = sessionStorage.getItem('isSelectedBaby');
+    const babySample = sessionStorage.getItem('babyInfo');
+    const baby = JSON.parse(babySample);
+
+    const fetchDiaryData = async () => {
+        try {
+            const now = new Date();
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=diarylist&babycode=${baby.code}`);
+            const data = await response.json();
+            setDiaryData(data);
+        } catch (error) {
+            console.error('Error fetching diary data:', error);
+        }
+    };
+
+    const fetchInfoData = async () => {
+        try {
+            const now = new Date();
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=allInfo&code=${baby.code}`);
+            const data = await response.json();
+            setInfoData(data);
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching diary data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchDiaryData();
+        fetchInfoData();
+    }, []);
 
     const prevMonth = () => {
         setCurrentMonth(subMonths(currentMonth, 1));
@@ -91,13 +136,13 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
     const onDateClick = (day) => {
         setSelectedDate(day);
         const newFormatDate = format(day, 'yyyy-MM-dd');
-        setFormatDate(newFormatDate); 
+        setFormatDate(newFormatDate);
 
         if (typeof onDateSelect === 'function') {
             onDateSelect(newFormatDate);
         }
 
-        if(typeof onDateInfoSelect === 'function'){
+        if (typeof onDateInfoSelect === 'function') {
             onDateInfoSelect(newFormatDate);
         }
     };
@@ -106,7 +151,7 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
         <div className='calendar-box'>
             <RenderHeader currentMonth={currentMonth} prevMonth={prevMonth} nextMonth={nextMonth} />
             <RenderDate />
-            <RenderDay currentMonth={currentMonth} selectedDate={selectedDate} onDateClick={onDateClick} />
+            <RenderDay currentMonth={currentMonth} selectedDate={selectedDate} onDateClick={onDateClick} diaryData={diaryData} infoData={infoData} />
         </div>
     );
 }

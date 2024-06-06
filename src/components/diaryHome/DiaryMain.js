@@ -10,9 +10,6 @@ import { useSession } from '../module/SessionComponent';
 const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
 
 const fetchDiaryDetailInfo = async (formatDate, selectedBabyCode) => {
-    console.log("formatDate" + formatDate);
-    console.log("selectedBabyCode" + selectedBabyCode);
-
     const now = new Date();
     const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=find&date=${formatDate ? formatDate : now.toDateString()}&babycode=${selectedBabyCode}`);
     const data = await response.json();
@@ -27,7 +24,6 @@ const fetchInfoDetail = async (formatInfoDate, selectedBabyCode) => {
 }
 
 const DiaryMain = () => {
-    const loggedIn = sessionStorage.getItem('isLoggedIn');
     const selectedBaby = sessionStorage.getItem('isSelectedBaby');
     const userSample = sessionStorage.getItem('userInfo');
     const babySample = sessionStorage.getItem('babyInfo');
@@ -453,7 +449,7 @@ if (option === 'showDiary') {
                         gap={2}>
 
                         <GridItem w='95%' area={'calendar'}>
-                            <MyCalendar onDateSelect={handleDateSelect} onDateInfoSelect={handleInfoDateSelect} />
+                            <MyCalendar selectedBabyCode={selectedBabyCode} onDateSelect={handleDateSelect} onDateInfoSelect={handleInfoDateSelect} />
                         </GridItem>
 
                         <GridItem w='95%' h='150px' bg='#E0CCB3' area={'diaryInfo'} textAlign={'center'}>
@@ -481,7 +477,7 @@ if (option === 'showDiary') {
                                             ? '해당일자의 정보가 없습니다'
                                             : (serverInfoData.date ? `[${serverInfoData.date}]` : '해당일자의 정보가 없습니다')
                                         }
-                                        {serverInfoData && serverInfoData.date === formatInfoDate ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
+                                        {serverInfoData ? <Link style={linkStyle} to={`/babyInfo/${serverInfoData.date}/${serverInfoData.baby_code}`}>{serverInfoData.height}cm | {serverInfoData.weight}kg</Link> : ""}
                                     </Text>
                                 </GridItem>
 
