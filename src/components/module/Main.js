@@ -84,7 +84,11 @@ const Main = () => {
                 const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/main`);
                 if (response.ok) {
                     const data = await response.json();
-                    setLatestPosts(data);
+                    const processedPosts = data.map(post => ({
+                        ...post,
+                        koreanCategory: post.category === 'chat' ? '자유' : post.category === 'notice' ? '공지' : post.category === 'recommend' ? '추천' : post.category
+                    }));
+                    setLatestPosts(processedPosts);
                 } else {
                     console.error('최신 글 가져오기 실패');
                 }
@@ -94,6 +98,9 @@ const Main = () => {
         };
         fetchLatestPosts();
     }, []);
+
+    const noticePost = latestPosts.find(post => post.category === 'notice');
+    const otherPosts = latestPosts.filter(post => post.category !== 'notice').slice(0, 3);
 
     return (
         <Box padding="20px">
@@ -207,10 +214,15 @@ const Main = () => {
                     </Text>
                     <Box>
                         <Box>
-                            {latestPosts && latestPosts.length > 0 ? (
-                                latestPosts.map(post => (
+                            {noticePost && (
+                                <Box key={noticePost.code} mb="20px">
+                                    <Text fontFamily="'Nanum Gothic', cursive" fontSize="lg">공지 | {noticePost.title}</Text>
+                                </Box>
+                            )}
+                            {otherPosts && otherPosts.length > 0 ? (
+                                otherPosts.map(post => (
                                     <Box key={post.code} mb="20px">
-                                        <Text fontFamily="'Nanum Gothic', cursive" fontSize="lg">{post.category} | {post.title}</Text>
+                                        <Text fontFamily="'Nanum Gothic', cursive" fontSize="lg">{post.koreanCategory} | {post.title}</Text>
                                     </Box>
                                 ))
                             ) : (
