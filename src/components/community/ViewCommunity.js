@@ -5,8 +5,8 @@ import { CloseIcon } from '@chakra-ui/icons';
 
 const ViewCommunity = () => {
     const [searchParams] = useSearchParams();
-    const code = searchParams.get('code'); // URL에서 code 파라미터 가져오기
-    const category = searchParams.get('category'); // URL에서 category 파라미터 가져오기
+    const code = searchParams.get('code');
+    const category = searchParams.get('category');
     const navigate = useNavigate();
 
     const [data, setData] = useState({});
@@ -14,23 +14,17 @@ const ViewCommunity = () => {
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
 
-    const [isOpen, setIsOpen] = useState(false); // 모달 상태
-    const [selectedCommentCode, setSelectedCommentCode] = useState(null); // 삭제할 댓글 코드
-    const cancelRef = useRef(); // 모달 취소 버튼 참조
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedCommentCode, setSelectedCommentCode] = useState(null);
+    const cancelRef = useRef();
 
     useEffect(() => {
-        // 세션에 저장된 유저 불러오기
         const userSample = sessionStorage.getItem('userInfo');
         if (userSample) {
             const user = JSON.parse(userSample);
             setUser(user);
-            console.log("User ID from session:", user.id);
         }
 
-        console.log("code: " + code);
-        console.log("category: " + category);
-
-        // 글 상세보기 불러오기
         if (code && category) {
             fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/detail&code=${code}`)
                 .then(response => {
@@ -40,15 +34,12 @@ const ViewCommunity = () => {
                     return response.json();
                 })
                 .then(responseData => {
-                    console.log(responseData);
-                    setData(responseData.community);  // `community` 객체로 데이터 설정
-                    console.log("커뮤니티 User ID:", responseData.community.userNickname);
+                    setData(responseData.community);
                 })
                 .catch(error => console.error('데이터를 가져오는 중 에러 발생', error));
         }
     }, [code, category]);
 
-    // 댓글 리스트 데이터 불러오기
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/communityComment?command=readComment&communityCode=${code}`)
             .then(response => {
@@ -58,15 +49,13 @@ const ViewCommunity = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                setComments(data || []); // 댓글 리스트 설정 (undefined인 경우 빈 배열로 설정)
+                setComments(data || []);
             })
             .catch(error => {
                 console.error('데이터를 가져오는 중 에러 발생', error);
             });
     }, []);
 
-    // 게시글 삭제 버튼
     const handleDelete = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=delete&code=${code}`, {
             method: 'DELETE',
@@ -77,8 +66,7 @@ const ViewCommunity = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('게시글 삭제 성공');
-                    navigate(`/community/${category}`); // 삭제 후 해당 리스트로 이동
+                    navigate(`/community/${category}`);
                 } else {
                     console.log('게시글 삭제 실패');
                 }
@@ -92,10 +80,7 @@ const ViewCommunity = () => {
     };
 
     const isOwner = user && user.nickname === data.userNickname;
-    console.log("isOwner:", isOwner);
 
-    // 댓글
-    // 댓글 등록하기
     const handleInputComment = async (e) => {
         if (!user) {
             alert('댓글을 작성하려면 로그인이 필요합니다');
@@ -128,20 +113,17 @@ const ViewCommunity = () => {
             }
 
             const responseText = await response.text();
-            console.log("Response Text:", responseText); // 서버 응답 로그
+
             if (responseText.trim() === "") {
                 console.error('빈 응답');
                 return;
             }
 
-            const jsonData = JSON.parse(responseText); // JSON 파싱
-            console.log("Response Data:", jsonData); // 새로 추가된 댓글 콘솔에 출력
+            const jsonData = JSON.parse(responseText);
 
             setComments(prevComments => [jsonData, ...prevComments]);
-            setComment(''); // 댓글 입력 필드 초기화
-            console.log('댓글 등록 성공');
-            // 비동기 처리방식으로 바꿔도 댓글이 바로 안떠서 reload하는 방법을 채택
-            // 등록이 한 번 일어나면 alert 창이 뜨기 때문에 도배 방지 가능
+            setComment('');
+
             window.location.reload();
 
         } catch (error) {
@@ -149,13 +131,11 @@ const ViewCommunity = () => {
         }
     };
 
-    // 댓글 삭제하기
     const handleDeleteComment = async (commentCode) => {
-        setSelectedCommentCode(commentCode); // 삭제할 댓글 코드 설정
-        setIsOpen(true); // 모달 열기
+        setSelectedCommentCode(commentCode);
+        setIsOpen(true);
     };
 
-    // 모달에서 확인 버튼을 눌렀을 때 댓글 삭제
     const confirmDeleteComment = async () => {
         if (!selectedCommentCode) return;
 
@@ -168,17 +148,16 @@ const ViewCommunity = () => {
             });
 
             if (response.ok) {
-                console.log('댓글 삭제 성공');
                 alert('댓글이 성공적으로 삭제되었습니다.');
-                setComments(comments.filter(comment => comment.code !== selectedCommentCode)); // 댓글 리스트 갱신
+                setComments(comments.filter(comment => comment.code !== selectedCommentCode));
             } else {
                 console.log('댓글 삭제 실패');
             }
         } catch (error) {
             console.error('댓글을 삭제하는 중 에러 발생', error);
         } finally {
-            setIsOpen(false); // 모달 닫기
-            setSelectedCommentCode(null); // 선택된 댓글 코드 초기화
+            setIsOpen(false);
+            setSelectedCommentCode(null);
         }
     };
 

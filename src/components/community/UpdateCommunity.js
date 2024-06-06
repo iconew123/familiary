@@ -1,7 +1,4 @@
-// 1. 우선 원래 있던 글의 데이터를 다 가져와서 input에 넣어놓고 수정을 시켜야 함
-// 2. 해당 글이 자신의 것임을 미리 검증하는 부분이 필요
-
-import { Box, Button, Input, Select, Text, Textarea, VStack } from '@chakra-ui/react';
+import { Box, Button, Input, Select, Textarea, VStack } from '@chakra-ui/react';
 import { HttpStatusCode } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -9,10 +6,9 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 const UpdateCommunity = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const code = searchParams.get('code'); // URL에서 code 파라미터 가져오기
+    const code = searchParams.get('code');
     const category = searchParams.get('category');
 
-    // 데이터 받아오기
     const [data, setData] = useState({
         code: '',
         userId: '',
@@ -25,7 +21,6 @@ const UpdateCommunity = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // 세션에서 사용자 정보 가져오기
         const userSample = sessionStorage.getItem('userInfo');
         const userInfo = JSON.parse(userSample);
         if (userSample) {
@@ -53,7 +48,6 @@ const UpdateCommunity = () => {
         setCommunity(data);
     }, [data]);
 
-    // 입력 필드값이 변경 될 때마다 호출하는 함수
     const onChange = (event) => {
         const { value, name } = event.target;
         setCommunity(prevState => ({
@@ -63,7 +57,6 @@ const UpdateCommunity = () => {
     };
 
     const [isLoading, setIsLoading] = useState(false);
-    // 수정 버튼 클릭 핸들러
     const handleButtonClick = () => {
         setIsLoading(true);
 
@@ -72,7 +65,6 @@ const UpdateCommunity = () => {
             code: data.code
         };
 
-        // 공지사항에 글을 작성할 수 있는지 여부를 판단
         if (community.category === 'notice' && !user.is_admin) {
             alert("권한이 없습니다. 공지사항에 글을 작성할 수 있는 권한이 필요합니다.");
             setIsLoading(false);
@@ -85,10 +77,8 @@ const UpdateCommunity = () => {
             return;
         }
 
-        // 서버로 데이터 전송
         const url = `${process.env.REACT_APP_SERVER_URL}/community?command=update`;
-        console.log('Sending request to:', url);
-        
+
         fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=update`, {
             method: 'POST',
             headers: {
@@ -98,7 +88,6 @@ const UpdateCommunity = () => {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('데이터 전송 성공');
                     navigate(`/community/${community.category}/detail?command=read/detail&code=${data.code}&category=${community.category}`);
                 } else {
                     console.log('데이터 전송 실패');
