@@ -50,8 +50,28 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick, diaryData, infoDat
         for (let i = 0; i < 7; i++) {
             formatDay = format(day, 'd');
             const cloneDay = day;
-            const dataForDay = diaryData.find(data => format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd'));
-            const dataForDayInfo = infoData.find(data => format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd'));
+            let dataForDay = null;
+            let dataForDayInfo = null;
+        
+            if (diaryData && diaryData.length > 0 && diaryData.status !== '400') {
+                dataForDay = diaryData.find(data => {
+                    if (data.date) {
+                        return format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
+                    }
+                    return false;
+                });
+            }
+            
+            if (infoData && infoData.length > 0 && infoData.status !== '404') {
+                dataForDayInfo = infoData.find(data => {
+                    if (data.date) {
+                        return format(data.date, 'yyyy-MM-dd') === format(cloneDay, 'yyyy-MM-dd');
+                    }
+                    return false;
+                });
+            }
+            
+
 
             days.push(
                 <div className={`rows-day ${!isSameMonth(day, currentMonth) ? 'disabled' :
@@ -113,8 +133,8 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
             const now = new Date();
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=allInfo&code=${baby.code}`);
             const data = await response.json();
-            setInfoData(data);
             console.log(data);
+            setInfoData(data);
         } catch (error) {
             console.error('Error fetching diary data:', error);
         }
