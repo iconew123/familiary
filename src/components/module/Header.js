@@ -9,15 +9,6 @@ const Header = () => {
     const isDiaryPage = location.pathname === '/diary';
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
-    const userSample = sessionStorage.getItem('userInfo');
-
-    // 문자열(JSON)을 다시 리스트로 파싱하여 사용
-    const user = JSON.parse(userSample);
-
-    const fontFamily = { fontFamily: "'Nanum Gothic', cursive" };
-
-
     const handleSelectChange = (e) => {
         const selectedOption = e.target.value;
         let url = '';
