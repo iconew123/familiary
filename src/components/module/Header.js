@@ -35,10 +35,10 @@ const Header = () => {
             case 'guide':
                 url = 'http://localhost:3000/familiary/info/guide/EPU';
                 break;
-            case 'government':
+            case 'hospital':
                 url = 'http://localhost:3000/familiary/info/hospitalInfo';
                 break;
-            case 'hospital':
+            case 'government':
                 url = 'http://localhost:3000/familiary/info/government';
                 break;
             case 'preantal':
