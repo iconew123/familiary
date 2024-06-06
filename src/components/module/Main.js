@@ -225,6 +225,9 @@ const Main = () => {
                         </Box>
                     </Box>
                 </GridItem>
+                <GridItem w='100%' h='55px' area={'adArea2'} justifyContent="center" alignItems="center">
+                    <Link href="https://kidikidi.elandmall.co.kr/p/planshop?exhibitionNo=202309008823" ><Image src={adImage2} alt="ad Image2" width="100%"  /></Link>
+                </GridItem>
             </Grid>
         </Box>
     );

@@ -39,7 +39,7 @@ const Header = () => {
                 url = 'http://localhost:3000/familiary/info/hospitalInfo';
                 break;
             case 'government':
-                url = 'http://localhost:3000/familiary/info/government';
+                url = 'http://localhost:3000/familiary/info/governmentMain';
                 break;
             case 'preantal':
                 url = 'http://localhost:3000/familiary/info/preantalEduation';
