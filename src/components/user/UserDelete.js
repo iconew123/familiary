@@ -8,7 +8,7 @@ const UserDelete = () => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [serverError, setServerError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [ setLoading] = useState(false);
 
     const loggedIn = sessionStorage.getItem('isLoggedIn');
     const userSample = sessionStorage.getItem('userInfo');
@@ -17,7 +17,6 @@ const UserDelete = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
-
         if (!loggedIn) {
             navigate('/');
         }
@@ -68,7 +67,6 @@ const UserDelete = () => {
             else {
                 setPasswordError(false);
             }
-            console.log(isVerity);
         }
 
         if (hasError) {
@@ -101,7 +99,6 @@ const UserDelete = () => {
         }
     };
 
-    const [data, setData] = useState({});
 
     const handleCheckClick = () => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/User?command=checkDeleteBaby&user_id=${user.id}`)
@@ -109,11 +106,10 @@ const UserDelete = () => {
             .then(data => {
 
                 if (data.isExist) {
-                    onOpen();  // 모달창 호출
+                    onOpen(); 
                 } else {
                     handleSubmit();
                 }
-
             })
             .catch(error => {
                 console.error('데이터를 가져오는 중 에러 발생', error);

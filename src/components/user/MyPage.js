@@ -5,8 +5,6 @@ import { useSession } from '../module/SessionComponent';
 
 const MyPage = () => {
     const loggedIn = sessionStorage.getItem('isLoggedIn');
-
-    // 세션 스토리지에서 저장된 리스트 데이터를 불러올 때
     const userSample = sessionStorage.getItem('userInfo');
     const user = JSON.parse(userSample);
     const navigate = useNavigate();

@@ -18,7 +18,7 @@ const UserUpdate = () => {
     const [phoneDuplError, setPhoneDuplError] = useState(false);
     const [emailDuplError, setEmailDuplError] = useState(false);
 
-    const [loading, setLoading] = useState(false);
+    const [setLoading] = useState(false);
     const { isLoggedIn, loginStatus } = useSession();
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
@@ -95,7 +95,6 @@ const UserUpdate = () => {
             else {
                 setPasswordError(false);
             }
-            console.log(isVerity);
         }
 
 
@@ -153,7 +152,6 @@ const UserUpdate = () => {
                 },
                 body: formData.toString()
             });
-
             if (response.ok) {
                 const userData = await response.json();
                 if (userData.status === 200) {
@@ -262,8 +260,6 @@ const UserUpdate = () => {
                         size='lg' bg='white' w='100%'
                         marginBottom='10px'
                     />
-
-
                     {passwordError && <Text color="red">{passwordError}</Text>}
                     {newPasswordError && <Text color="red">{newPasswordError}</Text>}
                     {nicknameDuplError && <Text color="red">{nicknameDuplError}</Text>}

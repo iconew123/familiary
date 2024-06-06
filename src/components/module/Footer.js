@@ -12,7 +12,6 @@ const Footer = () => {
                     <Link fontFamily="'Nanum Gothic', cursive"> 회사소개</Link>ㅤ|ㅤ
                     <Link fontFamily="'Nanum Gothic', cursive"> 이용약관</Link>ㅤ|ㅤ
                     <Link fontFamily="'Nanum Gothic', cursive"> 개인정보처리방침</Link>
-
                 </Flex>
                 </Box>
                 <Text textAlign='center' fontFamily="'Nanum Gothic', cursive">(주)삼김일윤ㅤ|ㅤ대표 : 김재현</Text>

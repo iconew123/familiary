@@ -31,7 +31,7 @@ const Join = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const { isLoggedIn, loginStatus } = useSession();
+    const { isLoggedIn } = useSession();
     const navigate = useNavigate();
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 

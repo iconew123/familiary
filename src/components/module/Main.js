@@ -64,7 +64,7 @@ const Main = () => {
                     console.log('로그인 성공');
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userInfo', JSON.stringify(userData));
-                    navigate(0); // 페이지 새로고침
+                    navigate(0); 
                 } else {
                     console.log('로그인 실패:', userData.message);
                     setPasswordError('아이디 또는 비밀번호가 잘못되었습니다.');
@@ -80,7 +80,6 @@ const Main = () => {
     };
 
     useEffect(() => {
-        // 최신 글 가져오기
         const fetchLatestPosts = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/main`);
@@ -108,14 +107,12 @@ const Main = () => {
                 gridTemplateRows={'auto 1fr 1fr'}
                 gap={6}
             >
-                {/* 광고단 */}
                 <GridItem w='100%' area={'adArea'} display="flex" justifyContent="center" alignItems="center" padding={4}>
                     <Link href="https://www.gg.go.kr/contents/contents.do?ciIdx=987110&menuId=266074">
                         <Image src={adImage1} alt="ad Image" width="100%" height="100%" objectFit="cover" />
                     </Link>
                 </GridItem>
 
-                {/* 임산부 가이드 */}
                 <GridItem area={'info'} padding={4} rowSpan={2} display="flex" flexDirection="column" justifyContent="space-between">
                     <Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(2, 1fr)" gap={6} height="100%">
                         <GridItem colSpan={1} rowSpan={1} display="flex" flexDirection="column" justifyContent="space-between">
@@ -154,7 +151,6 @@ const Main = () => {
                     </Grid>
                 </GridItem>
 
-                {/* 로그인 */}
                 <GridItem w='100%' bg='white' area={'login'} padding={4} rowSpan={1}>
                     {!loggedIn ? (
                         <Box maxW='500px' mx='auto' textAlign='center'>
@@ -205,8 +201,7 @@ const Main = () => {
                         </Box>
                     )}
                 </GridItem>
-
-                {/* 게시판(최신순) */}
+                
                 <GridItem w='100%' bg='#E6D7C3' area={'board'} padding={4} rowSpan={2}>
                     <Text fontSize="2xl" fontWeight="bold" mb="20px">
                         최신 글 목록
@@ -225,9 +220,11 @@ const Main = () => {
                         </Box>
                     </Box>
                 </GridItem>
+
                 <GridItem w='100%' h='55px' area={'adArea2'} justifyContent="center" alignItems="center">
-                    <Link href="https://kidikidi.elandmall.co.kr/p/planshop?exhibitionNo=202309008823" ><Image src={adImage2} alt="ad Image2" width="100%"  /></Link>
+                    <Link href="https://youtu.be/vXXHdzikJz4?si=28AQ0sXwFBam8RD1" ><Image src={adImage2} alt="ad Image2" width="100%"  /></Link>
                 </GridItem>
+
             </Grid>
         </Box>
     );
