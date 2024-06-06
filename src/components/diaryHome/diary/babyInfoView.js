@@ -29,8 +29,6 @@ const BabyInfoView = () => {
         }));
     };
 
-
-    // 다중 클릭방지
     const [isLoading, setIsLoading] = useState(false);
     const handleButtonClick = () => {
         setIsLoading(true);
@@ -72,7 +70,6 @@ const BabyInfoView = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 if (data.status === 400) {
                     alert(data.message_diary);
                 }

@@ -14,22 +14,15 @@ const BabyInfoShow = () => {
         fetchContent(contentType, currentPage);
     }, [contentType, currentPage]);
 
-    const handleIconClick = (type) => {
-        setContentType(type);
-        setCurrentPage(1); // 페이지 번호를 초기화합니다.
-    };
-
     const fetchContent = (type, page) => {
         const url = `${process.env.REACT_APP_SERVER_URL}/babyInfo?command=allInfo&code=${babycode}`;
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 setTotalItems(data.length);
-                console.log("Total items:", data.length); // 총 항목 수 로그 출력
                 const start = (page - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
                 const slicedData = data.slice(start, end);
-                console.log("Sliced data:", slicedData); // 슬라이스된 데이터 로그 출력
                 setContentData(slicedData);
             })
             .catch(error => {
