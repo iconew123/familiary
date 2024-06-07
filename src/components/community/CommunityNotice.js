@@ -17,7 +17,7 @@ const CommunityNotice = () => {
     }, [currentPage]);
 
     const fetchData = (page) => {
-        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/notice`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/notice`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.length) {
@@ -49,7 +49,7 @@ const CommunityNotice = () => {
     };
 
     const handlePreviousPage = () => {
-        if (currentPage > 1) {
+        if (currentPage > 1) { 
             setCurrentPage(currentPage - 1);
         }
     };

@@ -1,46 +1,48 @@
 import { Box, Button, Center, Flex, Heading, Select } from '@chakra-ui/react';
 import React from 'react';
-import { Text } from '@chakra-ui/react'
-import { Link, useLocation } from 'react-router-dom';
+import { Text } from '@chakra-ui/react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 <link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet"></link>
 
 const Header = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const isDiaryPage = location.pathname === '/diary';
     const loggedIn = sessionStorage.getItem('isLoggedIn');
 
     const handleSelectChange = (e) => {
+        e.preventDefault();
         const selectedOption = e.target.value;
         let url = '';
-
+    
         switch (selectedOption) {
             case 'notice':
-                url = 'http://localhost:3000/familiary/community/notice?command=read/notice';
+                url = '/community/notice?command=read/notice';
                 break;
             case 'chat':
-                url = 'http://localhost:3000/familiary/community/chat?command=read/chat';
+                url = '/community/chat?command=read/chat';
                 break;
             case 'recommend':
-                url = 'http://localhost:3000/familiary/community/recommend?command=read/recommend';
+                url = '/community/recommend?command=read/recommend';
                 break;
             case 'guide':
-                url = 'http://localhost:3000/familiary/info/guide/EPU';
+                url = '/info/guide/EPU';
                 break;
             case 'hospital':
-                url = 'http://localhost:3000/familiary/info/hospitalInfo';
+                url = '/info/hospitalInfo';
                 break;
             case 'government':
-                url = 'http://localhost:3000/familiary/info/governmentMain';
+                url = '/info/governmentMain';
                 break;
             case 'preantal':
-                url = 'http://localhost:3000/familiary/info/preantalEduation';
+                url = '/info/preantalEduation';
                 break;
             default:
                 break;
         }
-
+    
         if (url) {
-            window.location.href = url;
+            navigate(url);
         }
     };
 
@@ -85,7 +87,7 @@ const Header = () => {
                                 <option value='hospital'>병원 정보</option>
                                 <option value='preantal'>태교·운동</option>
                             </Select>
-                            <Link to="/user/MyPage"><Text fontSize='xl' marginTop='8px' color='#765d2f' fontFamily="'Nanum Gothic', cursive">MYPAGE</Text></Link>
+                            <Link to="/user/myPage"><Text fontSize='xl' marginTop='8px' color='#765d2f' fontFamily="'Nanum Gothic', cursive">MYPAGE</Text></Link>
                         </Flex>
                     </nav>
                 </Box>

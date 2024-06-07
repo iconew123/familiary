@@ -17,7 +17,7 @@ const CommunityRecommend = () => {
     }, [currentPage]);
 
     const fetchData = (page) => {
-        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/recommend`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/recommend`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.length) {

@@ -47,177 +47,172 @@ const router = createBrowserRouter([
             <h1>오류 페이지입니다.</h1>
         </>
     },
-    {   
-        path: "/user",
+    {
+        path: "user",
         element: <Root />,
         children: [
             {
-                path: "/user/join",
+                path: "join",
                 element: <Join />
             },
             {
-                path: "/user/login",
+                path: "login",
                 element: <Login />
             },
             {
-                path: "/user/logout",
+                path: "logout",
                 element: <Logout />
             },
             {
-                path: "/user/myPage",
+                path: "myPage",
                 element: <MyPage />,
             },
             {
-                path: "/user/update",
+                path: "update",
                 element: <UserUpdate />
             },
             {
-                path: "/user/delete",
+                path: "delete",
                 element: <UserDelete />
             },
-
         ]
     },
     {
-        path: "/diary",
+        path: "diary",
         element: <Root />,
         children: [
             {
                 path: "",
                 element: <DiaryMain />
-
             },
             {
-                path:"/diary/:date/:babycode/:id",
-                element: <DiaryView/>
+                path: ":date/:babycode/:id",
+                element: <DiaryView />
             },
             {
-                path:"/diary/show/:babycode/:id",
+                path: "show/:babycode/:id",
                 element: <DiaryShow />
             }
         ]
     },
     {
-        path:"/babyInfo",
+        path: "babyInfo",
         element: <Root />,
-        children:[
+        children: [
             {
-                path:"",
-                element: <DiaryMain/>
-                
+                path: "",
+                element: <DiaryMain />
             },
             {
-                path:"/babyInfo/:date/:babycode",
+                path: ":date/:babycode",
                 element: <BabyInfoView />
             },
             {
-                path:"/babyInfo/show/:babycode",
+                path: "show/:babycode",
                 element: <BabyInfoShow />
             }
         ]
     },
     {
-        path: "/baby",
+        path: "baby",
         element: <Root />,
         children: [
             {
-                path: "/baby/update",
+                path: "update",
                 element: <UpdateBaby />
-
             },
             {
-                path: "/baby/info",
+                path: "info",
                 element: <InfoBaby />
             },
             {
-                path: "/baby/create",
+                path: "create",
                 element: <CreateBaby />
             },
             {
-                path: "/baby/join",
+                path: "join",
                 element: <JoinBabyByCode />
             }
         ]
     },
     {
-        path: "/community",
+        path: "community",
         element: <Root />,
         children: [
             {
-                path: '/community/chat',
+                path: "chat",
                 element: <CommunityTalk />,
             },
             {
-                path: '/community/notice',
+                path: "notice",
                 element: <CommunityNotice />,
             },
             {
-                path: '/community/recommend',
+                path: "recommend",
                 element: <CommunityRecommend />,
             },
             {
-                path: '/community/create',
+                path: "create",
                 element: <CreateCommunity />,
             },
             {
-                path: '/community/update',
+                path: "update",
                 element: <UpdateCommunity />,
             },
             {
-                path: '/community/notice/detail',
+                path: "notice/detail",
                 element: <ViewCommunity />,
             },
             {
-                path: '/community/chat/detail',
+                path: "chat/detail",
                 element: <ViewCommunity />,
             },
             {
-                path: '/community/recommend/detail',
+                path: "recommend/detail",
                 element: <ViewCommunity />,
             }
         ]
     },
     {
-        path: "/info",
+        path: "info",
         element: <Root />,
         children: [
             {
-                path: '/info/guide/EPU',
+                path: "guide/EPU",
                 element: <PregnancyGuideEPU />,
             },
             {
-                path: '/info/guide/EPH',
+                path: "guide/EPH",
                 element: <PregnancyGuideEPH />,
             },
             {
-                path: '/info/guide/MPU',
+                path: "guide/MPU",
                 element: <PregnancyGuideMPU />,
             },
             {
-                path: '/info/guide/MPH',
+                path: "guide/MPH",
                 element: <PregnancyGuideMPH />,
             },
             {
-                path: '/info/guide/LPU',
+                path: "guide/LPU",
                 element: <PregnancyGuideLPU />,
             },
             {
-                path: '/info/guide/LPH',
+                path: "guide/LPH",
                 element: <PregnancyGuideLPH />,
             }, {
-                path: '/info/hospitalInfo',
+                path: "hospitalInfo",
                 element: <HospitalInfo />,
             }, {
-                path: '/info/government',
+                path: "government",
                 element: <GovernmentSupport />,
             }, {
-                path: '/info/preantalEduation',
+                path: "preantalEduation",
                 element: <PrenatalEducation />,
             }, {
-                path: '/info/governmentMain',
+                path: "governmentMain",
                 element: <GovernmentSupportMain />,
             }
-            
         ]
     }
 ], {

@@ -17,7 +17,7 @@ const CommunityTalk = () => {
     }, [currentPage]);
 
     const fetchData = (page) => {
-        fetch(`${process.env.REACT_APP_SERVER_URL.replace('https', 'http')}/community?command=read/chat`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/community?command=read/chat`)
             .then(response => response.json())
             .then(data => {
                 if (data && data.length) {

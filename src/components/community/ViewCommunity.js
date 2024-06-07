@@ -123,8 +123,6 @@ const ViewCommunity = () => {
             setComments(prevComments => [jsonData, ...prevComments]);
             setComment('');
 
-            window.location.reload();
-
         } catch (error) {
             console.error('댓글 등록 중 에러 발생', error);
         }
