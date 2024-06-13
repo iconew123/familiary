@@ -72,7 +72,6 @@ const RenderDay = ({ currentMonth, selectedDate, onDateClick, diaryData, infoDat
             }
             
 
-
             days.push(
                 <div className={`rows-day ${!isSameMonth(day, currentMonth) ? 'disabled' :
                     isSameDay(day, selectedDate) ? 'selected' :
@@ -119,7 +118,6 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
 
     const fetchDiaryData = async () => {
         try {
-            const now = new Date();
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/diary?command=diarylist&babycode=${baby.code}`);
             const data = await response.json();
             setDiaryData(data);
@@ -130,7 +128,6 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
 
     const fetchInfoData = async () => {
         try {
-            const now = new Date();
             const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/babyInfo?command=allInfo&code=${baby.code}`);
             const data = await response.json();
             setInfoData(data);
@@ -142,6 +139,12 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
     useEffect(() => {
         fetchDiaryData();
         fetchInfoData();
+        const interval = setInterval(() => {
+            fetchDiaryData();
+            fetchInfoData();
+        }, 1000); // 1분마다 데이터 업데이트
+
+        return () => clearInterval(interval);
     }, []);
 
     const prevMonth = () => {
@@ -152,7 +155,7 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
 
-    const onDateClick = (day) => {
+    const onDateClick = async (day) => {
         setSelectedDate(day);
         const newFormatDate = format(day, 'yyyy-MM-dd');
         setFormatDate(newFormatDate);
@@ -164,6 +167,9 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
         if (typeof onDateInfoSelect === 'function') {
             onDateInfoSelect(newFormatDate);
         }
+
+        await fetchDiaryData(); // 클릭시마다 데이터 새로고침
+        await fetchInfoData(); // 클릭시마다 데이터 새로고침
     };
 
     return (
@@ -174,3 +180,4 @@ export default function MyCalendar({ onDateSelect, onDateInfoSelect }) {
         </div>
     );
 }
+
